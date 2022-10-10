@@ -1,0 +1,91 @@
+COMMANDS:
+> dotnet new web
+> docker network create pro290
+
+==================================================
+PASTES:
+-------------------------------------------------
+:name:.csproj:
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.6" />
+    <PackageReference Include="MongoDB.Driver" Version="2.16.1" />
+    <PackageReference Include="Steeltoe.Discovery.Eureka" Version="3.2.0" />
+  </ItemGroup>
+
+------------------------------------------------
+appsettings.json:
+
+,
+  "ConnectionStrings": {
+    "mongo": "mongodb://localhost:27017"
+  },
+  "spring": {
+    "application": {
+      "name": "cart"
+    }
+  },
+  "eureka": {
+    "client": {
+      "serviceUrl": "http://localhost:8761/eureka/",
+      "shouldFetchRegistry": true,
+      "shouldRegisterWithEureka": true,
+      "validateCertificates": false
+    },
+    "instance": {}
+  }
+
+-------------------------------------------------
+program.cs:
+
+using Microsoft.EntityFrameworkCore;
+using Steeltoe.Discovery.Client;
+using Steeltoe.Common.Discovery;
+using Steeltoe.Discovery.Eureka;
+using Steeltoe.Discovery;
+
+~ Under builder:
+
+builder.Services.AddControllers();
+builder.Services.AddDiscoveryClient(builder.Configuration);
+var Origins = "_OriginsAllowed";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: Origins,
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:3000", "http://localhost:8888").WithHeaders(HeaderNames.ContentType, "application/json", HeaderNames.AccessControlAllowOrigin, "*").WithMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
+                      });
+});
+
+~ Under app:
+app.MapControllers();
+app.UseCors(Origins);
+
+------------------------------------------------------
+:Name:Controller.cs:
+
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace capstone
+{
+    namespace Controllers
+    {
+        [ApiController]
+        [Route("")]
+        public class :Name:Controller : ControllerBase
+        {
+            private readonly IMongoDatabase _db;
+            private readonly IMongoCollection<:Type:> collection;
+            public :Name:Controller(IConfiguration config) {
+                var client = new MongoClient(config.GetConnectionString("mongo"));
+                _db = client.GetDatabase("pro290");
+                collection = _db.GetCollection<:Type:>("");
+            }
+        }
+    }
+}
