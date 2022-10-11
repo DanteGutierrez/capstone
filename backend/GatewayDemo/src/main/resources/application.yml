@@ -1,0 +1,44 @@
+server:
+  port: 8888
+ 
+eureka:
+  client:
+    serviceUrl:
+      #defaultZone: http://localhost:8761/eureka
+      defaultZone: http://eureka:8761/eureka
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+      default-filters:
+        #This is to prevent two different cors headers being sent.
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      routes:
+      - id: cart
+        uri: lb://CART
+        predicates:
+        - Path=/cart/**
+        # filters:
+        # - AddResponseHeader=Access-Control-Allow-Origin, *
+
+      - id: inventory
+        uri: lb://INVENTORY
+        predicates:
+        - Path=/inventory/**
+        # filters:
+        # - AddResponseHeader=Access-Control-Allow-Origin, *
+
+      - id: account
+        uri: lb://ACCOUNT
+        predicates:
+        - Path=/account/**
+        # filters:
+        # - AddResponseHeader=Access-Control-Allow-Origin, *

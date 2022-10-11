@@ -18,7 +18,7 @@ namespace capstone
             {
                 var client = new MongoClient(config.GetConnectionString("mongo"));
                 _db = client.GetDatabase("capstone");
-                accounts = _db.GetCollection <Account> ("");
+                accounts = _db.GetCollection <Account> ("accounts");
             }
             private async Task<bool> CheckAuthorization(string? userid, string? auth)
             {
@@ -69,7 +69,7 @@ namespace capstone
             [Route("create")]
             public async Task<IResult> CreateAccount(Account account, string? Id)
             {
-                if(!await CheckAdmin(Id)) return Results.BadRequest("The id provided did not have admin clearance");
+                //if(!await CheckAdmin(Id)) return Results.BadRequest("The id provided did not have admin clearance");
 
                 if(await InsertAccount(account)) return Results.Ok(account._id.ToString());
 

@@ -1,0 +1,51 @@
+version: "3.8"
+
+networks:
+  capstone:
+    external: false
+
+services:
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - capstone
+ 
+  eureka:
+    container_name: eureka
+    image: steeltoeoss/eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+     - capstone
+ 
+  gateway:
+    container_name: gateway
+    build:
+      context: ./GatewayDemo/
+      dockerfile: 2.dockerfile
+    image: gateway:1
+    ports:
+      - "8888:8888"
+    networks:
+      - capstone
+    depends_on:
+      - eureka
+
+  account.1:
+    container_name: account.1
+    build:
+      context: ./account/
+      dockerfile: account.dockerfile
+    image: account:1
+    ports:
+      - "9000:80"
+    networks:
+      - capstone
+    depends_on:
+      - eureka
+      - mongo
+
+# docker-compose -f docker-compose.yaml -p capstone up --build --force-recreate
