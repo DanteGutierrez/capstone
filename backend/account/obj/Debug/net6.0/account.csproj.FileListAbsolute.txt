@@ -1,0 +1,6 @@
+C:\Users\dgutierrez\CAPSTONE\capstone\backend\account\obj\Debug\net6.0\account.csproj.AssemblyReference.cache
+C:\Users\dgutierrez\CAPSTONE\capstone\backend\account\obj\Debug\net6.0\account.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\dgutierrez\CAPSTONE\capstone\backend\account\obj\Debug\net6.0\account.AssemblyInfoInputs.cache
+C:\Users\dgutierrez\CAPSTONE\capstone\backend\account\obj\Debug\net6.0\account.AssemblyInfo.cs
+C:\Users\dgutierrez\CAPSTONE\capstone\backend\account\obj\Debug\net6.0\account.csproj.CoreCompileInputs.cache
+C:\Users\dgutierrez\CAPSTONE\capstone\backend\account\obj\Debug\net6.0\account.MvcApplicationPartsAssemblyInfo.cache

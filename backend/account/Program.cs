@@ -3,6 +3,7 @@ using Steeltoe.Discovery.Client;
 using Steeltoe.Common.Discovery;
 using Steeltoe.Discovery.Eureka;
 using Steeltoe.Discovery;
+using Microsoft.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,9 +15,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: Origins,
                       policy =>
                       {
-                          policy.WithOrigins("http://localhost:3000", "http://localhost:8888")
-                          .WithHeaders(HeaderNames.ContentType, "application/json", HeaderNames.AccessControlAllowOrigin, "*")
-                          .WithMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
+                          policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
                       });
 });
 
