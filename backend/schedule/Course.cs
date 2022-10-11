@@ -5,10 +5,10 @@ namespace capstone {
         [BsonId]
         public ObjectId _id { get; set; }
         [BsonElement("Name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
         [BsonElement("Code")]
-        public string Code { get; set; }
-        public Account()
+        public string? Code { get; set; }
+        public Course()
         {
             _id = ObjectId.GenerateNewId();
         }

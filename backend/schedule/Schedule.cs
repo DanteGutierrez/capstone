@@ -7,9 +7,9 @@ namespace capstone
         [BsonId]
         public ObjectId _id { get; set; }
         [BsonElement("CourseId")]
-        public string CourseId { get; set; }
+        public string? CourseId { get; set; }
         [BsonElement("AccountId")]
-        public string AccountId { get; set; }
+        public string? AccountId { get; set; }
         [BsonElement("Year")] 
         public int Year { get; set; }
         [BsonElement("Day")]
@@ -18,7 +18,7 @@ namespace capstone
         public int StartTime { get; set; }
         [BsonElement("Duration")]
         public int Duration { get; set; }
-        public Account()
+        public Schedule()
         {
             _id = ObjectId.GenerateNewId();
         }
