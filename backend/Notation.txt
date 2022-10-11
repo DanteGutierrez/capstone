@@ -54,7 +54,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: Origins,
                       policy =>
                       {
-                          policy.WithOrigins("http://localhost:3000", "http://localhost:8888").WithHeaders(HeaderNames.ContentType, "application/json", HeaderNames.AccessControlAllowOrigin, "*").WithMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
+                          policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
                       });
 });
 
@@ -83,7 +83,7 @@ namespace capstone
             private readonly IMongoCollection<:Type:> collection;
             public :Name:Controller(IConfiguration config) {
                 var client = new MongoClient(config.GetConnectionString("mongo"));
-                _db = client.GetDatabase("pro290");
+                _db = client.GetDatabase("capstone");
                 collection = _db.GetCollection<:Type:>("");
             }
         }

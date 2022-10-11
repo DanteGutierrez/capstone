@@ -1,5 +1,5 @@
 {
-  "FilePath": "c:\\Users\\dgutierrez\\CAPSTONE\\capstone\\backend\\account\\account.csproj",
+  "FilePath": "c:\\Users\\dgutierrez\\CAPSTONE\\capstone\\backend\\course\\course.csproj",
   "Configuration": {
     "ConfigurationName": "MVC-3.0",
     "LanguageVersion": "6.0",
@@ -16295,7 +16295,7 @@
     ],
     "CSharpLanguageVersion": 1000
   },
-  "RootNamespace": "account",
+  "RootNamespace": "course",
   "Documents": [],
   "SerializationFormat": "0.2"
 }
