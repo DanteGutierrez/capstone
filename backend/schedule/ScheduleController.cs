@@ -71,6 +71,28 @@ namespace capstone
                 await schedules.InsertOneAsync(schedule);
                 return Results.Ok();
             }
+            [HttpPost]
+            [Route("find")]
+            public async Task<IResult> FindSchedules(Search search) {
+                List<Schedule> list = new();
+                try {
+                    list = schedules.Find(s => s.Day == search.Day && s.Year == search.Year).ToList();
+                }
+                catch(Exception _i) {
+                    return Results.BadRequest("There was an issue");
+                }
+
+                if(search.StartTime != null) list = list.FindAll(s => s.StartTime >= search.StartTime);
+                    
+                if(search.EndTime != null) list = list.FindAll(s => s.StartTime + s.Duration <= search.EndTime);
+
+                if(search.Coaches.Count() > 0) list = list.FindAll(s => search.Coaches.Contains(s.AccountId));
+
+                if(search.Courses.Count() > 0) list = list.FindAll(s => search.Courses.Contains(s.CourseId) || 
+                                                                        accounts.Find(user => user._id == ObjectId.Parse(s.AccountId)).ToList().First().PreferredCourses.Contains(s.CourseId));
+
+                return Results.Ok(list);
+            }
             [HttpDelete]
             [Route("delete/{id}")]
             public async Task<IResult> DeleteSchedule(string id, string? auth) {

@@ -22,23 +22,21 @@ spring:
         #This is to prevent two different cors headers being sent.
         - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
       routes:
-      - id: cart
-        uri: lb://CART
-        predicates:
-        - Path=/cart/**
-        # filters:
-        # - AddResponseHeader=Access-Control-Allow-Origin, *
-
-      - id: inventory
-        uri: lb://INVENTORY
-        predicates:
-        - Path=/inventory/**
-        # filters:
-        # - AddResponseHeader=Access-Control-Allow-Origin, *
-
       - id: account
         uri: lb://ACCOUNT
         predicates:
         - Path=/account/**
+        # filters:
+        # - AddResponseHeader=Access-Control-Allow-Origin, *
+      - id: schedule
+        uri: lb://SCHEDULE
+        predicates:
+        - Path=/schedule/**
+        # filters:
+        # - AddResponseHeader=Access-Control-Allow-Origin, *
+      - id: course
+        uri: lb://COURSE
+        predicates:
+        - Path=/course/**
         # filters:
         # - AddResponseHeader=Access-Control-Allow-Origin, *

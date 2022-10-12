@@ -41,7 +41,21 @@ services:
       dockerfile: account.dockerfile
     image: account:1
     ports:
-      - "9000:80"
+      - "9010:80"
+    networks:
+      - capstone
+    depends_on:
+      - eureka
+      - mongo
+  
+  schedule.1:
+    container_name: schedule.1
+    build:
+      context: ./schedule/
+      dockerfile: schedule.dockerfile
+    image: schedule:1
+    ports:
+      - "9020:80"
     networks:
       - capstone
     depends_on:

@@ -18,6 +18,8 @@ namespace capstone
         public int StartTime { get; set; }
         [BsonElement("Duration")]
         public int Duration { get; set; }
+        [BsonElement("Room")]
+        public string? Room { get; set; }
         public Schedule()
         {
             _id = ObjectId.GenerateNewId();

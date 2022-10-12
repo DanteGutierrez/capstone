@@ -45,13 +45,21 @@ namespace capstone
 
                 if(!string.IsNullOrEmpty(account.Password)) 
                 {
-                    var passwordUpdate = Builders<Account>.Update.Set(a => a.Password, account.Password);
-                    await accounts.UpdateOneAsync(filter, passwordUpdate);
+                    var update = Builders<Account>.Update.Set(a => a.Password, account.Password);
+                    await accounts.UpdateOneAsync(filter, update);
                 }
                 if (!string.IsNullOrEmpty(account.PreferredName))
                 {
-                    var preferredNameUpdate = Builders<Account>.Update.Set(a => a.PreferredName, account.PreferredName);
-                    await accounts.UpdateOneAsync(filter, preferredNameUpdate);
+                    var update = Builders<Account>.Update.Set(a => a.PreferredName, account.PreferredName);
+                    await accounts.UpdateOneAsync(filter, update);
+                }
+                if(!string.IsNullOrEmpty(account.AssignedCourse)) {
+                    var update = Builders<Account>.Update.Set(a => a.AssignedCourse, account.AssignedCourse);
+                    await accounts.UpdateOneAsync(filter, update);
+                }
+                if(account.PreferredCourses != null) {
+                    var update = Builders<Account>.Update.Set(a => a.PreferredCourses, account.PreferredCourses);
+                    await accounts.UpdateOneAsync(filter, update);
                 }
 
                 return true;
@@ -64,6 +72,18 @@ namespace capstone
                     return true;
                 }
                 return false;
+            }
+            [HttpGet]
+            [Route("view/{id}")]
+            public async Task<IResult> ViewAccount(string? id) {
+                Account account;
+                try {
+                    account = accounts.Find(user => user._id == ObjectId.Parse(id)).ToList().First();
+                }
+                catch(Exception _i) {
+                    return Results.BadRequest("There was no account");
+                }
+                return Results.Ok(new LimitedAccount(account.PreferredName, account.AssignedCourse, account.PreferredCourses));
             }
             [HttpPost]
             [Route("create")]
