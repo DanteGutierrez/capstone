@@ -101,14 +101,9 @@ namespace capstone
                 if(!await CheckAuthorization(userid, auth)) return Results.BadRequest("You have invalid authorization");
 
                 if(string.IsNullOrEmpty(userid)) return Results.BadRequest("The user id cannot be empty");
-                Account user;
 
-                try {
-                    user = accounts.Find(user => user._id == ObjectId.Parse(userid)).ToList().First();
-                }
-                catch(Exception _i) {
-                    return Results.BadRequest("The id provided was invalid");
-                }
+                if(!accounts.Find(user => user._id == ObjectId.Parse(userid)).ToList().Any()) return Results.BadRequest("The id provided was invalid");
+                
                 if(!await UpdateTheAccount(account, userid)) return Results.BadRequest("The update failed");
                 return Results.Ok("Updated");
 
