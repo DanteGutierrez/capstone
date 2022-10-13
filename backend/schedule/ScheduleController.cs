@@ -57,6 +57,17 @@ namespace capstone
                 await schedules.InsertOneAsync(schedule);
                 return Results.Ok();
             }
+            [HttpDelete]
+            [Route("delete/{id}")]
+            public async Task<IResult> DeleteSchedule(string id, string? auth) {
+                if (!await CheckAuthorization(auth)) return Results.BadRequest("Invalid authorization");
+
+                if(!schedules.Find(schedule => schedule._id == ObjectId.Parse(id)).ToList().Any()) return Results.BadRequest("Schedule id is invalid");
+
+                var filter = Builders<Schedule>.Filter.Eq(s => s._id, ObjectId.Parse(id));
+                await schedules.DeleteOneAsync(filter);
+                return Results.Ok("Item Deleted");
+            }
             [HttpPost]
             [Route("find")]
             public async Task<IResult> FindSchedules(Search search) {
@@ -78,17 +89,6 @@ namespace capstone
                                                                         accounts.Find(user => user._id == ObjectId.Parse(s.AccountId)).ToList().First().PreferredCourses.Contains(s.CourseId));
 
                 return Results.Ok(list);
-            }
-            [HttpDelete]
-            [Route("delete/{id}")]
-            public async Task<IResult> DeleteSchedule(string id, string? auth) {
-                if (!await CheckAuthorization(auth)) return Results.BadRequest("Invalid authorization");
-
-                if(!schedules.Find(schedule => schedule._id == ObjectId.Parse(id)).ToList().Any()) return Results.BadRequest("Schedule id is invalid");
-
-                var filter = Builders<Schedule>.Filter.Eq(s => s._id, ObjectId.Parse(id));
-                await schedules.DeleteOneAsync(filter);
-                return Results.Ok("Item Deleted");
             }
         }
     }

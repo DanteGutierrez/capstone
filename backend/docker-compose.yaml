@@ -34,6 +34,20 @@ services:
     depends_on:
       - eureka
 
+  course.1:
+    container_name: course.1
+    build:
+      context: ./course/
+      dockerfile: course.dockerfile
+    image: course:1
+    ports:
+      - "9000:80"
+    networks:
+      - capstone
+    depends_on:
+      - eureka
+      - mongo
+
   account.1:
     container_name: account.1
     build:

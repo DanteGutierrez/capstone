@@ -73,18 +73,6 @@ namespace capstone
                 }
                 return false;
             }
-            [HttpGet]
-            [Route("view/{id}")]
-            public async Task<IResult> ViewAccount(string? id) {
-                Account account;
-                try {
-                    account = accounts.Find(user => user._id == ObjectId.Parse(id)).ToList().First();
-                }
-                catch(Exception _i) {
-                    return Results.BadRequest("There was no account");
-                }
-                return Results.Ok(new LimitedAccount(account.PreferredName, account.AssignedCourse, account.PreferredCourses));
-            }
             [HttpPost]
             [Route("create")]
             public async Task<IResult> CreateAccount(Account account, string? Id)
@@ -97,14 +85,14 @@ namespace capstone
             }
             [HttpPut]
             [Route("update/{userid}")]
-            public async Task<IResult> UpdateAccount(Account account, string? auth, string userid) {
-                if(!await CheckAuthorization(userid, auth)) return Results.BadRequest("You have invalid authorization");
+            public async Task<IResult> UpdateAccount(Account account, string? auth, string id) {
+                if(!await CheckAuthorization(id, auth)) return Results.BadRequest("You have invalid authorization");
 
-                if(string.IsNullOrEmpty(userid)) return Results.BadRequest("The user id cannot be empty");
+                if(string.IsNullOrEmpty(id)) return Results.BadRequest("The user id cannot be empty");
 
-                if(!accounts.Find(user => user._id == ObjectId.Parse(userid)).ToList().Any()) return Results.BadRequest("The id provided was invalid");
+                if(!accounts.Find(user => user._id == ObjectId.Parse(id)).ToList().Any()) return Results.BadRequest("The id provided was invalid");
                 
-                if(!await UpdateTheAccount(account, userid)) return Results.BadRequest("The update failed");
+                if(!await UpdateTheAccount(account, id)) return Results.BadRequest("The update failed");
                 return Results.Ok("Updated");
 
             }
@@ -123,6 +111,18 @@ namespace capstone
                     return Results.BadRequest("Login attempt failed");
                 }
                 return Results.Ok( user._id.ToString()); //TODO redis
+            }
+            [HttpGet]
+            [Route("view/{id}")]
+            public async Task<IResult> ViewAccount(string? id) {
+                Account account;
+                try {
+                    account = accounts.Find(user => user._id == ObjectId.Parse(id)).ToList().First();
+                }
+                catch(Exception _i) {
+                    return Results.BadRequest("There was no account");
+                }
+                return Results.Ok(new LimitedAccount(account.PreferredName, account.AssignedCourse, account.PreferredCourses));
             }
         }
     }

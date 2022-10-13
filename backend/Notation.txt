@@ -89,3 +89,108 @@ namespace capstone
         }
     }
 }
+==================================================
+Course API:
+
+/create
+POST:
+{
+  "Code":"",
+  "Name":""
+}
+returns: null
+--------------------------------------------
+/update/{id}
+PUT:
+{
+  "Code":"",
+  "Name":""
+}
+only changes name
+returns: message
+-----------------------------------------------
+/delete/{id}
+DELETE
+returns: message
+----------------------------------------------
+/view?id=""&code=""
+GET
+if id provided, returns single Course (takes priority over code)
+if code provided returns all code matches
+if nothing provided returns all courses
+returns: course
+=====================================================
+Account API:
+
+/create
+POST:
+{
+  "Admin":false,
+  "Email":"",
+  "Password":"",
+  "FirstName":"",
+  "LastName":"",
+  "PreferredName":"",
+  "AssignedCourse":"",
+  "PreferredCourses":[]
+}
+returns: null
+-------------------------------------------
+/update/{id}?auth=""
+PUT:
+{
+  "Admin":false,
+  "Email":"",
+  "Password":"",
+  "FirstName":"",
+  "LastName":"",
+  "PreferredName":"",
+  "AssignedCourse":"",
+  "PreferredCourses":[]
+}
+changes password, preferred name, assigned course, and preferred courses
+returns: message 
+-----------------------------------------
+/login
+POST:
+{
+  "Email":"",
+  "Password":""
+}
+returns: id / session
+---------------------------------------
+/view/{id}
+GET
+returns: limited account view (preferred name, assigned course, and preferred courses)
+==================================================================================================
+Schedule API: 
+
+/create?auth=""
+POST:
+{
+  "CourseId":"",
+  "AccountId":"",
+  "Year":0,
+  "Day":0,
+  "StartTime":0,
+  "Duration":0,
+  "Room":""
+}
+returns: null
+--------------------------------------------------
+/delete/{id}?auth=""
+DELETE
+returns: message
+---------------------------------------------------
+/find
+POST:
+{
+  "Year":0,
+  "Day":0,
+  "StartTime":0,
+  "EndTime":0,
+  "Coaches":[],
+  "Courses":[]
+}
+all values except day and year can be left null
+returns: list of schedules
