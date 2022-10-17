@@ -1,0 +1,79 @@
+/* Defaults */
+
+html {
+    margin: 0px;
+    padding: 0px;
+    width: 100vw;
+    height: 100vh;
+}
+
+body {
+    margin: 0px;
+    padding: 0px;
+}
+
+.container {
+    height: fit-content;
+    width: fit-content;
+    display: flex;
+    margin: 0px;
+    padding: 0px;
+    align-items: center;
+    justify-content: center;
+}
+
+.vertical {
+    flex-direction: column;
+}
+
+.horizontal {
+    flex-direction: row;
+}
+.align-start {
+    align-items: flex-start;
+}
+.justify-start {
+    justify-content: flex-start;
+}
+.justify-space {
+    justify-content: space-between;
+}
+.justify-around {
+    justify-content: space-around;
+}
+.align-end {
+  align-items: flex-end;
+}
+.max-width {
+    width: 100%;
+}
+
+.max-height {
+    height: 100%;
+}
+
+.item {
+    margin: 2px;
+    text-align: center;
+}
+
+.wireframe {
+    border: 1px solid black;
+    box-sizing: border-box;
+}
+
+/* Other */
+
+.button {
+    user-select: none;
+    border: 2px solid gray;
+    border-radius: 5%;
+}
+
+.button:hover {
+    cursor: pointer;
+}
+.miniButton {
+    height: 20px;
+    width: 20px;
+}

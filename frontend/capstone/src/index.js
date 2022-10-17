@@ -1,13 +1,74 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import HomePage from './HomePage';
+import Navigation from './Navigation';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+const URL = 'http://localhost:8888/';
+const schedule = URL + 'schedule/';
+const course = URL + 'course/';
+const account = URL + 'account/';
+
+class Application extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      login: {
+        authorized: false,
+        admin: false,
+        id: "",
+        name: "",
+        email: "",
+        password: ""
+      },
+      page: "",
+      error: "",
+    };
+  };
+  onNavButtonClicked = (page) => {
+    switch (page) {
+      case "home":
+        this.setState({ page: <HomePage /> });
+        break;
+      case "login":
+        break;
+      case "tutors":
+        break;
+      case "logout":
+        this.setState({
+          login: {
+            authorized: false,
+            admin: false,
+            email: "",
+            id: "",
+            username: "",
+            password: ""
+          }
+        });
+        this.setState({ page: <HomePage /> });
+        break;
+      default:
+        break;
+    }
+  };
+  componentDidMount() {
+    this.onNavButtonClicked("home");
+  };
+  render() {
+    return (
+      <div className="container vertical max-width max-height">
+        <Navigation Auth={this.state.login.authorized} Admin={this.state.login.admin} NavClick={this.onNavButtonClicked} />
+        {this.state.page}
+      </div>
+    );
+  };
+};
+
 root.render(
   <React.StrictMode>
-    <App />
+    <Application />
   </React.StrictMode>
 );
 
