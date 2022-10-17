@@ -27,7 +27,7 @@ namespace capstone
                 if(string.IsNullOrEmpty(course.Code) || string.IsNullOrEmpty(course.Name)) return Results.BadRequest("Course needs a code and name");
 
                 // No duplicates
-                if(courses.Find(c => c.Code.ToLower().Equals(course.Code.ToLower())).ToList().Any()) return Results.BadRequest("That course already exists");
+                if(courses.Find(c => c.Code.Equals(course.Code)).ToList().Any()) return Results.BadRequest("That course already exists");
                 
                 await courses.InsertOneAsync(course);
 
@@ -85,7 +85,7 @@ namespace capstone
                     List<Course> courseList;
                     try
                     {
-                        courseList = courses.Find(c => c.Code.ToLower().Contains(code.ToLower())).ToList();
+                        courseList = courses.Find(c => c.Code.Contains(code)).ToList();
                     }
                     catch (Exception _i)
                     {
@@ -93,7 +93,7 @@ namespace capstone
                     }
                     return Results.Ok(courseList);
                 }
-                return Results.Ok(courses);
+                return Results.Ok(courses.Find(c => true).ToList());
             }
         }
     }

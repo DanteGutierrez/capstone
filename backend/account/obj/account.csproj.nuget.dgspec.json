@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\dgutierrez\\CAPSTONE\\capstone\\backend\\account\\account.csproj": {}
+    "c:\\Users\\dgutierrez\\CAPSTONE\\capstone\\backend\\account\\account.csproj": {}
   },
   "projects": {
-    "C:\\Users\\dgutierrez\\CAPSTONE\\capstone\\backend\\account\\account.csproj": {
+    "c:\\Users\\dgutierrez\\CAPSTONE\\capstone\\backend\\account\\account.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\dgutierrez\\CAPSTONE\\capstone\\backend\\account\\account.csproj",
+        "projectUniqueName": "c:\\Users\\dgutierrez\\CAPSTONE\\capstone\\backend\\account\\account.csproj",
         "projectName": "account",
-        "projectPath": "C:\\Users\\dgutierrez\\CAPSTONE\\capstone\\backend\\account\\account.csproj",
+        "projectPath": "c:\\Users\\dgutierrez\\CAPSTONE\\capstone\\backend\\account\\account.csproj",
         "packagesPath": "C:\\Users\\dgutierrez\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\dgutierrez\\CAPSTONE\\capstone\\backend\\account\\obj\\",
+        "outputPath": "c:\\Users\\dgutierrez\\CAPSTONE\\capstone\\backend\\account\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -51,6 +51,10 @@
             "MongoDB.Driver": {
               "target": "Package",
               "version": "[2.16.1, )"
+            },
+            "StackExchange.Redis": {
+              "target": "Package",
+              "version": "[2.2.4, )"
             },
             "Steeltoe.Discovery.Eureka": {
               "target": "Package",

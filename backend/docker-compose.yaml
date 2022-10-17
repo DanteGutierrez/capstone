@@ -12,6 +12,14 @@ services:
       - "27017:27017"
     networks:
       - capstone
+  
+  redis:
+    container_name: redis
+    image: redis
+    ports: 
+      - "6379:6379"
+    networks:
+      - capstone
  
   eureka:
     container_name: eureka
@@ -47,6 +55,7 @@ services:
     depends_on:
       - eureka
       - mongo
+      - redis
 
   account.1:
     container_name: account.1
@@ -61,6 +70,7 @@ services:
     depends_on:
       - eureka
       - mongo
+      - redis
   
   schedule.1:
     container_name: schedule.1
@@ -75,5 +85,6 @@ services:
     depends_on:
       - eureka
       - mongo
+      - redis
 
 # docker-compose -f docker-compose.yaml -p capstone up --build --force-recreate

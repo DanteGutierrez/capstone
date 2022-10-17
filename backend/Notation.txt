@@ -11,6 +11,7 @@ PASTES:
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.6" />
     <PackageReference Include="MongoDB.Driver" Version="2.16.1" />
     <PackageReference Include="Steeltoe.Discovery.Eureka" Version="3.2.0" />
+    <PackageReference Include="StackExchange.Redis" Version="2.2.4" />
   </ItemGroup>
 
 ------------------------------------------------
@@ -18,7 +19,8 @@ appsettings.json:
 
 ,
   "ConnectionStrings": {
-    "mongo": "mongodb://localhost:27017"
+    "mongo": "mongodb://localhost:27017",
+    "redis": "localhost:6379"
   },
   "spring": {
     "application": {
@@ -70,6 +72,7 @@ using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using StackExchange.Redis;
 
 namespace capstone
 {
@@ -81,10 +84,14 @@ namespace capstone
         {
             private readonly IMongoDatabase _db;
             private readonly IMongoCollection<:Type:> collection;
+            private readonly IDatabase authorization;
             public :Name:Controller(IConfiguration config) {
                 var client = new MongoClient(config.GetConnectionString("mongo"));
                 _db = client.GetDatabase("capstone");
                 collection = _db.GetCollection<:Type:>("");
+
+                var _redis = ConnectionMultiplexer.Connect(config.GetConnectionString("redis"));
+                authorization = _redis.GetDatabase();
             }
         }
     }
@@ -103,7 +110,6 @@ returns: null
 /update/{id}
 PUT:
 {
-  "Code":"",
   "Name":""
 }
 only changes name
@@ -139,11 +145,7 @@ returns: null
 /update/{id}?auth=""
 PUT:
 {
-  "Admin":false,
-  "Email":"",
   "Password":"",
-  "FirstName":"",
-  "LastName":"",
   "PreferredName":"",
   "AssignedCourse":"",
   "PreferredCourses":[]
@@ -157,7 +159,11 @@ POST:
   "Email":"",
   "Password":""
 }
-returns: id / session
+returns: login credentials (id, authorization, admin)
+--------------------------------------
+/logout/{id}
+GET
+returns: message
 ---------------------------------------
 /view/{id}
 GET

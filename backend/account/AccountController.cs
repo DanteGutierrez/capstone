@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using StackExchange.Redis;
 
 namespace capstone
 {
@@ -14,17 +15,33 @@ namespace capstone
         {
             private readonly IMongoDatabase _db;
             private readonly IMongoCollection<Account> accounts;
+
+            private readonly IDatabase authorization;
             public AccountController(IConfiguration config)
             {
                 var client = new MongoClient(config.GetConnectionString("mongo"));
                 _db = client.GetDatabase("capstone");
                 accounts = _db.GetCollection <Account> ("accounts");
+
+                var _redis = ConnectionMultiplexer.Connect(config.GetConnectionString("redis"));
+                authorization = _redis.GetDatabase();
+            }
+            private async Task<string> GenerateAuthorization(string id) {
+                string auth = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
+
+                await authorization.StringGetSetAsync(id, auth);
+
+                return await authorization.StringGetAsync(id);
             }
             private async Task<bool> CheckAuthorization(string? userid, string? auth)
             {
                 if (string.IsNullOrEmpty(auth) || string.IsNullOrEmpty(userid)) return false;
-                return true;
-                //TODO redis
+
+                string value = authorization.StringGet(userid);
+
+                if(string.IsNullOrEmpty(value)) return false;
+
+                return value.Equals(auth);
             }
             private async Task<bool> CheckAdmin(string? Id) {
                 if(string.IsNullOrEmpty(Id)) return false;
@@ -84,11 +101,11 @@ namespace capstone
                 return Results.BadRequest("An account with this email already exists");
             }
             [HttpPut]
-            [Route("update/{userid}")]
+            [Route("update/{id}")]
             public async Task<IResult> UpdateAccount(Account account, string? auth, string id) {
-                if(!await CheckAuthorization(id, auth)) return Results.BadRequest("You have invalid authorization");
-
                 if(string.IsNullOrEmpty(id)) return Results.BadRequest("The user id cannot be empty");
+
+                if(!await CheckAuthorization(id, auth)) return Results.BadRequest("You have invalid authorization");
 
                 if(!accounts.Find(user => user._id == ObjectId.Parse(id)).ToList().Any()) return Results.BadRequest("The id provided was invalid");
                 
@@ -110,7 +127,16 @@ namespace capstone
                 {
                     return Results.BadRequest("Login attempt failed");
                 }
-                return Results.Ok( user._id.ToString()); //TODO redis
+
+                string auth = await GenerateAuthorization(user._id.ToString());
+
+                return Results.Ok(new LoginSuccess(user._id.ToString(), auth, user.Admin)); 
+            }
+            [HttpGet]
+            [Route("logout/{id}")]
+            public async Task<IResult> Logout(string id) {
+                await authorization.KeyDeleteAsync(id);
+                return Results.Ok("Logged Out");
             }
             [HttpGet]
             [Route("view/{id}")]

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using StackExchange.Redis;
 
 namespace capstone
 {
@@ -17,6 +18,7 @@ namespace capstone
             private readonly IMongoCollection<Course> courses;
             
             private readonly IMongoCollection<Account> accounts;
+            private readonly IDatabase authorization;
 
             public ScheduleController(IConfiguration config)
             {
@@ -25,6 +27,9 @@ namespace capstone
                 schedules = _db.GetCollection <Schedule> ("schedules");
                 courses = _db.GetCollection <Course> ("courses");
                 accounts = _db.GetCollection <Account> ("accounts");
+
+                var _redis = ConnectionMultiplexer.Connect(config.GetConnectionString("redis"));
+                authorization = _redis.GetDatabase();
             }
             public async Task<bool> VerifyAccount(string? Id) {
                 if(string.IsNullOrEmpty(Id)) return false;
@@ -36,18 +41,22 @@ namespace capstone
 
                 return courses.Find(course => course._id == ObjectId.Parse(Id)).ToList().Any();
             }
-            private async Task<bool> CheckAuthorization(string? auth)
+            private async Task<bool> CheckAuthorization(string? userid, string? auth)
             {
-                if (string.IsNullOrEmpty(auth)) return false;
-                return true;
-                //TODO redis
+                if (string.IsNullOrEmpty(auth) || string.IsNullOrEmpty(userid)) return false;
+
+                string value = authorization.StringGet(userid);
+
+                if (string.IsNullOrEmpty(value)) return false;
+
+                return value.Equals(auth);
             }
             [HttpPost]
             [Route("create")]
             public async Task<IResult> CreateSchedule(Schedule schedule, string? auth) {
-                if(!await CheckAuthorization(auth)) return Results.BadRequest("Invalid authorization");
                 if(!await VerifyAccount(schedule.AccountId)) return Results.BadRequest("Invalide Coach");
                 if(!await VerifyCourse(schedule.CourseId)) return Results.BadRequest("Invalid Course");
+                if(!await CheckAuthorization(schedule.AccountId, auth)) return Results.BadRequest("Invalid authorization");
 
                 if(schedule.Duration <= 0) return Results.BadRequest("Invalid Duration");
                 if(schedule.StartTime <= 0 || schedule.StartTime + schedule.Duration > 1440) return Results.BadRequest("Invalid Start Time");
@@ -59,8 +68,8 @@ namespace capstone
             }
             [HttpDelete]
             [Route("delete/{id}")]
-            public async Task<IResult> DeleteSchedule(string id, string? auth) {
-                if (!await CheckAuthorization(auth)) return Results.BadRequest("Invalid authorization");
+            public async Task<IResult> DeleteSchedule(string? userid, string id, string? auth) {
+                if (!await CheckAuthorization(userid, auth)) return Results.BadRequest("Invalid authorization");
 
                 if(!schedules.Find(schedule => schedule._id == ObjectId.Parse(id)).ToList().Any()) return Results.BadRequest("Schedule id is invalid");
 
