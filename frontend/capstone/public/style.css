@@ -73,7 +73,9 @@ body {
 .button:hover {
     cursor: pointer;
 }
+
 .miniButton {
     height: 20px;
     width: 20px;
 }
+

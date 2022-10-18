@@ -1,0 +1,51 @@
+.dropdown {
+    display: block;
+    position: absolute;
+    background-color: #EEE;
+    overflow-y: scroll;
+    max-height: 100px;
+    border-radius:5px;
+    width: fit-content;
+}
+.selection {
+    overflow-x: scroll;
+    max-width: 250px;
+}
+.option:hover {
+    cursor: pointer;
+    background-color: #AAA;
+}
+.selected {
+    background-color: #AAA;
+    border-radius: 20px;
+}
+.selected:hover {
+    cursor: pointer;
+}
+.color {
+    height: 10px;
+    width: 10px;
+    background-color: yellowgreen;
+}
+.close {
+    border-radius:50%;
+    background-color: white;
+    height: 12px;
+    width: 12px;
+}
+.dropdown::-webkit-scrollbar {
+    width: 12px;
+}
+
+.dropdown::-webkit-scrollbar-thumb {
+    background-color: #333;
+    border-radius: 20px;
+}
+.selection::-webkit-scrollbar {
+    height: 6px;
+}
+
+.selection::-webkit-scrollbar-thumb {
+    background-color: #333;
+    border-radius: 20px;
+}
