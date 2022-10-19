@@ -1,0 +1,72 @@
+.times {
+    width:120px;
+    height: 20px;
+    text-align: left;
+}
+.row {
+    height:100px;
+}
+.name {
+    width: 120px;
+}
+.other {
+    background-color: pink;
+    position: relative;
+}
+.other:hover {
+    cursor:pointer;
+}
+.info {
+    display:none;
+}
+.other:hover > .info {
+    background-color:beige;
+    display:block;
+    position: absolute;
+    width:10vw;
+    height:fit-content;
+    left:20px;
+    top:20px;
+}
+.box {
+    position: absolute;
+    z-index: -1;
+}
+.box-bind {
+    position: relative;
+}
+.lines {
+    width: 1px;
+    background-color: black;
+}
+.bars {
+    width: 3000px;
+    height: 2px;
+    background-color:black;
+}
+.spacer {
+    width:119px;
+}
+#Frame {
+    overflow-y: overlay;
+}
+#Frame::-webkit-scrollbar-thumb {
+    background-color: #333;
+    border-radius: 20px;
+}
+
+#Frame::-webkit-scrollbar {
+    width: 6px;
+}
+#Calendar {
+    overflow-x:overlay;
+    overflow-y:overlay;
+}
+#Calendar::-webkit-scrollbar-thumb {
+    background-color: #333;
+    border-radius: 20px;
+}
+
+#Calendar::-webkit-scrollbar {
+    height: 6px;
+}

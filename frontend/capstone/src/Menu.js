@@ -6,7 +6,7 @@ class Menu extends React.Component {
         super(props);
         this.state = {
             label: this.props.label,
-            unselected: this.props.options,
+            unselected: {... this.props.options },
             selected: [],
             open: false
         };
@@ -25,7 +25,7 @@ class Menu extends React.Component {
         this.setState({
             unselected: unselectedCopy,
             selected: selectedCopy
-        });
+        }, this.props.update(this.state.selected));
     }
     Select(name) {
         let unselectedCopy = this.state.unselected.slice();
@@ -35,23 +35,23 @@ class Menu extends React.Component {
         this.setState({
             unselected: unselectedCopy,
             selected: selectedCopy
-        });
+        }, this.props.update(this.state.selected));
     }
     render() {
         return (
-            <div class="container vertical justify-start item max-height max-width">
-                <div className="container horizontal align-start item">
+            <div className="container vertical justify-start item max-height max-width">
+                <div className="container horizontal align-start item" key="test">
                     <div className="item">{this.state.label}</div>
                     <div className="container vertical item">
                         {this.state.open
                             ? <div>
                                 <div className="button" onClick={evt => this.Close()}>Close</div>
-                                <div class="dropdown">
+                                <div className="dropdown">
                                 {this.state.unselected.map(option => {
                                     return (
                                         <div className="option container horizontal justify-around max-width" onClick={evt => { this.Select(option); this.Close() }}>
-                                            <div className="item">{option}</div>
-                                            <div className="color item"></div>
+                                            <div className="item" key={option}>{option}</div>
+                                            {/* <div className="color item"></div> */}
                                         </div>
                                     )
                                 })}
@@ -65,8 +65,8 @@ class Menu extends React.Component {
                     {this.state.selected.map(option => {
                         return (
                             <div className="selected container horizontal item" onClick={evt => this.UnSelect(option)}>
-                                <div className="item">{option}</div>
-                                <div className="close"></div>
+                                <div className="item" key={option}>{option}</div>
+                                {/* <div className="close"></div> */}
                             </div>
                         )
                     })}

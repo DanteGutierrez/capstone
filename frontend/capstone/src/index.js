@@ -7,9 +7,18 @@ import Navigation from './Navigation';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const URL = 'http://localhost:8888/';
-const schedule = URL + 'schedule/';
-const course = URL + 'course/';
-const account = URL + 'account/';
+
+const APIS = {
+  schedule: URL + 'schedule/',
+  course: URL + 'course/',
+  account: URL + 'account/'
+};
+
+const getID = (id) => {
+  let PID = id.pid;
+  if (PID < 0) PID += 65536;
+  return id.timestamp.toString(16) + id.machine.toString(16) + PID.toString(16) + id.increment.toString(16);
+};
 
 class Application extends React.Component {
   constructor(props) {
@@ -30,7 +39,7 @@ class Application extends React.Component {
   onNavButtonClicked = (page) => {
     switch (page) {
       case "home":
-        this.setState({ page: <HomePage /> });
+        this.setState({ page: <HomePage APIS={APIS} getID={getID} /> });
         break;
       case "login":
         break;
@@ -58,8 +67,8 @@ class Application extends React.Component {
   };
   render() {
     return (
-      <div className="container vertical max-width max-height">
-        <Navigation Auth={this.state.login.authorized} Admin={this.state.login.admin} NavClick={this.onNavButtonClicked} />
+      <div className="container vertical justify-start align-start max-width max-height">
+        <Navigation Auth={this.state.login.authorized} Admin={this.state.login.admin} NavClick={this.onNavButtonClicked}/>
         {this.state.page}
       </div>
     );
