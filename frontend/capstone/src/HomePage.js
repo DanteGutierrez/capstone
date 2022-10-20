@@ -59,26 +59,26 @@ class Frame extends React.Component {
             coaches: [],
             courses: [],
             calendarData: [
-                { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, {starttime:725, duration: 10}] },
-                { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
-                { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
-                { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
-                { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
-                { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
-                { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
-                { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
-                { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
-                { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
-                { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
-                { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
-                { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
-                { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
-                { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
-                { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
-                { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
-                { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
-                { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
-                { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
+                // { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, {starttime:725, duration: 10}] },
+                // { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
+                // { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
+                // { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
+                // { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
+                // { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
+                // { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
+                // { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
+                // { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
+                // { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
+                // { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
+                // { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
+                // { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
+                // { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
+                // { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
+                // { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
+                // { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
+                // { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
+                // { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
+                // { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
             ]
         };
     }
@@ -134,7 +134,7 @@ class Frame extends React.Component {
             };
             let schedule = [];
             this.state.schedules.map(entry => {
-                if (entry.accountid === coach.id) schedule.push(entry);
+                if (entry.accountId === coach.id) schedule.push(entry);
             });
             datum.schedule = schedule;
             list.push(datum);
@@ -142,25 +142,23 @@ class Frame extends React.Component {
         this.setState({ calendarData: list });
     }
     LoadCoaches = async () => {
-        // let coaches = [];
-        // this.state.schedules.map(async (schedule) => {
-        //     if (coaches.indexOf(schedule.AccountId) !== -1) {
-        //         await axios.get(this.props.APIS.schedule + 'search/' + schedule.AccountId)
-        //             .then(response => {
-        //                 if (response.data.statusCode !== 200) {
-        //                     console.log(response.data.value)
-        //                 }
-        //                 else {
-        //                     let coach = response.data.value;
-
-        //                     coach.id = schedule.AccountId;
-
-        //                     coaches.push(coach);
-        //                 }
-        //             });
-        //     }
-        // });
-        // this.setState({ coaches: coaches });
+        let coachIds = {
+            accounts: []
+        };
+        this.state.schedules.map(schedule => {
+            if (coachIds.accounts.indexOf(schedule.accountId) == -1) {
+                coachIds.accounts.push(schedule.accountId);
+            }
+        });
+        axios.post(this.props.APIS.account + 'batch', coachIds)
+            .then(response => {
+                if (response.data.statusCode !== 200) {
+                    console.log(response.data.value);
+                }
+                else {
+                    this.setState({ coaches: response.data.value }, async () => this.CalendarData());
+                }
+            });
     }
     LoadSchedules = async () => {
         axios.post(this.props.APIS.schedule + 'find', this.state.search,)
@@ -186,9 +184,8 @@ class Frame extends React.Component {
         this.state.coaches.map(coach => {
             coaches.push(coach.preferredname);
         });
-        //console.log(this.state.calendarData)
         return (
-            <div className="container vertical max-height max-width wireframe">
+            <div id="Home" className="container vertical justify-start max-width wireframe">
                 <div className="container horizontal max-width wireframe">
                     <DateSelection />
                     <SearchOptions Courses={courses} Coaches={coaches} UpdateCoaches={this.UpdateCoaches} UpdateCourses={this.UpdateCourses} key={this.state.courses + this.state.coaches} />

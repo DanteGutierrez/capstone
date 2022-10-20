@@ -167,7 +167,14 @@ returns: message
 ---------------------------------------
 /view/{id}
 GET
-returns: limited account view (preferred name, assigned course, and preferred courses)
+returns: limited account view (id, name, assigned course, and preferred courses)
+-------------------------------------
+/batch
+POST:
+{
+  "Accounts":[]
+}
+returns: list of limited account views (id, name, assigned course, and preferred courses)
 ==================================================================================================
 Schedule API: 
 

@@ -148,7 +148,23 @@ namespace capstone
                 catch(Exception _i) {
                     return Results.BadRequest("There was no account");
                 }
-                return Results.Ok(new LimitedAccount(account.PreferredName, account.AssignedCourse, account.PreferredCourses));
+                return Results.Ok(new LimitedAccount(account._id.ToString(), (string.IsNullOrEmpty( account.PreferredName) ? account.FirstName : account.PreferredName) + " " + account.LastName, account.AssignedCourse, account.PreferredCourses));
+            }
+            [HttpPost]
+            [Route("batch")]
+            public async Task<IResult> BatchAccounts(ListAccounts list) {
+                List<LimitedAccount> result = new();
+                foreach(string id in list.Accounts) {
+                    Account account;
+                    try {
+                        account = accounts.Find(user => user._id == ObjectId.Parse(id)).ToList().First();
+                    }
+                    catch(Exception _i) {
+                        break;
+                    }
+                    result.Add(new LimitedAccount(account._id.ToString(), (string.IsNullOrEmpty(account.PreferredName) ? account.FirstName : account.PreferredName) + " " + account.LastName, account.AssignedCourse, account.PreferredCourses));
+                }
+                return Results.Ok(result);
             }
         }
     }

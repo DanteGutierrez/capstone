@@ -67,7 +67,7 @@ class Application extends React.Component {
   };
   render() {
     return (
-      <div id="Main" className="container vertical justify-start align-start max-width max-height">
+      <div id="Main" className="container vertical justify-start max-width max-height">
         <Navigation Auth={this.state.login.authorized} Admin={this.state.login.admin} NavClick={this.onNavButtonClicked}/>
         {this.state.page}
       </div>

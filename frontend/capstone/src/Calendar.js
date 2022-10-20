@@ -13,32 +13,25 @@ const TimeConvert = (start) => {
 }
 class Frame extends React.Component {
     GenerateRow(data) {
-        let tracker = 0;
-        let row = ``;
+        let row = '';
         data.schedule.map(entry => {
-            if (entry.starttime > tracker) {
-                row += `<div class="row block" style="width: ${((entry.starttime - tracker) / 60) * width}px;"></div>`;
-            }
-            row += `
-            <div class="row other" style="width: ${(entry.duration / 60) * width}px;"><div class="info container vertical wireframe"><div class="item wireframe">${data.coach.preferredname}</div><div class="item wireframe">${TimeConvert(entry.starttime) + " - " + TimeConvert(entry.starttime + entry.duration)}</div></div></div>`;
-            tracker = entry.starttime + entry.duration;
+            row += `<div class="row other" style="width: ${(entry.duration / 60) * width}px; left: ${(entry.startTime / 60) * width}px;"><div class="info container vertical wireframe"><div class="item wireframe">${data.coach.name}</div><div class="item wireframe">${TimeConvert(entry.startTime) + " - " + TimeConvert(entry.startTime + entry.duration)}</div></div></div>`
         });
-        row += `<div class="row block" style="width: ${((((StartingPoint + 13) * 60) - tracker)/60) * width}px;"></div>`;
         return (row);
     }
     render() {
         return (
-            <div id="Frame" className="container horizontal justify-start align-start max-width wireframe">
-                <div className="test">
-                    <div id="Names" className="item wireframe">
+            <div id="Frame" className="max-height max-width wireframe">
+                <div className="container horizontal">
+                    <div id="Names" className="wireframe">
                         <div className="column title">Coaches</div>
                         {this.props.data.map(data => {
                             return (
-                                <div className="column row mini-margin wireframe">{data.coach.preferredname}</div>
+                                <div className="column row mini-margin wireframe">{data.coach.name}</div>
                             )
                         })}
                     </div>
-                    <div className='container vertical justify-start align-start item box-bind wireframe'>
+                    <div className='container vertical justify-start align-start box-bind wireframe'>
                         <div className="container horizontal justify-start align-start box max-height">
                                 {Times.slice(0,Times.length - 1).map(value => {
                                 return (
@@ -60,7 +53,7 @@ class Frame extends React.Component {
                         {this.props.data.map(data => {
                             return (
                                 <>
-                                    <div className="container horizontal" dangerouslySetInnerHTML={{ __html: this.GenerateRow(data) }}></div>
+                                    <div className="container horizontal time-row row" dangerouslySetInnerHTML={{ __html: this.GenerateRow(data) }}></div>
                                     <div className="bars"></div>
                                 </>
                                 )

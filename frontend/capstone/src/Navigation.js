@@ -1,4 +1,5 @@
 import React from 'react';
+import './Navigation.css';
 
 class NavButton extends React.Component {
     render() {
@@ -20,7 +21,7 @@ class Frame extends React.Component {
     };
     render() {
         return (
-            <nav className="container horizontal max-width item top-stick">
+            <nav className="container horizontal max-width">
                 <NavButton name="Home" nav="/" Click={evt => this.props.NavClick("home")} />
                 {this.state.Admin
                     ? <NavButton name="Tutors" nav="/tutors" Click={evt => this.props.NavClick("tutors")} />

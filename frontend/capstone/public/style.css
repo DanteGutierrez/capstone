@@ -5,6 +5,10 @@ html {
     padding: 0px;
     width: 100vw;
     height: 100vh;
+    min-width:1000px;
+    min-height:400px;
+    /* overflow-x: hidden;
+    overflow-y: hidden; */
 }
 
 body {
@@ -77,15 +81,5 @@ body {
 .miniButton {
     height: 20px;
     width: 20px;
-}
-.top-stick {
-    display: inline-flex;
-    top: 0;
-    position: sticky;
-}
-/* top 26px; */
-
-#Main {
-    display:inline-flex;
 }
 

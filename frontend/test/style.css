@@ -1,0 +1,15 @@
+.container {
+    border: 2px solid red;
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+    width: 500px;
+}
+.child {
+    border: 3px solid green;
+    height: 100%;
+}
+.child1 {
+    border: 3px solid green;
+    height: 20px;
+}
