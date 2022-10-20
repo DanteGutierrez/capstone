@@ -14,7 +14,7 @@ const TimeConvert = (start) => {
 class Frame extends React.Component {
     GenerateRow(data) {
         let tracker = 0;
-        let row = `<div class="row name">${data.coach.preferredname}</div>`;
+        let row = ``;
         data.schedule.map(entry => {
             if (entry.starttime > tracker) {
                 row += `<div class="row block" style="width: ${((entry.starttime - tracker) / 60) * width}px;"></div>`;
@@ -28,45 +28,44 @@ class Frame extends React.Component {
     }
     render() {
         return (
-            <div id="Frame" className="container horizontal max-width max-height justify-start align-start wireframe">
-                {/* <div className="container vertical justify-start coaches item wireframe">
-                    <div className="times max-width">Coaches</div>
-                    {this.props.data.map(data => {
-                        return (
-                            <div className="row spacer item">{data.coach.preferredname}</div>
-                        )
-                    })}
-                </div> */}
-                <div id="Calendar" className="container vertical box-bind justify-start align-start item wireframe">
-                    <div className="container horizontal justify-start align-start box max-height">
-                        
-                        {Times.map(value => {
+            <div id="Frame" className="container horizontal justify-start align-start max-width wireframe">
+                <div className="test">
+                    <div id="Names" className="item wireframe">
+                        <div className="column title">Coaches</div>
+                        {this.props.data.map(data => {
+                            return (
+                                <div className="column row mini-margin wireframe">{data.coach.preferredname}</div>
+                            )
+                        })}
+                    </div>
+                    <div className='container vertical justify-start align-start item box-bind wireframe'>
+                        <div className="container horizontal justify-start align-start box max-height">
+                                {Times.slice(0,Times.length - 1).map(value => {
+                                return (
+                                    <>
+                                        <div className="spacer"></div>
+                                        <div className="lines max-height"></div>
+                                    </>
+                                )
+                            })}
+                            <div className="spacer"></div>
+                        </div>
+                        <div className="container horizontal justify-start align-start title">
+                            {Times.map(value => {
+                                return (
+                                    <div className="column times">{value}</div>
+                                )
+                            })}
+                        </div>
+                        {this.props.data.map(data => {
                             return (
                                 <>
-                                    <div className="spacer"></div>
-                                    <div className="lines max-height"></div>
+                                    <div className="container horizontal" dangerouslySetInnerHTML={{ __html: this.GenerateRow(data) }}></div>
+                                    <div className="bars"></div>
                                 </>
-                            )
-                        })}
-                        <div className="spacer"></div>
+                                )
+                            })}
                     </div>
-                    <div className="container horizontal justify-start align-start">
-                        <div className="times max-width">Coaches</div>
-                        {Times.map(value => {
-                            return (
-                                <div className="times">{value}</div>
-                            )
-                        })}
-                    </div>
-                    <div className="bars"></div>
-                    {this.props.data.map(data => {
-                        return (
-                            <>
-                                <div className="container horizontal" dangerouslySetInnerHTML={{ __html: this.GenerateRow(data) }}></div>
-                                <div className="bars"></div>
-                            </>
-                            )
-                        })}
                 </div>
             </div>
         )

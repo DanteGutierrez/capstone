@@ -189,7 +189,7 @@ class Frame extends React.Component {
         //console.log(this.state.calendarData)
         return (
             <div className="container vertical max-height max-width wireframe">
-                <div className="container horizontal max-width item wireframe">
+                <div className="container horizontal max-width wireframe">
                     <DateSelection />
                     <SearchOptions Courses={courses} Coaches={coaches} UpdateCoaches={this.UpdateCoaches} UpdateCourses={this.UpdateCourses} key={this.state.courses + this.state.coaches} />
                 </div>

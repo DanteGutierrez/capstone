@@ -1,12 +1,22 @@
 .times {
-    width:120px;
-    height: 20px;
     text-align: left;
+}
+.title {
+    height: 20px;
+    box-sizing: border-box;
+    background-color: white;
+    border-bottom: 2px solid black;
+    position: sticky;
+    top: 26px;
+    z-index: 2;
 }
 .row {
     height:100px;
 }
-.name {
+.mini-margin {
+    margin: 2px;
+}
+.column {
     width: 120px;
 }
 .other {
@@ -40,7 +50,7 @@
     background-color: black;
 }
 .bars {
-    width: 3000px;
+    width: 2880px;
     height: 2px;
     background-color:black;
 }
@@ -48,7 +58,10 @@
     width:119px;
 }
 #Frame {
-    overflow-y: overlay;
+    height: 80%;
+    max-height: 100%;
+    margin: 0px;
+    display: inline-flex;
 }
 #Frame::-webkit-scrollbar-thumb {
     background-color: #333;
@@ -57,16 +70,16 @@
 
 #Frame::-webkit-scrollbar {
     width: 6px;
-}
-#Calendar {
-    overflow-x:overlay;
-    overflow-y:overlay;
-}
-#Calendar::-webkit-scrollbar-thumb {
-    background-color: #333;
-    border-radius: 20px;
-}
-
-#Calendar::-webkit-scrollbar {
     height: 6px;
+}
+#Names {
+    position: sticky;
+    left: 0;
+    display: inline-block;
+    background-color:white;
+    border-right: 2px solid black;
+    z-index:3;
+}
+.test {
+    display:inline-flex;
 }
