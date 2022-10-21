@@ -5,6 +5,7 @@ import axios from 'axios';
 import HomePage from './HomePage';
 import Navigation from './Navigation';
 import Login from './Login';
+import TutorPage from './TutorPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -38,6 +39,7 @@ class Application extends React.Component {
       },
       page: "",
       error: "",
+      courses: [],
     };
   };
   updateCredentials  = (event) => {
@@ -84,6 +86,38 @@ class Application extends React.Component {
         });
     }
   }
+  onTutorNavigate = (id) => {
+    axios.get(APIS.account + "view/" + id)
+      .then(response => {
+        if (response.data.statusCode !== 200) {
+          console.log(response.data.value);
+        }
+        else {
+          this.setState({ page: <TutorPage APIS={APIS} Login={this.state.login} Tutor={response.data.value} Courses={this.state.courses} /> });
+        }
+      })
+  };
+  GetAllCourses = async () => {
+    axios.get(APIS.course + "view")
+      .then(response => {
+        if (response.data.statusCode !== 200) {
+          console.log(response.data.statusCode);
+        }
+        else {
+          let courseList = [];
+          response.data.value.map(course => {
+            let clone = {
+              id: "",
+              code: course.code,
+              name: course.name
+            };
+            clone.id = getID(course._id);
+            courseList.push(clone);
+          })
+          this.setState({ courses: courseList });
+        }
+    })
+  }
   onNavButtonClicked = (page) => {
     switch (page) {
       case "home":
@@ -116,11 +150,12 @@ class Application extends React.Component {
   };
   componentDidMount() {
     this.onNavButtonClicked("home");
+    this.GetAllCourses();
   };
   render() {
     return (
       <div id="Main" className="container vertical justify-start max-width max-height">
-        <Navigation Auth={this.state.login.authorized} Admin={this.state.login.admin} NavClick={this.onNavButtonClicked}/>
+        <Navigation Login={this.state.login} NavClick={this.onNavButtonClicked} TutorNavigation={this.onTutorNavigate} />
         {this.state.page}
       </div>
     );

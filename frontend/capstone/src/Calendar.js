@@ -11,11 +11,11 @@ const TimeConvert = (start) => {
     value += `${time % 12 == 0 ? 12 : time % 12}:${minutes < 10 ? "0" + minutes : minutes} ${time > 11 ? "pm" : "am"}`;
     return value;
 }
-class Frame extends React.Component {
+class CalendarFrame extends React.Component {
     GenerateRow(data) {
         let row = '';
         data.schedule.map(entry => {
-            row += `<div class="row other" style="width: ${(entry.duration / 60) * width}px; left: ${(entry.startTime / 60) * width}px;"><div class="info container vertical wireframe"><div class="item wireframe">${data.coach.name}</div><div class="item wireframe">${TimeConvert(entry.startTime) + " - " + TimeConvert(entry.startTime + entry.duration)}</div></div></div>`
+            row += `<div key=${entry} class="row other" style="width: ${(entry.duration / 60) * width}px; left: ${(entry.startTime / 60) * width}px;"><div class="info container vertical wireframe"><div class="item wireframe">${data.coach.name}</div><div class="item wireframe">${TimeConvert(entry.startTime) + " - " + TimeConvert(entry.startTime + entry.duration)}</div></div></div>`
         });
         return (row);
     }
@@ -33,11 +33,11 @@ class Frame extends React.Component {
                     </div>
                     <div className='container vertical justify-start align-start box-bind wireframe'>
                         <div className="container horizontal justify-start align-start box max-height">
-                                {Times.slice(0,Times.length - 1).map(value => {
+                                {Times.slice(0,Times.length - 1).map((value, i) => {
                                 return (
                                     <>
-                                        <div className="spacer"></div>
-                                        <div className="lines max-height"></div>
+                                        <div className="spacer" key={(i + 1) * -1}></div>
+                                        <div className="lines max-height" key={i}></div>
                                     </>
                                 )
                             })}
@@ -53,8 +53,8 @@ class Frame extends React.Component {
                         {this.props.data.map(data => {
                             return (
                                 <>
-                                    <div className="container horizontal time-row row" dangerouslySetInnerHTML={{ __html: this.GenerateRow(data) }}></div>
-                                    <div className="bars"></div>
+                                    <div className="container horizontal time-row row" key={data} dangerouslySetInnerHTML={{ __html: this.GenerateRow(data) }}></div>
+                                    <div className="bars" key={data}></div>
                                 </>
                                 )
                             })}
@@ -64,4 +64,4 @@ class Frame extends React.Component {
         )
     }
 }
-export default Frame;
+export default CalendarFrame;

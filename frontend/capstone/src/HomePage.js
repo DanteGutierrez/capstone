@@ -42,7 +42,7 @@ class DateSelection extends React.Component {
         )
     }
 }
-class Frame extends React.Component {
+class HomeFrame extends React.Component {
     constructor(props) {
         super(props);
         let now = new Date();
@@ -168,13 +168,13 @@ class Frame extends React.Component {
         return (
             <div id="Home" className="container vertical justify-start max-width wireframe">
                 <div className="container horizontal max-width wireframe">
-                    <DateSelection />
+                    <DateSelection key={"1"} />
                     <SearchOptions Courses={courses} Coaches={coaches} UpdateCoaches={this.UpdateCoaches} UpdateCourses={this.UpdateCourses} key={this.state.courses + this.state.coaches} />
                 </div>
-                <Calendar data={this.state.calendarData} key={this.state.calendarData} />
+                <Calendar data={this.state.calendarData} key={this.state.calendarData}/>
             </div>
         )
     }
 }
 
-export default Frame;
+export default HomeFrame;

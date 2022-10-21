@@ -11,17 +11,20 @@ class NavButton extends React.Component {
     };
 };
 
-class Frame extends React.Component {
+class NavigationFrame extends React.Component {
     render() {
         return (
             <nav className="container horizontal max-width">
                 <NavButton name="Home" nav="/" Click={evt => this.props.NavClick("home")} />
-                {this.props.Admin
+                {this.props.Login.admin
                     ? <NavButton name="Tutors" nav="/tutors" Click={evt => this.props.NavClick("tutors")} />
                     : <></>
                 }
-                {this.props.Auth != ""
-                    ? <NavButton name="Logout" nav="/logout" Click={evt => this.props.NavClick("logout")} />
+                {this.props.Login.authorized != ""
+                    ? <>
+                        <NavButton name="My Page" nav="/tutor" Click={evt => this.props.TutorNavigation(this.props.Login.id)}/>
+                        <NavButton name="Logout" nav="/logout" Click={evt => this.props.NavClick("logout")} />
+                      </>
                     : <NavButton name="Login" nav="/login" Click={evt => this.props.NavClick("login")} />
                 }
             </nav>
@@ -29,4 +32,4 @@ class Frame extends React.Component {
     }
 }
 
-export default Frame;
+export default NavigationFrame;

@@ -1,0 +1,13 @@
+#TutorName {
+    font-size: 32pt;
+}
+#TutorEmail {
+    font-size: 28pt;
+}
+
+.course {
+    background-color: pink;
+}
+.preferred {
+    flex-wrap:wrap;
+}
