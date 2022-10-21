@@ -27,7 +27,7 @@ class Frame extends React.Component {
                         <div className="column title">Coaches</div>
                         {this.props.data.map(data => {
                             return (
-                                <div className="column row mini-margin wireframe">{data.coach.name}</div>
+                                <div className="column row mini-margin wireframe" key={data.coach.name}>{data.coach.name}</div>
                             )
                         })}
                     </div>
@@ -46,7 +46,7 @@ class Frame extends React.Component {
                         <div className="container horizontal justify-start align-start title">
                             {Times.map(value => {
                                 return (
-                                    <div className="column times">{value}</div>
+                                    <div className="column times" key={value}>{value}</div>
                                 )
                             })}
                         </div>

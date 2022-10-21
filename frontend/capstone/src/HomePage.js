@@ -59,26 +59,7 @@ class Frame extends React.Component {
             coaches: [],
             courses: [],
             calendarData: [
-                // { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, {starttime:725, duration: 10}] },
-                // { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
-                // { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
-                // { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
-                // { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
-                // { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
-                // { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
-                // { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
-                // { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
-                // { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
-                // { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
-                // { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
-                // { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
-                // { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
-                // { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
-                // { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
-                // { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
-                // { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
-                // { coach: { preferredname: "Dante Gutierrez" }, schedule: [{ starttime: 540, duration: 120 }, { starttime: 725, duration: 10 }] },
-                // { coach: { preferredname: "Chris Stanley" }, schedule: [{ starttime: 627, duration: 19 }, { starttime: 902, duration: 178 }] },
+                
             ]
         };
     }

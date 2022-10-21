@@ -6,6 +6,7 @@
     max-height: 100px;
     border-radius:5px;
     width: fit-content;
+    z-index: 5;
 }
 .selection {
     overflow-x: scroll;

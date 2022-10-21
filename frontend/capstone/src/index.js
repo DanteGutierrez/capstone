@@ -1,8 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
+import axios from 'axios';
 import HomePage from './HomePage';
 import Navigation from './Navigation';
+import Login from './Login';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -25,38 +27,88 @@ class Application extends React.Component {
     super(props);
     this.state = {
       login: {
-        authorized: false,
+        authorized: "",
         admin: false,
         id: "",
-        name: "",
         email: "",
-        password: ""
+        password: "",
+        course: "",
+        preferredCourses: [],
+        preferredName: ""
       },
       page: "",
       error: "",
     };
   };
+  updateCredentials  = (event) => {
+    let target = event.target;
+    let loginInfo = this.state.login;
+    switch (target.name) {
+      case "Email":
+        loginInfo.email = target.value;
+        break;
+      case "Password":
+        loginInfo.password = target.value;
+        break;
+      case "Name":
+        loginInfo.name = target.value;
+        break;
+      case "Admin":
+        loginInfo.admin = target.value;
+        break;
+      default:
+        break;
+    }
+    this.setState({ login: loginInfo });
+  }
+  Login = () => {
+    if (this.state.login.email == "" || this.state.login.password == "") {
+      this.setState({ error: "testing" });
+    }
+    else {
+      axios.post(APIS.account + "login", { Email: this.state.login.email, Password: this.state.login.password })
+        .then(response => {
+          if (response.data.statusCode !== 200) {
+            console.log(response.data.value);
+            this.setState({ error: response.data.value });
+          }
+          else {
+            let loginInfo = this.state.login;
+            loginInfo.email = "";
+            loginInfo.password = "";
+            loginInfo.admin = response.data.value.admin;
+            loginInfo.id = response.data.value.id;
+            loginInfo.authorized = response.data.value.auth;
+            this.setState({ login: loginInfo }, this.onNavButtonClicked('home'));
+          }
+        });
+    }
+  }
   onNavButtonClicked = (page) => {
     switch (page) {
       case "home":
         this.setState({ page: <HomePage APIS={APIS} getID={getID} /> });
         break;
       case "login":
+        this.setState({ page: <Login UpdateCredentials={this.updateCredentials} Login={this.Login} Error={this.state.error} /> });
         break;
       case "tutors":
         break;
       case "logout":
         this.setState({
           login: {
-            authorized: false,
+            authorized: "",
             admin: false,
-            email: "",
             id: "",
-            username: "",
-            password: ""
+            email: "",
+            password: "",
+            course: "",
+            preferredCourses: [],
+            preferredName: ""
           }
         });
-        this.setState({ page: <HomePage /> });
+        this.setState({ page: <HomePage APIS={APIS} getID={getID} /> });
+        axios.get(APIS.account + `logout/${this.state.login.id}`);
         break;
       default:
         break;

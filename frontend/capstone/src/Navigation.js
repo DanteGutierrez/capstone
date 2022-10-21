@@ -12,22 +12,15 @@ class NavButton extends React.Component {
 };
 
 class Frame extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            Auth: props.Auth,
-            Admin: props.Admin
-        };
-    };
     render() {
         return (
             <nav className="container horizontal max-width">
                 <NavButton name="Home" nav="/" Click={evt => this.props.NavClick("home")} />
-                {this.state.Admin
+                {this.props.Admin
                     ? <NavButton name="Tutors" nav="/tutors" Click={evt => this.props.NavClick("tutors")} />
                     : <></>
                 }
-                {this.state.Auth
+                {this.props.Auth != ""
                     ? <NavButton name="Logout" nav="/logout" Click={evt => this.props.NavClick("logout")} />
                     : <NavButton name="Login" nav="/login" Click={evt => this.props.NavClick("login")} />
                 }

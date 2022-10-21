@@ -6,7 +6,7 @@ class Menu extends React.Component {
         super(props);
         this.state = {
             label: this.props.label,
-            unselected: {... this.props.options },
+            unselected: [... this.props.options],
             selected: [],
             open: false
         };
