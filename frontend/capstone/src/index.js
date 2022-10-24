@@ -23,6 +23,27 @@ const getID = (id) => {
   return id.timestamp.toString(16) + id.machine.toString(16) + PID.toString(16) + id.increment.toString(16);
 };
 
+// const GetAllCourses = async () => {
+//   await axios.get(APIS.course + "view")
+//     .then(response => {
+//       if (response.data.statusCode !== 200) {
+//         console.log(response.data.statusCode);
+//       }
+//       else {
+//         let courseList = [];
+//         response.data.value.map(course => {
+//           let clone = {
+//             id: "",
+//             code: course.code,
+//             name: course.name
+//           };
+//           clone.id = getID(course._id);
+//           courseList.push(clone);
+//         })
+//         return courseList;
+//       }
+//   })
+// }
 class Application extends React.Component {
   constructor(props) {
     super(props);
@@ -93,31 +114,10 @@ class Application extends React.Component {
           console.log(response.data.value);
         }
         else {
-          this.setState({ page: <TutorPage APIS={APIS} Login={this.state.login} Tutor={response.data.value} Courses={this.state.courses} /> });
+          this.setState({ page: <TutorPage APIS={APIS} getID={getID} Login={this.state.login} Tutor={response.data.value} /> });
         }
       })
   };
-  GetAllCourses = async () => {
-    axios.get(APIS.course + "view")
-      .then(response => {
-        if (response.data.statusCode !== 200) {
-          console.log(response.data.statusCode);
-        }
-        else {
-          let courseList = [];
-          response.data.value.map(course => {
-            let clone = {
-              id: "",
-              code: course.code,
-              name: course.name
-            };
-            clone.id = getID(course._id);
-            courseList.push(clone);
-          })
-          this.setState({ courses: courseList });
-        }
-    })
-  }
   onNavButtonClicked = (page) => {
     switch (page) {
       case "home":
@@ -148,9 +148,8 @@ class Application extends React.Component {
         break;
     }
   };
-  componentDidMount() {
+  componentDidMount = async () => {
     this.onNavButtonClicked("home");
-    this.GetAllCourses();
   };
   render() {
     return (

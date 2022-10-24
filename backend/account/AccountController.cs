@@ -30,6 +30,7 @@ namespace capstone
                 string auth = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
 
                 await authorization.StringGetSetAsync(id, auth);
+                await authorization.KeyExpireAsync(id, TimeSpan.FromHours(4));
 
                 return await authorization.StringGetAsync(id);
             }
@@ -148,7 +149,7 @@ namespace capstone
                 catch(Exception _i) {
                     return Results.BadRequest("There was no account");
                 }
-                return Results.Ok(new LimitedAccount(account._id.ToString(), (string.IsNullOrEmpty( account.PreferredName) ? account.FirstName : account.PreferredName) + " " + account.LastName, account.AssignedCourse, account.PreferredCourses));
+                return Results.Ok(new LimitedAccount(account._id.ToString(), account.Email, (string.IsNullOrEmpty( account.PreferredName) ? account.FirstName : account.PreferredName) + " " + account.LastName, account.AssignedCourse, account.PreferredCourses));
             }
             [HttpPost]
             [Route("batch")]
@@ -162,7 +163,7 @@ namespace capstone
                     catch(Exception _i) {
                         break;
                     }
-                    result.Add(new LimitedAccount(account._id.ToString(), (string.IsNullOrEmpty(account.PreferredName) ? account.FirstName : account.PreferredName) + " " + account.LastName, account.AssignedCourse, account.PreferredCourses));
+                    result.Add(new LimitedAccount(account._id.ToString(), account.Email, (string.IsNullOrEmpty(account.PreferredName) ? account.FirstName : account.PreferredName) + " " + account.LastName, account.AssignedCourse, account.PreferredCourses));
                 }
                 return Results.Ok(result);
             }

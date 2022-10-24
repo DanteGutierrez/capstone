@@ -23,7 +23,6 @@
     position: relative;
 }
 .other {
-    background-color: pink;
     position: absolute;
 }
 .other:hover {
@@ -90,3 +89,4 @@
     width: fit-content;
     height: fit-content;
 }
+

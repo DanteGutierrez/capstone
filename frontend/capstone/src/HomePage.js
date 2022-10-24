@@ -58,29 +58,27 @@ class HomeFrame extends React.Component {
             schedules: [],
             coaches: [],
             courses: [],
-            calendarData: [
-                
-            ]
+            calendarData: [ ]
         };
     }
     UpdateTime = (start, end) => {
 
     }
-    UpdateCourses = (courses) => {
-        let list = [];
-        courses.map(course => {
-            let id;
-            this.state.courses.map(c => {
-                if (c.code === course) id = c.id;
-            })
-            list.push(id);
-        });
+    // UpdateCourses = (courses) => {
+    //     let list = [];
+    //     courses.map(course => {
+    //         let id;
+    //         this.state.courses.map(c => {
+    //             if (c.code === course) id = c.id;
+    //         })
+    //         list.push(id);
+    //     });
 
-        let search = this.state.search;
-        search.Courses = list;
+    //     let search = this.state.search;
+    //     search.Courses = list;
 
-        this.setState({ search: search }, async () => this.LoadSchedules());
-    }
+    //     this.setState({ search: search }, async () => this.LoadSchedules());
+    // }
     UpdateCoaches = (coaches) => {
         let list = [];
         coaches.map(coach => {
@@ -96,17 +94,17 @@ class HomeFrame extends React.Component {
 
         this.setState({ search: search }, async () => this.LoadSchedules());
     }
-    LoadCourses = async () => {
-        axios.get(this.props.APIS.course + "view")
-            .then(response => {
-                if (response.data.statusCode !== 200) {
-                    console.log(response.data.value);
-                }
-                else {
-                    this.setState({ courses: response.data.value });
-                }
-            });
-    }
+    // LoadCourses = async () => {
+    //     await axios.get(this.props.APIS.course + "view")
+    //         .then(response => {
+    //             if (response.data.statusCode !== 200) {
+    //                 console.log(response.data.value);
+    //             }
+    //             else {
+    //                 this.setState({ courses: response.data.value });
+    //             }
+    //         });
+    // }
     CalendarData = async () => {
         let list = [];
         this.state.coaches.map(coach => {
@@ -115,7 +113,14 @@ class HomeFrame extends React.Component {
             };
             let schedule = [];
             this.state.schedules.map(entry => {
-                if (entry.accountId === coach.id) schedule.push(entry);
+                if (entry.accountId === coach.id) {
+                    this.state.courses.map(course => {
+                        if (course.id === entry.courseId) {
+                            entry.course = course;
+                        }
+                    })
+                    schedule.push(entry);
+                }
             });
             datum.schedule = schedule;
             list.push(datum);
@@ -152,24 +157,44 @@ class HomeFrame extends React.Component {
                 }
             });
     }
+    GetAllCourses = async () => {
+        await axios.get(this.props.APIS.course + "view")
+            .then(response => {
+                if (response.data.statusCode !== 200) {
+                    console.log(response.data.statusCode);
+                }
+                else {
+                    let courseList = [];
+                    response.data.value.map(course => {
+                        let clone = {
+                            id: "",
+                            code: course.code,
+                            name: course.name
+                        };
+                        clone.id = this.props.getID(course._id);
+                        courseList.push(clone);
+                    })
+                    this.setState({ courses: courseList }, async () => this.LoadSchedules())
+                }
+            })
+    }
     componentDidMount = async () => {
-        await this.LoadSchedules();
-        await this.LoadCourses();
+        await this.GetAllCourses();
     }
     render() {
-        let courses = [];
-        let coaches = [];
-        this.state.courses.map(course => {
-            courses.push(course.code);
-        });
-        this.state.coaches.map(coach => {
-            coaches.push(coach.preferredname);
-        });
+        // let courses = [];
+        // let coaches = [];
+        // this.state.courses.map(course => {
+        //     courses.push(course.code);
+        // });
+        // this.state.coaches.map(coach => {
+        //     coaches.push(coach.preferredname);
+        // });
         return (
-            <div id="Home" className="container vertical justify-start max-width wireframe">
+            <div id="Framing" className="container vertical justify-start max-width wireframe">
                 <div className="container horizontal max-width wireframe">
                     <DateSelection key={"1"} />
-                    <SearchOptions Courses={courses} Coaches={coaches} UpdateCoaches={this.UpdateCoaches} UpdateCourses={this.UpdateCourses} key={this.state.courses + this.state.coaches} />
+                    {/* <SearchOptions Courses={courses} Coaches={coaches} UpdateCoaches={this.UpdateCoaches} UpdateCourses={this.UpdateCourses} key={this.state.courses + this.state.coaches} /> */}
                 </div>
                 <Calendar data={this.state.calendarData} key={this.state.calendarData}/>
             </div>

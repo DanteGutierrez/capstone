@@ -87,3 +87,54 @@ body {
     color: red;
     font-weight: bold;
 }
+
+#Framing {
+    height: calc(100% - 28px);
+}
+
+/* Class Code Colors */
+
+.CSC,
+.DBT {
+    background-color: yellow;
+}
+
+.ENG,
+.FAC,
+.HUM,
+.LIT,
+.LNG,
+.MAT,
+.SSC,
+.NEU {
+    background-color: gold;
+}
+
+.GAT {
+    background-color: yellowgreen;
+}
+
+.ITH,
+.ITS {
+    background-color: lightskyblue;
+}
+
+.MGT,
+.MOA,
+.BIT,
+.BUS,
+.MTM {
+    background-color: plum;
+}
+
+.PRO {
+    background-color: pink;
+}
+
+.SEN {
+    background-color: coral;
+}
+
+.TST {
+    background-color: red;
+}

@@ -4,9 +4,11 @@
 #TutorEmail {
     font-size: 28pt;
 }
-
-.course {
-    background-color: pink;
+#TutoringInformation {
+    height: 80%;
+}
+#NameInformation {
+    height: 20%;
 }
 .preferred {
     flex-wrap:wrap;

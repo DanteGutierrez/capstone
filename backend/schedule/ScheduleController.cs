@@ -61,7 +61,7 @@ namespace capstone
                 if(schedule.Duration <= 0) return Results.BadRequest("Invalid Duration");
                 if(schedule.StartTime <= 0 || schedule.StartTime + schedule.Duration > 1440) return Results.BadRequest("Invalid Start Time");
 
-                if(schedule.Day <= 0 || schedule.Day > (schedule.Year % 4 == 0 && schedule.Year % 100 != 0 ? 366 : 365)) return Results.BadRequest("Invalid Day");
+                if(schedule.Day <= 0 || schedule.Day > (schedule.Year % 4 == 0 && (schedule.Year % 100 != 0 ||schedule.Year % 400 == 0) ? 366 : 365)) return Results.BadRequest("Invalid Day");
 
                 await schedules.InsertOneAsync(schedule);
                 return Results.Ok();

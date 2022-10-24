@@ -15,7 +15,18 @@ class CalendarFrame extends React.Component {
     GenerateRow(data) {
         let row = '';
         data.schedule.map(entry => {
-            row += `<div key=${entry} class="row other" style="width: ${(entry.duration / 60) * width}px; left: ${(entry.startTime / 60) * width}px;"><div class="info container vertical wireframe"><div class="item wireframe">${data.coach.name}</div><div class="item wireframe">${TimeConvert(entry.startTime) + " - " + TimeConvert(entry.startTime + entry.duration)}</div></div></div>`
+            let fullCourseCode = entry.course != undefined ? entry.course.code : "";
+            let fullCourseName = entry.course != undefined ? entry.course.name : "";
+            let courseCode = entry.course != undefined ? entry.course.code.slice(0, 3) : "";
+            row += `
+            <div key=${entry} class="row other ${courseCode}" style="width: ${(entry.duration / 60) * width}px; left: ${(entry.startTime / 60) * width}px;">
+                <div class="info container vertical wireframe">
+                    <div class="item wireframe">${data.coach.name}</div>
+                    <div class="item wireframe">${fullCourseCode}</div>
+                    <div class="item wireframe">${fullCourseName}</div>
+                    <div class="item wireframe">${TimeConvert(entry.startTime) + " - " + TimeConvert(entry.startTime + entry.duration)}</div>
+                </div>
+            </div>`
         });
         return (row);
     }
@@ -36,8 +47,8 @@ class CalendarFrame extends React.Component {
                                 {Times.slice(0,Times.length - 1).map((value, i) => {
                                 return (
                                     <>
-                                        <div className="spacer" key={(i + 1) * -1}></div>
-                                        <div className="lines max-height" key={i}></div>
+                                        <div className="spacer"></div>
+                                        <div className="lines max-height"></div>
                                     </>
                                 )
                             })}
@@ -46,15 +57,15 @@ class CalendarFrame extends React.Component {
                         <div className="container horizontal justify-start align-start title">
                             {Times.map(value => {
                                 return (
-                                    <div className="column times" key={value}>{value}</div>
+                                    <div className="column times">{value}</div>
                                 )
                             })}
                         </div>
                         {this.props.data.map(data => {
                             return (
                                 <>
-                                    <div className="container horizontal time-row row" key={data} dangerouslySetInnerHTML={{ __html: this.GenerateRow(data) }}></div>
-                                    <div className="bars" key={data}></div>
+                                    <div className="container horizontal time-row row" dangerouslySetInnerHTML={{ __html: this.GenerateRow(data) }}></div>
+                                    <div className="bars"></div>
                                 </>
                                 )
                             })}
