@@ -35,7 +35,7 @@ class CalendarFrame extends React.Component {
             <div id="Frame" className="max-height max-width wireframe">
                 <div className="container horizontal">
                     <div id="Names" className="wireframe">
-                        <div className="column title">Coaches</div>
+                        <div className="column title">{this.props.title}</div>
                         {this.props.data.map(data => {
                             return (
                                 <div className="column row mini-margin wireframe" key={data.coach.name}>{data.coach.name}</div>

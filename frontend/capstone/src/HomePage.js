@@ -24,9 +24,9 @@ class DateSelection extends React.Component {
                     <div className="item">Year</div>
                     <div className="item">Week</div>
                     <div className="container horizontal max-width item wireframe">
-                        <div className="item">d</div>
+                        <div className="item button">ᐊ</div>
                         <div className="item">Day</div>
-                        <div className="item">b</div>
+                        <div className="item button">ᐅ</div>
                     </div>
                 </div>
                 <div className="container horizontal max-height align-end item wireframe">
@@ -58,33 +58,43 @@ class HomeFrame extends React.Component {
             schedules: [],
             coaches: [],
             courses: [],
-            calendarData: [ ]
+            calendarData: [],
+            selections: {
+                coaches: [],
+                courses: []
+            }
         };
     }
     UpdateTime = (start, end) => {
 
     }
-    // UpdateCourses = (courses) => {
-    //     let list = [];
-    //     courses.map(course => {
-    //         let id;
-    //         this.state.courses.map(c => {
-    //             if (c.code === course) id = c.id;
-    //         })
-    //         list.push(id);
-    //     });
+    UpdateCourses = (courses) => {
+        let selection = this.state.selections;
+        selection.courses = courses;
+        this.setState({ selections: selection });
+        let list = [];
+        courses.map(course => {
+            let id;
+            this.state.courses.map(c => {
+                if (c.code === course) id = c.id;
+            })
+            list.push(id);
+        });
 
-    //     let search = this.state.search;
-    //     search.Courses = list;
+        let search = this.state.search;
+        search.Courses = list;
 
-    //     this.setState({ search: search }, async () => this.LoadSchedules());
-    // }
+        this.setState({ search: search }, async () => this.LoadSchedules());
+    }
     UpdateCoaches = (coaches) => {
+        let selection = this.state.selections;
+        selection.coaches = coaches;
+        this.setState({ selections: selection });
         let list = [];
         coaches.map(coach => {
             let id;
             this.state.coaches.map(c => {
-                if (c.PreferredName === coach) id = c.id;
+                if (c.name === coach) id = c.id;
             })
             list.push(id);
         });
@@ -94,17 +104,6 @@ class HomeFrame extends React.Component {
 
         this.setState({ search: search }, async () => this.LoadSchedules());
     }
-    // LoadCourses = async () => {
-    //     await axios.get(this.props.APIS.course + "view")
-    //         .then(response => {
-    //             if (response.data.statusCode !== 200) {
-    //                 console.log(response.data.value);
-    //             }
-    //             else {
-    //                 this.setState({ courses: response.data.value });
-    //             }
-    //         });
-    // }
     CalendarData = async () => {
         let list = [];
         this.state.coaches.map(coach => {
@@ -182,21 +181,31 @@ class HomeFrame extends React.Component {
         await this.GetAllCourses();
     }
     render() {
-        // let courses = [];
-        // let coaches = [];
-        // this.state.courses.map(course => {
-        //     courses.push(course.code);
-        // });
-        // this.state.coaches.map(coach => {
-        //     coaches.push(coach.preferredname);
-        // });
+        let courses = {
+            selected: this.state.selections.courses,
+            unselected: []
+        };
+        let coaches = {
+            selected: this.state.selections.coaches,
+            unselected: []
+        };
+        this.state.courses.map(course => {
+            if (courses.selected.indexOf(course.code) == -1) {
+                courses.unselected.push(course.code);
+            }
+        });
+        this.state.coaches.map(coach => {
+            if (coaches.selected.indexOf(coach.name) == -1) {
+                coaches.unselected.push(coach.name);
+            }
+        });
         return (
             <div id="Framing" className="container vertical justify-start max-width wireframe">
                 <div className="container horizontal max-width wireframe">
                     <DateSelection key={"1"} />
-                    {/* <SearchOptions Courses={courses} Coaches={coaches} UpdateCoaches={this.UpdateCoaches} UpdateCourses={this.UpdateCourses} key={this.state.courses + this.state.coaches} /> */}
+                    <SearchOptions Courses={courses} Coaches={coaches} UpdateCoaches={this.UpdateCoaches} UpdateCourses={this.UpdateCourses} key={this.state.courses + this.state.coaches} />
                 </div>
-                <Calendar data={this.state.calendarData} key={this.state.calendarData}/>
+                <Calendar data={this.state.calendarData} title={"Coaches"} key={this.state.calendarData}/>
             </div>
         )
     }

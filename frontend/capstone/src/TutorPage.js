@@ -14,6 +14,17 @@ class TutorInfo extends React.Component {
                     <div id="TutorEmail" className="max-height max-width">{this.props.Tutor.email}</div>
                     {/* links */}
                 </div>
+                <div className="container vertical max-height max-width wireframe">
+                    {/* Text */}
+                </div>
+                <div className="container vertical max-height item wireframe">
+                    <div className="item">{this.props.Year}</div>
+                    <div className="container horizontal max-width item wireframe">
+                        <div className="item button" onClick={evt => this.props.ChangeDay(-7)}>ᐊ</div>
+                        <div className="item">Week {Math.ceil(((6 - new Date(this.props.Year, 0, this.props.Day).getDay()) + this.props.Day) / 7)}</div>
+                        <div className="item button" onClick={evt => this.props.ChangeDay(7)}>ᐅ</div>
+                    </div>
+                </div>
             </div>
         )
     }
@@ -56,6 +67,7 @@ class ClassSelection extends React.Component {
     }
 }
 
+const DayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 class TutorFrame extends React.Component {
     constructor(props) {
         super(props);
@@ -71,18 +83,22 @@ class TutorFrame extends React.Component {
             courses: []
         };
     }
-    CalculateDayOfWeek = (year, day) => {
-        const monthBounds = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30];
-        const DayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-        let cMonth = 0;
-        let cDay = day;
-        for (let i = 0; i < monthBounds.length; i++) {
-            if (cDay - monthBounds[i] < 0) {
-                cDay -= monthBounds[i];
-                cMonth = i;
-            }
+    ChangeDay = (days) => {
+        let day = this.state.day + days;
+        let year = this.state.year;
+        if (day < 1) {
+            day += ((this.state.year % 4 == 0 && (this.state.year % 100 != 0 || this.state.year % 400 == 0)) ? 366 : 365);
+            year -= 1;
         }
-        let time = new Date(year, cMonth, cDay);
+        else if (day > ((this.state.year % 4 == 0 && (this.state.year % 100 != 0 || this.state.year % 400 == 0)) ? 366 : 365)) {
+            day -= ((this.state.year % 4 == 0 && (this.state.year % 100 != 0 || this.state.year % 400 == 0)) ? 366 : 365);
+            year += 1;
+        }
+        this.setState({ year: year, day: day }, async () => this.LoadSchedules());
+    }
+    CalculateDayOfWeek = (year, day) => {
+        
+        let time = new Date(year, 0, day);
         return DayOfWeek[time.getDay()];
     }
     LoadSchedules = async () => {
@@ -92,11 +108,26 @@ class TutorFrame extends React.Component {
             Day: 0,
             Coaches: [this.props.Tutor.id]
         };
-        let currentYear = this.state.year;
-        let currentDay = this.state.day;
+        let date = new Date(this.state.year, 0, this.state.day);
+        let currentDay = this.state.day - date.getDay() - 1;
+        let yearModifier = 0;
         for (let i = 0; i < 7; i++) {
-            search.Year = currentYear;
-            search.Day = currentDay + i;
+            if (currentDay + 1 < 1) {
+                console.log(currentDay + " < 1");
+                currentDay = (this.state.year % 4 == 0 && (this.state.year % 100 != 0 || this.state.year % 400 == 0)) ? 366 : 365;
+                yearModifier = -1;
+            }
+            else if (currentDay + 1 > ((this.state.year % 4 == 0 && (this.state.year % 100 != 0 || this.state.year % 400 == 0)) ? 366 : 365)) {
+                currentDay = 1;
+                yearModifier = 1;
+            }
+            else {
+                currentDay += 1;
+                yearModifier = 0;
+            }
+            search.Day = currentDay;
+            search.Year = this.state.year + yearModifier;
+            date = new Date(this.state.year, 0, currentDay);
             await axios.post(this.props.APIS.schedule + "find", search)
                 .then(response => {
                     if (response.data.statusCode !== 200) {
@@ -110,7 +141,7 @@ class TutorFrame extends React.Component {
                                 }
                             });
                         });
-                        list.push({ coach: { name: this.CalculateDayOfWeek(currentYear, currentDay + i) }, schedule: response.data.value });
+                        list.push({ coach: { name: date.toDateString()}, schedule: response.data.value });
                     }
                 })
         }
@@ -144,10 +175,10 @@ class TutorFrame extends React.Component {
     render() {
         return (
             <div id="Framing" className="container vertical justify-start max-width wireframe">
-                <TutorInfo Tutor={this.props.Tutor} />
+                <TutorInfo Tutor={this.props.Tutor} Year={this.state.year} Day={this.state.day} ChangeDay={this.ChangeDay} />
                 <div id="TutoringInformation" className="container horizontal max-width wireframe">
                     <ClassSelection Tutor={this.props.Tutor} courses={this.state.courses} />
-                    <Calendar data={this.state.schedules} key={this.state.schedules} />
+                    <Calendar data={this.state.schedules} title={"Days of the Week"} key={this.state.schedules} />
                 </div>
             </div>
         )
