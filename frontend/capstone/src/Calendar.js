@@ -46,10 +46,10 @@ class CalendarFrame extends React.Component {
                         <div className="container horizontal justify-start align-start box max-height">
                                 {Times.slice(0,Times.length - 1).map((value, i) => {
                                 return (
-                                    <>
+                                    <React.Fragment key = {i}>
                                         <div className="spacer"></div>
                                         <div className="lines max-height"></div>
-                                    </>
+                                    </React.Fragment>
                                 )
                             })}
                             <div className="spacer"></div>
@@ -57,16 +57,16 @@ class CalendarFrame extends React.Component {
                         <div className="container horizontal justify-start align-start title">
                             {Times.map(value => {
                                 return (
-                                    <div className="column times">{value}</div>
+                                    <div className="column times" key={value}>{value}</div>
                                 )
                             })}
                         </div>
                         {this.props.data.map(data => {
                             return (
-                                <>
+                                <React.Fragment key={data.coach.name}>
                                     <div className="container horizontal time-row row" dangerouslySetInnerHTML={{ __html: this.GenerateRow(data) }}></div>
                                     <div className="bars"></div>
-                                </>
+                                </React.Fragment>
                                 )
                             })}
                     </div>

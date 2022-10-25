@@ -7,3 +7,14 @@
     width: 20px;
     background-color: red;
 }
+.tab {
+    width: 50px;
+    height: 30px;
+}
+.tab:hover {
+    cursor:pointer;
+}
+.selectedTab {
+    width: 75px;
+    height: 50px;
+}

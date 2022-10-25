@@ -18,12 +18,17 @@ class TutorInfo extends React.Component {
                     {/* Text */}
                 </div>
                 <div className="container vertical max-height item wireframe">
+                    <div className="item">Year</div>
                     <div className="item">{this.props.Year}</div>
                     <div className="container horizontal max-width item wireframe">
                         <div className="item button" onClick={evt => this.props.ChangeDay(-7)}>ᐊ</div>
                         <div className="item">Week {Math.ceil(((6 - new Date(this.props.Year, 0, this.props.Day).getDay()) + this.props.Day) / 7)}</div>
                         <div className="item button" onClick={evt => this.props.ChangeDay(7)}>ᐅ</div>
                     </div>
+                    {this.props.Login.admin || this.props.Login.id == this.props.Tutor.id
+                        ? <div className="item button">Change Schedule</div>
+                        : <></>
+                    }
                 </div>
             </div>
         )
@@ -32,36 +37,53 @@ class TutorInfo extends React.Component {
 class ClassSelection extends React.Component {
     render() {
         return (
-            <div className="container horizontal max-height wireframe">
-                <div className="container vertical justify-start max-height max-width wireframe">
+            <div className="container horizontal align-start max-height wireframe">
+                <div className="container vertical justify-start max-height wireframe">
                     <div className="container vertical max-width wireframe">
                         <div className="item">Assigned:</div>
                         {
                             this.props.courses.map(course => {
                                 if (course.id == this.props.Tutor.assignedCourse){
                                 return (
-                                    <div className={`item ${course.code.slice(0,3)}`} key={course.code}>{`${course.code} - ${course.name}`}</div>
+                                    <div className={`item course ${course.code.slice(0,3)}`} key={course.code}>{`${course.code} - ${course.name}`}</div>
                                 )}
                             })
                         }
                     </div>
-                    <div className="container vertical jusitfy-start max-height max-width wireframe">
+                    <div className="preferredContainer container vertical justify-start max-height max-width wireframe">
                         <div className="item">Also Tutors:</div>
-                        <div className="item preferred">
+                        <div className="container horizontal item preferred">
                             {this.props.Tutor.preferredCourses.map(courseId => {
-                                let foundCourse = {code: "000", name:"ERROR"};
-                                this.props.Courses.map(course => {
+                                let foundCourse = {code: "TST000", name:"ERROR"};
+                                this.props.courses.map(course => {
                                     if (course.id == courseId) foundCourse = course;
                                 }) 
-                                console.log(foundCourse);
+                                if (foundCourse.code == "TST000") return;
                                 return (
-                                    <div className="item course" key={foundCourse.code}>{`${foundCourse.code} - ${foundCourse.name}`}</div>
+                                    <div className={`item course ${foundCourse.code.slice(0, 3)}`} key={foundCourse.code} onClick={evt => this.props.movePreferredCourse(foundCourse.id)}>{`${foundCourse.code} - ${foundCourse.name}`}</div>
                                 )
                             })}
                         </div>
                     </div>
                 </div>
-                <div></div>
+                {this.props.Login.admin || this.props.Login.id == this.props.Tutor.id
+                    ? <div className="preferredContainer container vertical justify-start max-height item wireframe">
+                        <div className="item">Add to Preferred: </div>
+                        <div className="container horizontal item preferred">
+                            {this.props.courses.map(course => {
+                                let error = (course.id == this.props.Tutor.assignedCourse);
+                                this.props.Tutor.preferredCourses.map(courseId => {
+                                    if (courseId == course.id) error = true;
+                                });
+                                if (error) return;
+                                return (
+                                    <div className={`item course ${course.code.slice(0, 3)}`} key={course.code} onClick={evt => this.props.movePreferredCourse(course.id)}>{`${course.code} - ${course.name}`}</div>
+                                )
+                            })}
+                        </div>
+                    </div>
+                    : <></>
+                }
             </div>
         )
     }
@@ -95,11 +117,6 @@ class TutorFrame extends React.Component {
             year += 1;
         }
         this.setState({ year: year, day: day }, async () => this.LoadSchedules());
-    }
-    CalculateDayOfWeek = (year, day) => {
-        
-        let time = new Date(year, 0, day);
-        return DayOfWeek[time.getDay()];
     }
     LoadSchedules = async () => {
         let list = [];
@@ -146,7 +163,6 @@ class TutorFrame extends React.Component {
                 })
         }
         this.setState({ schedules: list });
-
     }
     GetAllCourses = async () => {
         await axios.get(this.props.APIS.course + "view")
@@ -169,15 +185,25 @@ class TutorFrame extends React.Component {
                 }
             })
     }
+    movePreferredCourse = (id) => {
+        let preferred = false;
+        let clone = this.props.Tutor;
+        clone.preferredCourses.map(course => {
+            if (course == id) preferred = true;
+        });
+        if (preferred) clone.preferredCourses.splice(clone.preferredCourses.indexOf(id), 1);
+        else clone.preferredCourses.push(id);
+        this.props.updateTutor(clone);
+    }
     componentDidMount = async () => {
         await this.GetAllCourses();
     }
     render() {
         return (
             <div id="Framing" className="container vertical justify-start max-width wireframe">
-                <TutorInfo Tutor={this.props.Tutor} Year={this.state.year} Day={this.state.day} ChangeDay={this.ChangeDay} />
+                <TutorInfo Tutor={this.props.Tutor} Year={this.state.year} Day={this.state.day} ChangeDay={this.ChangeDay} Login={this.props.Login}/>
                 <div id="TutoringInformation" className="container horizontal max-width wireframe">
-                    <ClassSelection Tutor={this.props.Tutor} courses={this.state.courses} />
+                    <ClassSelection Tutor={this.props.Tutor} courses={this.state.courses} Login={this.props.Login} movePreferredCourse={this.movePreferredCourse} />
                     <Calendar data={this.state.schedules} title={"Days of the Week"} key={this.state.schedules} />
                 </div>
             </div>

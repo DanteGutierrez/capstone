@@ -37,8 +37,8 @@ class Menu extends React.Component {
                                 <div className="dropdown">
                                 {this.props.options.unselected.map(option => {
                                     return (
-                                        <div className="option container horizontal justify-around max-width" onClick={evt => { this.Select(option); this.Close() }}>
-                                            <div className="item" key={option}>{option}</div>
+                                        <div className="option container horizontal justify-around max-width" onClick={evt => { this.Select(option); this.Close() }} key={option}>
+                                            <div className="item" >{option}</div>
                                             {/* <div className="color item"></div> */}
                                         </div>
                                     )
@@ -52,8 +52,8 @@ class Menu extends React.Component {
                 <div className="selection container horizontal justify-start item">
                     {this.props.options.selected.map(option => {
                         return (
-                            <div className="selected container horizontal item" onClick={evt => this.UnSelect(option)}>
-                                <div className="item" key={option}>{option}</div>
+                            <div className="selected container horizontal item" onClick={evt => this.UnSelect(option)} key={option}>
+                                <div className="item" >{option}</div>
                                 {/* <div className="close"></div> */}
                             </div>
                         )

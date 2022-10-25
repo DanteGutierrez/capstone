@@ -19,24 +19,22 @@ class SearchOptions extends React.Component {
 class DateSelection extends React.Component {
     render() {
         return (
-            <div className="container horizontal max-height max-width item wireframe">
+            <div className="container horizontal max-height max-width justify-start item wireframe">
                 <div className="container vertical max-height item wireframe">
                     <div className="item">Year</div>
-                    <div className="item">Week</div>
+                    <div className="item">{this.props.Year}</div>
                     <div className="container horizontal max-width item wireframe">
-                        <div className="item button">ᐊ</div>
-                        <div className="item">Day</div>
-                        <div className="item button">ᐅ</div>
+                        <div className="item button" onClick={evt => this.props.ChangeDay(-7)}>ᐊ</div>
+                        <div className="item">Week {Math.ceil(((6 - new Date(this.props.Year, 0, this.props.Day).getDay()) + this.props.Day) / 7)}</div>
+                        <div className="item button" onClick={evt => this.props.ChangeDay(7)}>ᐅ</div>
                     </div>
                 </div>
                 <div className="container horizontal max-height align-end item wireframe">
-                    <div className="item">Sun</div>
-                    <div className="item">Mon</div>
-                    <div className="item">Tue</div>
-                    <div className="item">Wed</div>
-                    <div className="item">Thu</div>
-                    <div className="item">Fri</div>
-                    <div className="item">Sat</div>
+                    {this.props.Tabs.map(tab => {
+                        return (
+                            <div className={`tab${tab.selected ? " selectedTab" : ""} wireframe`} onClick={evt => this.props.ChangeDay(tab.value)} key={tab.name}>{tab.name}</div>
+                        )
+                    })}
                 </div>
             </div>
         )
@@ -64,6 +62,22 @@ class HomeFrame extends React.Component {
                 courses: []
             }
         };
+    }
+    ChangeDay = (days) => {
+        let day = this.state.search.Day + days;
+        let year = this.state.search.Year;
+        if (day < 1) {
+            day += ((this.state.year % 4 == 0 && (this.state.year % 100 != 0 || this.state.year % 400 == 0)) ? 366 : 365);
+            year -= 1;
+        }
+        else if (day > ((this.state.year % 4 == 0 && (this.state.year % 100 != 0 || this.state.year % 400 == 0)) ? 366 : 365)) {
+            day -= ((this.state.year % 4 == 0 && (this.state.year % 100 != 0 || this.state.year % 400 == 0)) ? 366 : 365);
+            year += 1;
+        }
+        let search = this.state.search;
+        search.Day = day;
+        search.Year = year;
+        this.setState({ search: search }, async () => this.LoadSchedules());
     }
     UpdateTime = (start, end) => {
 
@@ -181,6 +195,16 @@ class HomeFrame extends React.Component {
         await this.GetAllCourses();
     }
     render() {
+        let date = new Date(this.state.search.Year, 0, this.state.search.Day).getDay();
+        let tabs = [
+            { name: "Sun", selected: date == 0, value: 0 - date},
+            { name: "Mon", selected: date == 1, value: 1 - date },
+            { name: "Tue", selected: date == 2, value: 2 - date },
+            { name: "Wed", selected: date == 3, value: 3 - date },
+            { name: "Thu", selected: date == 4, value: 4 - date },
+            { name: "Fri", selected: date == 5, value: 5 - date },
+            { name: "Sat", selected: date == 6, value: 6 - date }
+        ];
         let courses = {
             selected: this.state.selections.courses,
             unselected: []
@@ -202,7 +226,7 @@ class HomeFrame extends React.Component {
         return (
             <div id="Framing" className="container vertical justify-start max-width wireframe">
                 <div className="container horizontal max-width wireframe">
-                    <DateSelection key={"1"} />
+                    <DateSelection ChangeDay={this.ChangeDay} Year={this.state.search.Year} Day={this.state.search.Day} Tabs={tabs} />
                     <SearchOptions Courses={courses} Coaches={coaches} UpdateCoaches={this.UpdateCoaches} UpdateCourses={this.UpdateCourses} key={this.state.courses + this.state.coaches} />
                 </div>
                 <Calendar data={this.state.calendarData} title={"Coaches"} key={this.state.calendarData}/>

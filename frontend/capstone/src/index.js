@@ -107,6 +107,17 @@ class Application extends React.Component {
         });
     }
   }
+  updateTutor = (tutor) => {
+    axios.put(APIS.account + `update/${tutor.id}?auth=${this.state.login.authorized}`, tutor)
+      .then(response => {
+        if (response.data.statusCode !== 200) {
+          console.log(response.data.value);
+        }
+        else {
+          this.onTutorNavigate(tutor.id);
+        }
+    })
+  }
   onTutorNavigate = (id) => {
     axios.get(APIS.account + "view/" + id)
       .then(response => {
@@ -114,7 +125,7 @@ class Application extends React.Component {
           console.log(response.data.value);
         }
         else {
-          this.setState({ page: <TutorPage APIS={APIS} getID={getID} Login={this.state.login} Tutor={response.data.value} /> });
+          this.setState({ page: <TutorPage APIS={APIS} getID={getID} Login={this.state.login} Tutor={response.data.value} updateTutor={this.updateTutor} /> });
         }
       })
   };

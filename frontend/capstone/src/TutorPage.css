@@ -10,6 +10,27 @@
 #NameInformation {
     height: 20%;
 }
+.course {
+    width: 100px;
+    height: 75px;
+    user-select: none;
+}
+.course:hover {
+    cursor:pointer;
+}
 .preferred {
-    flex-wrap:wrap;
+    flex-wrap: wrap;
+}
+.preferredContainer {
+    width: 350px;
+    overflow-y:auto;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #333;
+    border-radius: 20px;
+}
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
 }
