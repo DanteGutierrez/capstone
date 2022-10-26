@@ -93,9 +93,10 @@ namespace capstone
             }
             [HttpPost]
             [Route("create")]
-            public async Task<IResult> CreateAccount(Account account, string? Id)
+            public async Task<IResult> CreateAccount(Account account, string? admin, string? auth)
             {
-                //if(!await CheckAdmin(Id)) return Results.BadRequest("The id provided did not have admin clearance");
+                if(!await CheckAdmin(admin)) return Results.BadRequest("The id provided did not have admin clearance");
+                if(!await CheckAuthorization(admin, auth)) return Results.BadRequest("You have invalid authorization");
 
                 if(await InsertAccount(account)) return Results.Ok(account._id.ToString());
 
@@ -103,10 +104,15 @@ namespace capstone
             }
             [HttpPut]
             [Route("update/{id}")]
-            public async Task<IResult> UpdateAccount(Account account, string? auth, string id) {
+            public async Task<IResult> UpdateAccount(Account account, string? auth, string id, string? admin) {
                 if(string.IsNullOrEmpty(id)) return Results.BadRequest("The user id cannot be empty");
-
-                if(!await CheckAuthorization(id, auth)) return Results.BadRequest("You have invalid authorization");
+                
+                if(!await CheckAdmin(admin)) {
+                    if(!await CheckAuthorization(id, auth)) return Results.BadRequest("You have invalid authorization");
+                }
+                else {
+                    if(!await CheckAuthorization(admin, auth)) return Results.BadRequest("You have invalid authorization");
+                }
 
                 if(!accounts.Find(user => user._id == ObjectId.Parse(id)).ToList().Any()) return Results.BadRequest("The id provided was invalid");
                 

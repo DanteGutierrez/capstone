@@ -6,6 +6,7 @@ import HomePage from './HomePage';
 import Navigation from './Navigation';
 import Login from './Login';
 import TutorPage from './TutorPage';
+import Tutors from './Tutors';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -132,12 +133,13 @@ class Application extends React.Component {
   onNavButtonClicked = (page) => {
     switch (page) {
       case "home":
-        this.setState({ page: <HomePage APIS={APIS} getID={getID} /> });
+        this.setState({ page: <HomePage APIS={APIS} getID={getID} TutorNavigation={this.onTutorNavigate} /> });
         break;
       case "login":
         this.setState({ page: <Login UpdateCredentials={this.updateCredentials} Login={this.Login} Error={this.state.error} /> });
         break;
       case "tutors":
+        this.setState({ page: <Tutors APIS={APIS} getID={getID} Login={this.state.login} /> });
         break;
       case "logout":
         this.setState({
@@ -152,7 +154,7 @@ class Application extends React.Component {
             preferredName: ""
           }
         });
-        this.setState({ page: <HomePage APIS={APIS} getID={getID} /> });
+        this.setState({ page: <HomePage APIS={APIS} getID={getID} TutorNavigation={this.onTutorNavigate} /> });
         axios.get(APIS.account + `logout/${this.state.login.id}`);
         break;
       default:

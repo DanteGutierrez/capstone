@@ -38,7 +38,12 @@ class CalendarFrame extends React.Component {
                         <div className="column title">{this.props.title}</div>
                         {this.props.data.map(data => {
                             return (
-                                <div className="column row mini-margin wireframe" key={data.coach.name}>{data.coach.name}</div>
+                                <div className="column row mini-margin wireframe" key={data.coach.name}>
+                                    {data.coach.id != undefined
+                                        ? <div className="item button" onClick={evt => this.props.TutorNavigation(data.coach.id)}>{data.coach.name}</div>
+                                        : <>{data.coach.name}</>
+                                    }
+                                </div>
                             )
                         })}
                     </div>

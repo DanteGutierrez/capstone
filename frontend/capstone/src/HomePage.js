@@ -229,7 +229,7 @@ class HomeFrame extends React.Component {
                     <DateSelection ChangeDay={this.ChangeDay} Year={this.state.search.Year} Day={this.state.search.Day} Tabs={tabs} />
                     <SearchOptions Courses={courses} Coaches={coaches} UpdateCoaches={this.UpdateCoaches} UpdateCourses={this.UpdateCourses} key={this.state.courses + this.state.coaches} />
                 </div>
-                <Calendar data={this.state.calendarData} title={"Coaches"} key={this.state.calendarData}/>
+                <Calendar TutorNavigation={this.props.TutorNavigation} data={this.state.calendarData} title={"Coaches"} key={this.state.calendarData}/>
             </div>
         )
     }
