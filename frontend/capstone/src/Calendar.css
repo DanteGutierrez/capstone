@@ -53,7 +53,7 @@
     background-color: black;
 }
 .bars {
-    width: 2880px;
+    width: calc(120px * (21 - 7));
     height: 2px;
     background-color:black;
 }

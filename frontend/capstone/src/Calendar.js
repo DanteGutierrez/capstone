@@ -2,7 +2,8 @@ import React from 'react';
 import './Calendar.css';
 
 const Times = ["12 am", "1 am", "2 am", "3 am", "4 am", "5 am", "6 am", "7 am", "8 am", "9 am", "10 am", "11 am", "12 pm", "1 pm", "2 pm", "3 pm", "4 pm", "5 pm", "6 pm", "7 pm", "8 pm", "9 pm", "10 pm", "11 pm"]
-const StartingPoint = 8;
+const StartingPoint = 7;
+const EndingPoint = 21;
 const width = 120;
 const TimeConvert = (start) => {
     let value = "";
@@ -18,15 +19,26 @@ class CalendarFrame extends React.Component {
             let fullCourseCode = entry.course != undefined ? entry.course.code : "";
             let fullCourseName = entry.course != undefined ? entry.course.name : "";
             let courseCode = entry.course != undefined ? entry.course.code.slice(0, 3) : "";
-            row += `
-            <div key=${entry} class="row other ${courseCode}" style="width: ${(entry.duration / 60) * width}px; left: ${(entry.startTime / 60) * width}px;">
-                <div class="info container vertical wireframe">
-                    <div class="item wireframe">${data.coach.name}</div>
-                    <div class="item wireframe">${fullCourseCode}</div>
-                    <div class="item wireframe">${fullCourseName}</div>
-                    <div class="item wireframe">${TimeConvert(entry.startTime) + " - " + TimeConvert(entry.startTime + entry.duration)}</div>
-                </div>
-            </div>`
+            let entryWidth = (entry.duration / 60) * width;
+            let entryLeft = ((entry.startTime - (StartingPoint * 60)) / 60) * width;
+            if (entry.startTime < (StartingPoint * 60)) {
+                entryWidth = (((entry.startTime + entry.duration) - (StartingPoint * 60)) / 60) * width;
+                entryLeft = 0;
+            }
+            else if (entry.startTime + entry.duration > (EndingPoint * 60)) {
+                entryWidth = ((EndingPoint - entry.startTime) / 60) * width;
+            }
+            if (entryWidth > 0) {
+                row += `
+                <div key=${entry} class="row other ${courseCode}" style="width: ${entryWidth}px; left: ${entryLeft}px;">
+                    <div class="info container vertical wireframe">
+                        <div class="item wireframe">${data.coach.name}</div>
+                        <div class="item wireframe">${fullCourseCode}</div>
+                        <div class="item wireframe">${fullCourseName}</div>
+                        <div class="item wireframe">${TimeConvert(entry.startTime) + " - " + TimeConvert(entry.startTime + entry.duration)}</div>
+                    </div>
+                </div>`    
+            }
         });
         return (row);
     }
@@ -49,7 +61,7 @@ class CalendarFrame extends React.Component {
                     </div>
                     <div className='container vertical justify-start align-start box-bind wireframe'>
                         <div className="container horizontal justify-start align-start box max-height">
-                                {Times.slice(0,Times.length - 1).map((value, i) => {
+                                {Times.slice(StartingPoint,EndingPoint).map((value, i) => {
                                 return (
                                     <React.Fragment key = {i}>
                                         <div className="spacer"></div>
@@ -57,10 +69,9 @@ class CalendarFrame extends React.Component {
                                     </React.Fragment>
                                 )
                             })}
-                            <div className="spacer"></div>
                         </div>
                         <div className="container horizontal justify-start align-start title">
-                            {Times.map(value => {
+                            {Times.slice(StartingPoint, EndingPoint).map(value => {
                                 return (
                                     <div className="column times" key={value}>{value}</div>
                                 )

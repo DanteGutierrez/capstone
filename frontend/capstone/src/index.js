@@ -7,6 +7,7 @@ import Navigation from './Navigation';
 import Login from './Login';
 import TutorPage from './TutorPage';
 import Tutors from './Tutors';
+import Schedule from './Schedule';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -109,7 +110,7 @@ class Application extends React.Component {
     }
   }
   updateTutor = (tutor) => {
-    axios.put(APIS.account + `update/${tutor.id}?auth=${this.state.login.authorized}`, tutor)
+    axios.put(APIS.account + `update/${tutor.id}?auth=${this.state.login.authorized}&admin=${this.state.login.id}`, tutor)
       .then(response => {
         if (response.data.statusCode !== 200) {
           console.log(response.data.value);
@@ -126,7 +127,7 @@ class Application extends React.Component {
           console.log(response.data.value);
         }
         else {
-          this.setState({ page: <TutorPage APIS={APIS} getID={getID} Login={this.state.login} Tutor={response.data.value} updateTutor={this.updateTutor} /> });
+          this.setState({ page: <TutorPage APIS={APIS} getID={getID} Login={this.state.login} Tutor={response.data.value} updateTutor={this.updateTutor} key={response.data.value.id} onNavButtonClicked={this.onNavButtonClicked} /> });
         }
       })
   };
@@ -138,8 +139,11 @@ class Application extends React.Component {
       case "login":
         this.setState({ page: <Login UpdateCredentials={this.updateCredentials} Login={this.Login} Error={this.state.error} /> });
         break;
+      case "schedule":
+        this.setState({ page: <Schedule APIS={APIS} getID={getID} TutorNavigation={this.onTutorNavigate} Login={this.state.login} />})
+        break;
       case "tutors":
-        this.setState({ page: <Tutors APIS={APIS} getID={getID} Login={this.state.login} /> });
+        this.setState({ page: <Tutors APIS={APIS} getID={getID} Login={this.state.login}/> });
         break;
       case "logout":
         this.setState({

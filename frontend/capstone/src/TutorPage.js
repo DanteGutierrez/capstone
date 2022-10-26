@@ -26,7 +26,7 @@ class TutorInfo extends React.Component {
                         <div className="item button" onClick={evt => this.props.ChangeDay(7)}>ᐅ</div>
                     </div>
                     {this.props.Login.admin || this.props.Login.id == this.props.Tutor.id
-                        ? <div className="item button">Change Schedule</div>
+                        ? <div className="item button" onClick={evt => this.props.onNavButtonClicked("schedule")}>Change Schedule</div>
                         : <></>
                     }
                 </div>
@@ -130,7 +130,6 @@ class TutorFrame extends React.Component {
         let yearModifier = 0;
         for (let i = 0; i < 7; i++) {
             if (currentDay + 1 < 1) {
-                console.log(currentDay + " < 1");
                 currentDay = (this.state.year % 4 == 0 && (this.state.year % 100 != 0 || this.state.year % 400 == 0)) ? 366 : 365;
                 yearModifier = -1;
             }
@@ -162,6 +161,7 @@ class TutorFrame extends React.Component {
                     }
                 })
         }
+        console.log(list);
         this.setState({ schedules: list });
     }
     GetAllCourses = async () => {
@@ -201,7 +201,7 @@ class TutorFrame extends React.Component {
     render() {
         return (
             <div id="Framing" className="container vertical justify-start max-width wireframe">
-                <TutorInfo Tutor={this.props.Tutor} Year={this.state.year} Day={this.state.day} ChangeDay={this.ChangeDay} Login={this.props.Login}/>
+                <TutorInfo Tutor={this.props.Tutor} Year={this.state.year} Day={this.state.day} ChangeDay={this.ChangeDay} Login={this.props.Login} onNavButtonClicked={this.props.onNavButtonClicked} />
                 <div id="TutoringInformation" className="container horizontal max-width wireframe">
                     <ClassSelection Tutor={this.props.Tutor} courses={this.state.courses} Login={this.props.Login} movePreferredCourse={this.movePreferredCourse} />
                     <Calendar data={this.state.schedules} title={"Days of the Week"} key={this.state.schedules} />
