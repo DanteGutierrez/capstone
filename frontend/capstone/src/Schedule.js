@@ -15,7 +15,9 @@ class ScheduleMakingFrame extends React.Component {
                 RepeatDay: [false, false, false, false, false, false, false],
                 Repeat: false,
             },
-            courses: []
+            courses: [],
+            error: "",
+            success: ""
         };
     }
     ConvertTime = (time) => {
@@ -106,37 +108,73 @@ class ScheduleMakingFrame extends React.Component {
                 }
             })
     }
-    CreateSchedule = () => {
-        let now = new Date();
-        let start = new Date(now.getFullYear(), 0, 0);
-        let diff = now - start;
-        let oneDay = 1000 * 60 * 60 * 24;
-        let day = Math.floor(diff / oneDay);
-        let schedule = {
-            CourseId: this.state.Form.Course,
-            AccountId: this.props.Login.id,
-            Year: now.getFullYear(),
-            Day: day,
-            StartTime: this.state.Form.StartTime,
-            Duration: this.state.Form.EndTime - this.state.Form.StartTime,
-            Rooom: this.state.Form.Room
-        }
-        axios.post(this.props.APIS.schedule + `create?auth=${this.props.Login.authorized}`, schedule)
+    CreateSchedule = async (schedule) => {
+        return await axios.post(this.props.APIS.schedule + `create?auth=${this.props.Login.authorized}`, schedule)
             .then(response => {
                 if (response.data.statusCode != 200) {
-                    console.log(response.data.value);
+                    this.setState({ error: console.log(response.data.value) });
+                    return false;
                 }
                 else {
-                    return;
+                    return true;
                 }
-            })
+            });
+    }
+    ProcessSchedules = async () => {
+        if (this.state.Form.StartTime == "") { this.setState({ error: "Set a time for the tutoring to start" }); return; }
+        if (this.state.Form.EndTime == "") { this.setState({ error: "Set a time for the tutoring to end" }); return; }
+        if (this.ConvertTime(this.state.Form.EndTime) < this.ConvertTime(this.state.Form.StartTime)) { this.setState({ error: "Ending Time cannot be before Starting Time" }); return; }
+        if (this.ConvertTime(this.state.Form.EndTime) > (21 * 60)) { this.setState({ error: "You must end your tutoring at or before 9 pm" }); return; }
+        if (this.ConvertTime(this.state.Form.StartTime) < (7 * 60)) { this.setState({ error: "You must start your tutoring at or after 7 am" }); return; }
+        if (this.state.Form.StartDay == "") { this.setState({ error: "Set a date for your tutoring" }); return; }
+        if (this.state.Form.Room == "") { this.setState({ error: "Set a room to tutor in" }); return; }
+        if (this.state.Form.Repeat) {
+            if (this.state.Form.EndDay == "") { this.setState({ error: "Set an ending date for your tutoring" }); return; }
+            let year = this.GetYear(this.state.Form.StartDay);
+            let loops = this.GetDay(this.state.Form.EndDay) - this.GetDay(this.state.Form.StartDay) + (year != this.GetYear(this.state.Form.EndDay) ? (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0) ? 366 : 365) : 0);
+            if (loops < 0 || loops > 100) this.setState({ error: "You cannot set more than 100 schedules at once." });
+            else {
+                let successes = 0;
+                let attempts = 0;
+                for (let i = 0; i <= loops; i++) {
+                    let currentDay = new Date(year, 0, this.GetDay(this.state.Form.StartDay) + i);
+                    if (this.state.Form.RepeatDay[currentDay.getDay()]) {
+                        let schedule = {
+                            CourseId: this.state.Form.Course,
+                            AccountId: this.props.Login.id,
+                            Year: currentDay.getFullYear(),
+                            Day: this.GetDay(currentDay.toISOString().slice(1, 10)),
+                            StartTime: this.ConvertTime(this.state.Form.StartTime),
+                            Duration: this.ConvertTime(this.state.Form.EndTime) - this.ConvertTime(this.state.Form.StartTime),
+                            Room: this.state.Form.Room
+                        }
+                        attempts++;
+                        successes += await this.CreateSchedule(schedule) ? 1 : 0;
+                    }
+                }
+                this.setState({ success: `Successfully created ${successes} meeting(s)`, error: `Failed creating ${attempts - successes} meeting(s)` });
+            }
+        }
+        else {
+            let schedule = {
+                CourseId: this.state.Form.Course,
+                AccountId: this.props.Login.id,
+                Year: this.GetYear(this.state.Form.StartDay),
+                Day: this.GetDay(this.state.Form.StartDay),
+                StartTime: this.ConvertTime(this.state.Form.StartTime),
+                Duration: this.ConvertTime(this.state.Form.EndTime) - this.ConvertTime(this.state.Form.StartTime),
+                Room: this.state.Form.Room
+            }
+            if (await this.CreateSchedule(schedule)) this.setState({ success: 'Successfully created meeting', error: '' });
+            else this.setState({ success: '', error: 'Failed creating meeting' });
+        }
     }
     componentDidMount = async () => {
         await this.GetAllCourses();
     }
     render() {
         return (
-            <div className="container vertical justify-start max-width max-height wireframe">
+            <div className="container vertical justify-start align-start max-width max-height wireframe">
                 <div className="container horizontal item wireframe">
                     <label className="item" htmlFor='StartTime'>Start Time:</label>
                     <input className="item" type="time" name="StartTime" onChange={this.UpdateCredentials}/>
@@ -198,7 +236,9 @@ class ScheduleMakingFrame extends React.Component {
                     </>
                     : <></>
                 }
-                {/* <input className="item" type="button" value="Create Schedules" onClick={evt => this.CreateSchedule()}/> */}
+                <input className="item" type="button" value="Create Schedules" onClick={evt => this.ProcessSchedules()} />
+                <div className="success">{this.state.success}</div>
+                <div className="error">{this.state.error}</div>
             </div>
         )
     }

@@ -2,6 +2,7 @@ import React from 'react'
 import axios from 'axios'
 import './TutorPage.css'
 import Calendar from './Calendar';
+import Schedule from './Schedule';
 
 
 class TutorInfo extends React.Component {
@@ -14,9 +15,6 @@ class TutorInfo extends React.Component {
                     <div id="TutorEmail" className="max-height max-width">{this.props.Tutor.email}</div>
                     {/* links */}
                 </div>
-                <div className="container vertical max-height max-width wireframe">
-                    {/* Text */}
-                </div>
                 <div className="container vertical max-height item wireframe">
                     <div className="item">Year</div>
                     <div className="item">{this.props.Year}</div>
@@ -26,9 +24,12 @@ class TutorInfo extends React.Component {
                         <div className="item button" onClick={evt => this.props.ChangeDay(7)}>ᐅ</div>
                     </div>
                     {this.props.Login.admin || this.props.Login.id == this.props.Tutor.id
-                        ? <div className="item button" onClick={evt => this.props.onNavButtonClicked("schedule")}>Change Schedule</div>
+                        ? <div className="item button" onClick={evt => this.props.ScheduleToggled()}>{this.props.scheduleOpen ? 'Change Schedule' : 'Open Schedule'}</div>
                         : <></>
                     }
+                </div>
+                <div className="container vertical max-height max-width wireframe">
+                    {/* Text */}
                 </div>
             </div>
         )
@@ -102,7 +103,8 @@ class TutorFrame extends React.Component {
             year: now.getFullYear(),
             day: day,
             schedules: [],
-            courses: []
+            courses: [],
+            scheduleOpen: true
         };
     }
     ChangeDay = (days) => {
@@ -161,7 +163,6 @@ class TutorFrame extends React.Component {
                     }
                 })
         }
-        console.log(list);
         this.setState({ schedules: list });
     }
     GetAllCourses = async () => {
@@ -185,6 +186,9 @@ class TutorFrame extends React.Component {
                 }
             })
     }
+    ScheduleToggled = async () => {
+        this.setState({ scheduleOpen: !this.state.scheduleOpen }, async () => this.LoadSchedules());
+    }  
     movePreferredCourse = (id) => {
         let preferred = false;
         let clone = this.props.Tutor;
@@ -201,10 +205,13 @@ class TutorFrame extends React.Component {
     render() {
         return (
             <div id="Framing" className="container vertical justify-start max-width wireframe">
-                <TutorInfo Tutor={this.props.Tutor} Year={this.state.year} Day={this.state.day} ChangeDay={this.ChangeDay} Login={this.props.Login} onNavButtonClicked={this.props.onNavButtonClicked} />
+                <TutorInfo Tutor={this.props.Tutor} Year={this.state.year} Day={this.state.day} ChangeDay={this.ChangeDay} Login={this.props.Login} ScheduleToggled={this.ScheduleToggled} ScheduleOpen={this.state.scheduleOpen} />
                 <div id="TutoringInformation" className="container horizontal max-width wireframe">
                     <ClassSelection Tutor={this.props.Tutor} courses={this.state.courses} Login={this.props.Login} movePreferredCourse={this.movePreferredCourse} />
-                    <Calendar data={this.state.schedules} title={"Days of the Week"} key={this.state.schedules} />
+                    {this.state.scheduleOpen
+                        ? <Calendar data={this.state.schedules} title={"Days of the Week"} key={this.state.schedules} />
+                        : <Schedule APIS={this.props.APIS} getID={this.props.getID} Login={this.props.Login} />
+                    }
                 </div>
             </div>
         )

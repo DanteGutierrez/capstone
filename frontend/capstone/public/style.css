@@ -87,6 +87,10 @@ body {
     color: red;
     font-weight: bold;
 }
+.success {
+    color: green;
+    font-weight: bold;
+}
 
 #Framing {
     height: calc(100% - 28px);

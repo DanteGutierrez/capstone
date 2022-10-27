@@ -139,9 +139,9 @@ class Application extends React.Component {
       case "login":
         this.setState({ page: <Login UpdateCredentials={this.updateCredentials} Login={this.Login} Error={this.state.error} /> });
         break;
-      case "schedule":
-        this.setState({ page: <Schedule APIS={APIS} getID={getID} TutorNavigation={this.onTutorNavigate} Login={this.state.login} />})
-        break;
+      // case "schedule":
+      //   this.setState({ page: <Schedule APIS={APIS} getID={getID} Login={this.state.login} />})
+      //   break;
       case "tutors":
         this.setState({ page: <Tutors APIS={APIS} getID={getID} Login={this.state.login}/> });
         break;

@@ -12,36 +12,84 @@ const TimeConvert = (start) => {
     value += `${time % 12 == 0 ? 12 : time % 12}:${minutes < 10 ? "0" + minutes : minutes} ${time > 11 ? "pm" : "am"}`;
     return value;
 }
-class CalendarFrame extends React.Component {
-    GenerateRow(data) {
-        let row = '';
-        data.schedule.map(entry => {
-            let fullCourseCode = entry.course != undefined ? entry.course.code : "";
-            let fullCourseName = entry.course != undefined ? entry.course.name : "";
-            let courseCode = entry.course != undefined ? entry.course.code.slice(0, 3) : "";
-            let entryWidth = (entry.duration / 60) * width;
-            let entryLeft = ((entry.startTime - (StartingPoint * 60)) / 60) * width;
-            if (entry.startTime < (StartingPoint * 60)) {
-                entryWidth = (((entry.startTime + entry.duration) - (StartingPoint * 60)) / 60) * width;
-                entryLeft = 0;
-            }
-            else if (entry.startTime + entry.duration > (EndingPoint * 60)) {
-                entryWidth = ((EndingPoint - entry.startTime) / 60) * width;
-            }
-            if (entryWidth > 0) {
-                row += `
-                <div key=${entry} class="row other ${courseCode}" style="width: ${entryWidth}px; left: ${entryLeft}px;">
-                    <div class="info container vertical wireframe">
-                        <div class="item wireframe">${data.coach.name}</div>
-                        <div class="item wireframe">${fullCourseCode}</div>
-                        <div class="item wireframe">${fullCourseName}</div>
-                        <div class="item wireframe">${TimeConvert(entry.startTime) + " - " + TimeConvert(entry.startTime + entry.duration)}</div>
-                    </div>
-                </div>`    
-            }
-        });
-        return (row);
+class Delete extends React.Component {
+    render() {
+        return (
+            <div className="container vertical max-height justify-start">
+                <div className="item button">Delete</div>
+            </div>
+        )
     }
+}
+class Row extends React.Component {
+    render() {
+        return (
+            <div className="container horizontal max-width time-row row">
+                {this.props.data.schedule.map(entry => {
+                    let fullCourseCode = entry.course != undefined ? entry.course.code : "";
+                    let fullCourseName = entry.course != undefined ? entry.course.name : "";
+                    let courseCode = entry.course != undefined ? entry.course.code.slice(0, 3) : "";
+                    let entryWidth = (entry.duration / 60) * width;
+                    let entryLeft = ((entry.startTime - (StartingPoint * 60)) / 60) * width;
+                    if (entry.startTime < (StartingPoint * 60)) {
+                        entryWidth = (((entry.startTime + entry.duration) - (StartingPoint * 60)) / 60) * width;
+                        entryLeft = 0;
+                    }
+                    else if (entry.startTime + entry.duration > (EndingPoint * 60)) {
+                        entryWidth = ((EndingPoint - entry.startTime) / 60) * width;
+                    }
+                    if (entryWidth > 0)
+                        return (
+                            <div key={entry.year + '' + entry.day + '' + entry.startTime} className={`row other ${courseCode}`} style={{ width: entryWidth + 'px', left: entryLeft + 'px' }}>
+                                <div className={`info container horizontal max-height max-width ${courseCode}`} style={entryLeft > (EndingPoint - StartingPoint) * (width / 2) ? {right: '0px'} : { left: '0px' }}>
+                                    <div className="container vertical max-width align-start">
+                                        <div className="item">{this.props.data.coach.name}</div>
+                                        <div className="item">{TimeConvert(entry.startTime) + " - " + TimeConvert(entry.startTime + entry.duration)}</div>
+                                        <div className="item">Room: {entry.room == null ? 'Unspecified' : entry.room}</div>
+                                        <div className="item">{fullCourseCode} - {fullCourseName}</div>
+                                    </div>
+                                    <Delete/>
+                                </div>
+                            </div>
+                        )
+                })}
+            </div>
+        )
+    }
+}
+class CalendarFrame extends React.Component {
+    // GenerateRow(data) {
+    //     let row = '';
+    //     data.schedule.map(entry => {
+    //         let fullCourseCode = entry.course != undefined ? entry.course.code : "";
+    //         let fullCourseName = entry.course != undefined ? entry.course.name : "";
+    //         let courseCode = entry.course != undefined ? entry.course.code.slice(0, 3) : "";
+    //         let entryWidth = (entry.duration / 60) * width;
+    //         let entryLeft = ((entry.startTime - (StartingPoint * 60)) / 60) * width;
+    //         if (entry.startTime < (StartingPoint * 60)) {
+    //             entryWidth = (((entry.startTime + entry.duration) - (StartingPoint * 60)) / 60) * width;
+    //             entryLeft = 0;
+    //         }
+    //         else if (entry.startTime + entry.duration > (EndingPoint * 60)) {
+    //             entryWidth = ((EndingPoint - entry.startTime) / 60) * width;
+    //         }
+    //         if (entryWidth > 0) {
+    //             row += `
+    //             <div key=${entry.year + '' +  entry.day + '' + entry.startTime} class="row other ${courseCode}" style="width: ${entryWidth}px; left: ${entryLeft}px;">
+    //                 <div class="info container horizontal max-height max-width ${courseCode}" style="${entryLeft > (EndingPoint - StartingPoint) * (width / 2) ? 'right: 0px;' : 'left: 0px;'}">
+    //                     <div class="container vertical>
+    //                         <div class="item">${data.coach.name}</div>
+    //                         <div class="item">${TimeConvert(entry.startTime) + " - " + TimeConvert(entry.startTime + entry.duration)}</div>
+    //                         <div class="item">Room: ${entry.room == null ? 'Unspecified' : entry.room}</div>
+    //                         <div class="item">${fullCourseCode} - ${fullCourseName}</div>
+    //                     </div>
+    //                     ${<Delete/>}
+    //                 </div>
+    //             </div>`    
+    //         }
+    //     });
+    //     return (row);
+    // }
     render() {
         return (
             <div id="Frame" className="max-height max-width wireframe">
@@ -78,12 +126,7 @@ class CalendarFrame extends React.Component {
                             })}
                         </div>
                         {this.props.data.map(data => {
-                            return (
-                                <React.Fragment key={data.coach.name}>
-                                    <div className="container horizontal time-row row" dangerouslySetInnerHTML={{ __html: this.GenerateRow(data) }}></div>
-                                    <div className="bars"></div>
-                                </React.Fragment>
-                                )
+                            return (<Row data={data} key={data.coach.name} />)
                             })}
                     </div>
                 </div>
