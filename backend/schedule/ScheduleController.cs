@@ -41,6 +41,20 @@ namespace capstone
 
                 return courses.Find(course => course._id == ObjectId.Parse(Id)).ToList().Any();
             }
+            private async Task<bool> CheckAdmin(string? Id)
+            {
+                if (string.IsNullOrEmpty(Id)) return false;
+                Account admin;
+                try
+                {
+                    admin = accounts.Find(account => account._id == ObjectId.Parse(Id)).ToList().First();
+                }
+                catch (Exception _i)
+                {
+                    return false;
+                }
+                return admin.Admin;
+            }
             private async Task<bool> CheckAuthorization(string? userid, string? auth)
             {
                 if (string.IsNullOrEmpty(auth) || string.IsNullOrEmpty(userid)) return false;
@@ -53,10 +67,16 @@ namespace capstone
             }
             [HttpPost]
             [Route("create")]
-            public async Task<IResult> CreateSchedule(Schedule schedule, string? auth) {
+            public async Task<IResult> CreateSchedule(Schedule schedule, string? auth, string? admin) {
                 if(!await VerifyAccount(schedule.AccountId)) return Results.BadRequest("Invalide Coach");
                 if(!await VerifyCourse(schedule.CourseId)) return Results.BadRequest("Invalid Course");
-                if(!await CheckAuthorization(schedule.AccountId, auth)) return Results.BadRequest("Invalid authorization");
+                
+                if(await CheckAdmin(admin)) {
+                    if (!await CheckAuthorization(admin, auth)) return Results.BadRequest("Invalid authorization");
+                }
+                else{
+                    if(!await CheckAuthorization(schedule.AccountId, auth)) return Results.BadRequest("Invalid authorization");
+                }
 
                 if(schedule.Duration <= 0) return Results.BadRequest("Invalid Duration");
                 if(schedule.StartTime <= 0 || schedule.StartTime + schedule.Duration > 1440) return Results.BadRequest("Invalid Start Time");

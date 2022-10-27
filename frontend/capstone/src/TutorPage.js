@@ -23,7 +23,7 @@ class TutorInfo extends React.Component {
                         <div className="item">Week {Math.ceil(((6 - new Date(this.props.Year, 0, this.props.Day).getDay()) + this.props.Day) / 7)}</div>
                         <div className="item button" onClick={evt => this.props.ChangeDay(7)}>ᐅ</div>
                     </div>
-                    {this.props.Login.admin || this.props.Login.id == this.props.Tutor.id
+                    {this.props.Login.admin || this.props.Login.id === this.props.Tutor.id
                         ? <div className="item button" onClick={evt => this.props.ScheduleToggled()}>{this.props.scheduleOpen ? 'Change Schedule' : 'Open Schedule'}</div>
                         : <></>
                     }
@@ -44,10 +44,14 @@ class ClassSelection extends React.Component {
                         <div className="item">Assigned:</div>
                         {
                             this.props.courses.map(course => {
-                                if (course.id == this.props.Tutor.assignedCourse){
+                                if (course.id === this.props.Tutor.assignedCourse){
                                 return (
                                     <div className={`item course ${course.code.slice(0,3)}`} key={course.code}>{`${course.code} - ${course.name}`}</div>
-                                )}
+                                    )
+                                }
+                                else {
+                                    return null;
+                                }
                             })
                         }
                     </div>
@@ -57,9 +61,10 @@ class ClassSelection extends React.Component {
                             {this.props.Tutor.preferredCourses.map(courseId => {
                                 let foundCourse = {code: "TST000", name:"ERROR"};
                                 this.props.courses.map(course => {
-                                    if (course.id == courseId) foundCourse = course;
+                                    if (course.id === courseId) foundCourse = course;
+                                    return null;
                                 }) 
-                                if (foundCourse.code == "TST000") return;
+                                if (foundCourse.code === "TST000") return null;
                                 return (
                                     <div className={`item course ${foundCourse.code.slice(0, 3)}`} key={foundCourse.code} onClick={evt => this.props.movePreferredCourse(foundCourse.id)}>{`${foundCourse.code} - ${foundCourse.name}`}</div>
                                 )
@@ -67,16 +72,17 @@ class ClassSelection extends React.Component {
                         </div>
                     </div>
                 </div>
-                {this.props.Login.admin || this.props.Login.id == this.props.Tutor.id
+                {this.props.Login.admin || this.props.Login.id === this.props.Tutor.id
                     ? <div className="preferredContainer container vertical justify-start max-height item wireframe">
                         <div className="item">Add to Preferred: </div>
                         <div className="container horizontal item preferred">
                             {this.props.courses.map(course => {
-                                let error = (course.id == this.props.Tutor.assignedCourse);
+                                let error = (course.id === this.props.Tutor.assignedCourse);
                                 this.props.Tutor.preferredCourses.map(courseId => {
-                                    if (courseId == course.id) error = true;
+                                    if (courseId === course.id) error = true;
+                                    return null;
                                 });
-                                if (error) return;
+                                if (error) return null;
                                 return (
                                     <div className={`item course ${course.code.slice(0, 3)}`} key={course.code} onClick={evt => this.props.movePreferredCourse(course.id)}>{`${course.code} - ${course.name}`}</div>
                                 )
@@ -90,7 +96,7 @@ class ClassSelection extends React.Component {
     }
 }
 
-const DayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+//const DayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 class TutorFrame extends React.Component {
     constructor(props) {
         super(props);
@@ -111,11 +117,11 @@ class TutorFrame extends React.Component {
         let day = this.state.day + days;
         let year = this.state.year;
         if (day < 1) {
-            day += ((this.state.year % 4 == 0 && (this.state.year % 100 != 0 || this.state.year % 400 == 0)) ? 366 : 365);
+            day += ((this.state.year % 4 === 0 && (this.state.year % 100 !== 0 || this.state.year % 400 === 0)) ? 366 : 365);
             year -= 1;
         }
-        else if (day > ((this.state.year % 4 == 0 && (this.state.year % 100 != 0 || this.state.year % 400 == 0)) ? 366 : 365)) {
-            day -= ((this.state.year % 4 == 0 && (this.state.year % 100 != 0 || this.state.year % 400 == 0)) ? 366 : 365);
+        else if (day > ((this.state.year % 4 === 0 && (this.state.year % 100 !== 0 || this.state.year % 400 === 0)) ? 366 : 365)) {
+            day -= ((this.state.year % 4 === 0 && (this.state.year % 100 !== 0 || this.state.year % 400 === 0)) ? 366 : 365);
             year += 1;
         }
         this.setState({ year: year, day: day }, async () => this.LoadSchedules());
@@ -132,10 +138,10 @@ class TutorFrame extends React.Component {
         let yearModifier = 0;
         for (let i = 0; i < 7; i++) {
             if (currentDay + 1 < 1) {
-                currentDay = (this.state.year % 4 == 0 && (this.state.year % 100 != 0 || this.state.year % 400 == 0)) ? 366 : 365;
+                currentDay = (this.state.year % 4 === 0 && (this.state.year % 100 !== 0 || this.state.year % 400 === 0)) ? 366 : 365;
                 yearModifier = -1;
             }
-            else if (currentDay + 1 > ((this.state.year % 4 == 0 && (this.state.year % 100 != 0 || this.state.year % 400 == 0)) ? 366 : 365)) {
+            else if (currentDay + 1 > ((this.state.year % 4 === 0 && (this.state.year % 100 !== 0 || this.state.year % 400 === 0)) ? 366 : 365)) {
                 currentDay = 1;
                 yearModifier = 1;
             }
@@ -147,18 +153,21 @@ class TutorFrame extends React.Component {
             search.Year = this.state.year + yearModifier;
             date = new Date(this.state.year, 0, currentDay);
             await axios.post(this.props.APIS.schedule + "find", search)
-                .then(response => {
-                    if (response.data.statusCode !== 200) {
-                        console.log(response.data.value);
-                    }
-                    else {
-                        response.data.value.map(item => {
-                            this.state.courses.map(course => {
-                                if (course.id === item.courseId) {
-                                    item.course = course;
-                                }
-                            });
+            // eslint-disable-next-line
+            .then(response => {
+                if (response.data.statusCode !== 200) {
+                    console.log(response.data.value);
+                }
+                else {
+                    response.data.value.map(item => {
+                        this.state.courses.map(course => {
+                            if (course.id === item.courseId) {
+                                item.course = course;
+                            }
+                            return null;
                         });
+                        return null;
+                    });
                         list.push({ coach: { name: date.toDateString()}, schedule: response.data.value });
                     }
                 })
@@ -181,6 +190,7 @@ class TutorFrame extends React.Component {
                         };
                         clone.id = this.props.getID(course._id);
                         courseList.push(clone);
+                        return null;
                     })
                     this.setState({ courses: courseList }, async () => this.LoadSchedules())
                 }
@@ -193,11 +203,21 @@ class TutorFrame extends React.Component {
         let preferred = false;
         let clone = this.props.Tutor;
         clone.preferredCourses.map(course => {
-            if (course == id) preferred = true;
+            if (course === id) preferred = true;
+            return null;
         });
         if (preferred) clone.preferredCourses.splice(clone.preferredCourses.indexOf(id), 1);
         else clone.preferredCourses.push(id);
         this.props.updateTutor(clone);
+    }
+    DeleteSchedule = (id) => {
+        axios.delete(`${this.props.APIS.schedule}delete/${id}?auth=${this.props.Login.authorized}&userid=${this.props.Login.id}`)
+            .then(response => {
+                if (response.data.statusCode !== 200) {
+                    console.log(response.data.value);
+                }
+                else this.LoadSchedules();
+            })
     }
     componentDidMount = async () => {
         await this.GetAllCourses();
@@ -209,8 +229,8 @@ class TutorFrame extends React.Component {
                 <div id="TutoringInformation" className="container horizontal max-width wireframe">
                     <ClassSelection Tutor={this.props.Tutor} courses={this.state.courses} Login={this.props.Login} movePreferredCourse={this.movePreferredCourse} />
                     {this.state.scheduleOpen
-                        ? <Calendar data={this.state.schedules} title={"Days of the Week"} key={this.state.schedules} />
-                        : <Schedule APIS={this.props.APIS} getID={this.props.getID} Login={this.props.Login} />
+                        ? <Calendar data={this.state.schedules} getID={this.props.getID} title={"Days of the Week"} key={this.state.schedules} DeleteSchedule={this.props.Login.id === this.props.Tutor.id || this.props.Login.admin ? this.DeleteSchedule : undefined} />
+                        : <Schedule APIS={this.props.APIS} getID={this.props.getID} Login={this.props.Login} Tutor={this.props.Tutor} />
                     }
                 </div>
             </div>

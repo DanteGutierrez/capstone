@@ -128,7 +128,7 @@ returns: course
 =====================================================
 Account API:
 
-/create
+/create?admin=""&auth=""
 POST:
 {
   "Admin":false,
@@ -142,7 +142,7 @@ POST:
 }
 returns: null
 -------------------------------------------
-/update/{id}?auth=""
+/update/{id}?auth=""&admin=""
 PUT:
 {
   "Password":"",
@@ -178,7 +178,7 @@ returns: list of limited account views (id, name, assigned course, and preferred
 ==================================================================================================
 Schedule API: 
 
-/create?auth=""
+/create?auth=""&admin=""
 POST:
 {
   "CourseId":"",
@@ -191,7 +191,7 @@ POST:
 }
 returns: null
 --------------------------------------------------
-/delete/{id}?auth=""
+/delete/{id}?auth=""&userid=""
 DELETE
 returns: message
 ---------------------------------------------------

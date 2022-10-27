@@ -33,6 +33,7 @@ class TutorCreationFrame extends React.Component {
                         };
                         clone.id = this.props.getID(course._id);
                         courseList.push(clone);
+                        return null;
                     })
                     this.setState({ courses: courseList });
                 }
@@ -67,7 +68,7 @@ class TutorCreationFrame extends React.Component {
     CreateAccount = () => {
         axios.post(this.props.APIS.account + `create?auth=${this.props.Login.authorized}&admin=${this.props.Login.id}`, this.state.Account)
             .then(response => {
-                if (response.data.statusCode != 200) {
+                if (response.data.statusCode !== 200) {
                     console.log(response.data.value);
                 }
                 else {

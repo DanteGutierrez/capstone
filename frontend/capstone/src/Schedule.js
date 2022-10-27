@@ -33,7 +33,7 @@ class ScheduleMakingFrame extends React.Component {
         let brokenDate = date.split("-");
         let year = Number(brokenDate[0]);
         let days = MonthToDays[Number(brokenDate[1]) - 1] + Number(brokenDate[2]);
-        if (days > 59 && (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0))) days += 1;
+        if (days > 59 && (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0))) days += 1;
         return days;
     }
     UpdateCredentials = (event) => {
@@ -84,6 +84,8 @@ class ScheduleMakingFrame extends React.Component {
             case "End":
                 form.EndDay = event.target.value;
                 break;
+            default:
+                break;
         }
         this.setState({ Form: form });
     }
@@ -103,15 +105,16 @@ class ScheduleMakingFrame extends React.Component {
                         };
                         clone.id = this.props.getID(course._id);
                         courseList.push(clone);
+                        return null;
                     })
                     this.setState({ courses: courseList });
                 }
             })
     }
     CreateSchedule = async (schedule) => {
-        return await axios.post(this.props.APIS.schedule + `create?auth=${this.props.Login.authorized}`, schedule)
+        return await axios.post(this.props.APIS.schedule + `create?auth=${this.props.Login.authorized}&admin=${this.props.Login.id}`, schedule)
             .then(response => {
-                if (response.data.statusCode != 200) {
+                if (response.data.statusCode !== 200) {
                     this.setState({ error: console.log(response.data.value) });
                     return false;
                 }
@@ -121,17 +124,18 @@ class ScheduleMakingFrame extends React.Component {
             });
     }
     ProcessSchedules = async () => {
-        if (this.state.Form.StartTime == "") { this.setState({ error: "Set a time for the tutoring to start" }); return; }
-        if (this.state.Form.EndTime == "") { this.setState({ error: "Set a time for the tutoring to end" }); return; }
+        if (this.state.Form.StartTime === "") { this.setState({ error: "Set a time for the tutoring to start" }); return; }
+        if (this.state.Form.EndTime === "") { this.setState({ error: "Set a time for the tutoring to end" }); return; }
         if (this.ConvertTime(this.state.Form.EndTime) < this.ConvertTime(this.state.Form.StartTime)) { this.setState({ error: "Ending Time cannot be before Starting Time" }); return; }
         if (this.ConvertTime(this.state.Form.EndTime) > (21 * 60)) { this.setState({ error: "You must end your tutoring at or before 9 pm" }); return; }
         if (this.ConvertTime(this.state.Form.StartTime) < (7 * 60)) { this.setState({ error: "You must start your tutoring at or after 7 am" }); return; }
-        if (this.state.Form.StartDay == "") { this.setState({ error: "Set a date for your tutoring" }); return; }
-        if (this.state.Form.Room == "") { this.setState({ error: "Set a room to tutor in" }); return; }
+        if (this.state.Form.StartDay === "") { this.setState({ error: "Set a date for your tutoring" }); return; }
+        if (this.state.Form.Room === "") { this.setState({ error: "Set a room to tutor in" }); return; }
+        if (this.state.Form.Course === "") { this.setState({ error: "Set a course to tutor" }); return; }
         if (this.state.Form.Repeat) {
-            if (this.state.Form.EndDay == "") { this.setState({ error: "Set an ending date for your tutoring" }); return; }
+            if (this.state.Form.EndDay === "") { this.setState({ error: "Set an ending date for your tutoring" }); return; }
             let year = this.GetYear(this.state.Form.StartDay);
-            let loops = this.GetDay(this.state.Form.EndDay) - this.GetDay(this.state.Form.StartDay) + (year != this.GetYear(this.state.Form.EndDay) ? (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0) ? 366 : 365) : 0);
+            let loops = this.GetDay(this.state.Form.EndDay) - this.GetDay(this.state.Form.StartDay) + (year !== this.GetYear(this.state.Form.EndDay) ? (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0) ? 366 : 365) : 0);
             if (loops < 0 || loops > 100) this.setState({ error: "You cannot set more than 100 schedules at once." });
             else {
                 let successes = 0;
@@ -141,7 +145,7 @@ class ScheduleMakingFrame extends React.Component {
                     if (this.state.Form.RepeatDay[currentDay.getDay()]) {
                         let schedule = {
                             CourseId: this.state.Form.Course,
-                            AccountId: this.props.Login.id,
+                            AccountId: this.props.Tutor.id,
                             Year: currentDay.getFullYear(),
                             Day: this.GetDay(currentDay.toISOString().slice(1, 10)),
                             StartTime: this.ConvertTime(this.state.Form.StartTime),
@@ -158,7 +162,7 @@ class ScheduleMakingFrame extends React.Component {
         else {
             let schedule = {
                 CourseId: this.state.Form.Course,
-                AccountId: this.props.Login.id,
+                AccountId: this.props.Tutor.id,
                 Year: this.GetYear(this.state.Form.StartDay),
                 Day: this.GetDay(this.state.Form.StartDay),
                 StartTime: this.ConvertTime(this.state.Form.StartTime),
@@ -202,6 +206,7 @@ class ScheduleMakingFrame extends React.Component {
                 <div className="container horizontal item wireframe" key={this.state.courses}>
                     <label className="item" htmlFor='Course'>Course:</label>
                     <select className="item" name="Course" onChange={this.UpdateCredentials}>
+                        <option value="">Please Select A Course</option>
                         {this.state.courses.map(course => {
                             return (
                                 <option value={course.id} key={course.id}>{course.code} - {course.name}</option>

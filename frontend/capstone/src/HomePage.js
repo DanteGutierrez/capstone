@@ -67,11 +67,11 @@ class HomeFrame extends React.Component {
         let day = this.state.search.Day + days;
         let year = this.state.search.Year;
         if (day < 1) {
-            day += ((this.state.year % 4 == 0 && (this.state.year % 100 != 0 || this.state.year % 400 == 0)) ? 366 : 365);
+            day += ((this.state.year % 4 === 0 && (this.state.year % 100 !== 0 || this.state.year % 400 === 0)) ? 366 : 365);
             year -= 1;
         }
-        else if (day > ((this.state.year % 4 == 0 && (this.state.year % 100 != 0 || this.state.year % 400 == 0)) ? 366 : 365)) {
-            day -= ((this.state.year % 4 == 0 && (this.state.year % 100 != 0 || this.state.year % 400 == 0)) ? 366 : 365);
+        else if (day > ((this.state.year % 4 === 0 && (this.state.year % 100 !== 0 || this.state.year % 400 === 0)) ? 366 : 365)) {
+            day -= ((this.state.year % 4 === 0 && (this.state.year % 100 !== 0 || this.state.year % 400 === 0)) ? 366 : 365);
             year += 1;
         }
         let search = this.state.search;
@@ -91,8 +91,10 @@ class HomeFrame extends React.Component {
             let id;
             this.state.courses.map(c => {
                 if (c.code === course) id = c.id;
+                return null;
             })
             list.push(id);
+            return null;
         });
 
         let search = this.state.search;
@@ -109,8 +111,10 @@ class HomeFrame extends React.Component {
             let id;
             this.state.coaches.map(c => {
                 if (c.name === coach) id = c.id;
+                return null;
             })
             list.push(id);
+            return null;
         });
         
         let search = this.state.search;
@@ -131,12 +135,15 @@ class HomeFrame extends React.Component {
                         if (course.id === entry.courseId) {
                             entry.course = course;
                         }
+                        return null;
                     })
                     schedule.push(entry);
                 }
+                return null;
             });
             datum.schedule = schedule;
             list.push(datum);
+            return null;
         });
         this.setState({ calendarData: list });
     }
@@ -145,9 +152,10 @@ class HomeFrame extends React.Component {
             accounts: []
         };
         this.state.schedules.map(schedule => {
-            if (coachIds.accounts.indexOf(schedule.accountId) == -1) {
+            if (coachIds.accounts.indexOf(schedule.accountId) === -1) {
                 coachIds.accounts.push(schedule.accountId);
             }
+            return null;
         });
         axios.post(this.props.APIS.account + 'batch', coachIds)
             .then(response => {
@@ -186,6 +194,7 @@ class HomeFrame extends React.Component {
                         };
                         clone.id = this.props.getID(course._id);
                         courseList.push(clone);
+                        return null;
                     })
                     this.setState({ courses: courseList }, async () => this.LoadSchedules())
                 }
@@ -197,13 +206,13 @@ class HomeFrame extends React.Component {
     render() {
         let date = new Date(this.state.search.Year, 0, this.state.search.Day).getDay();
         let tabs = [
-            { name: "Sun", selected: date == 0, value: 0 - date},
-            { name: "Mon", selected: date == 1, value: 1 - date },
-            { name: "Tue", selected: date == 2, value: 2 - date },
-            { name: "Wed", selected: date == 3, value: 3 - date },
-            { name: "Thu", selected: date == 4, value: 4 - date },
-            { name: "Fri", selected: date == 5, value: 5 - date },
-            { name: "Sat", selected: date == 6, value: 6 - date }
+            { name: "Sun", selected: date === 0, value: 0 - date},
+            { name: "Mon", selected: date === 1, value: 1 - date },
+            { name: "Tue", selected: date === 2, value: 2 - date },
+            { name: "Wed", selected: date === 3, value: 3 - date },
+            { name: "Thu", selected: date === 4, value: 4 - date },
+            { name: "Fri", selected: date === 5, value: 5 - date },
+            { name: "Sat", selected: date === 6, value: 6 - date }
         ];
         let courses = {
             selected: this.state.selections.courses,
@@ -214,14 +223,16 @@ class HomeFrame extends React.Component {
             unselected: []
         };
         this.state.courses.map(course => {
-            if (courses.selected.indexOf(course.code) == -1) {
+            if (courses.selected.indexOf(course.code) === -1) {
                 courses.unselected.push(course.code);
             }
+            return null;
         });
         this.state.coaches.map(coach => {
-            if (coaches.selected.indexOf(coach.name) == -1) {
+            if (coaches.selected.indexOf(coach.name) === -1) {
                 coaches.unselected.push(coach.name);
             }
+            return null;
         });
         return (
             <div id="Framing" className="container vertical justify-start max-width wireframe">

@@ -20,7 +20,7 @@ class NavigationFrame extends React.Component {
                     ? <NavButton name="Tutors" nav="/tutors" Click={evt => this.props.NavClick("tutors")} />
                     : <></>
                 }
-                {this.props.Login.authorized != ""
+                {this.props.Login.authorized !== ""
                     ? <>
                         <NavButton name="My Page" nav="/tutor" Click={evt => this.props.TutorNavigation(this.props.Login.id)}/>
                         <NavButton name="Logout" nav="/logout" Click={evt => this.props.NavClick("logout")} />

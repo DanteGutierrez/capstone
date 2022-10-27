@@ -7,7 +7,6 @@ import Navigation from './Navigation';
 import Login from './Login';
 import TutorPage from './TutorPage';
 import Tutors from './Tutors';
-import Schedule from './Schedule';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -25,27 +24,6 @@ const getID = (id) => {
   return id.timestamp.toString(16) + id.machine.toString(16) + PID.toString(16) + id.increment.toString(16);
 };
 
-// const GetAllCourses = async () => {
-//   await axios.get(APIS.course + "view")
-//     .then(response => {
-//       if (response.data.statusCode !== 200) {
-//         console.log(response.data.statusCode);
-//       }
-//       else {
-//         let courseList = [];
-//         response.data.value.map(course => {
-//           let clone = {
-//             id: "",
-//             code: course.code,
-//             name: course.name
-//           };
-//           clone.id = getID(course._id);
-//           courseList.push(clone);
-//         })
-//         return courseList;
-//       }
-//   })
-// }
 class Application extends React.Component {
   constructor(props) {
     super(props);
@@ -61,7 +39,6 @@ class Application extends React.Component {
         preferredName: ""
       },
       page: "",
-      error: "",
       courses: [],
     };
   };
@@ -86,16 +63,15 @@ class Application extends React.Component {
     }
     this.setState({ login: loginInfo });
   }
-  Login = () => {
-    if (this.state.login.email == "" || this.state.login.password == "") {
-      this.setState({ error: "testing" });
+  Login = async () => {
+    if (this.state.login.email === "" || this.state.login.password === "") {
+      return "Make sure both and email and password are entered";
     }
     else {
-      axios.post(APIS.account + "login", { Email: this.state.login.email, Password: this.state.login.password })
+      return await axios.post(APIS.account + "login", { Email: this.state.login.email, Password: this.state.login.password })
         .then(response => {
           if (response.data.statusCode !== 200) {
-            console.log(response.data.value);
-            this.setState({ error: response.data.value });
+            return response.data.value;
           }
           else {
             let loginInfo = this.state.login;
@@ -105,6 +81,7 @@ class Application extends React.Component {
             loginInfo.id = response.data.value.id;
             loginInfo.authorized = response.data.value.auth;
             this.setState({ login: loginInfo }, this.onNavButtonClicked('home'));
+            return "";
           }
         });
     }
@@ -137,11 +114,8 @@ class Application extends React.Component {
         this.setState({ page: <HomePage APIS={APIS} getID={getID} TutorNavigation={this.onTutorNavigate} /> });
         break;
       case "login":
-        this.setState({ page: <Login UpdateCredentials={this.updateCredentials} Login={this.Login} Error={this.state.error} /> });
+        this.setState({ page: <Login UpdateCredentials={this.updateCredentials} Login={this.Login} /> });
         break;
-      // case "schedule":
-      //   this.setState({ page: <Schedule APIS={APIS} getID={getID} Login={this.state.login} />})
-      //   break;
       case "tutors":
         this.setState({ page: <Tutors APIS={APIS} getID={getID} Login={this.state.login}/> });
         break;
