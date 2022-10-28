@@ -100,25 +100,30 @@ namespace capstone
             [HttpPost]
             [Route("find")]
             public async Task<IResult> FindSchedules(Search search) {
-                List<Schedule> assigned = new();
-                List<Schedule> preferred = new();
+                List<Schedule> list = new();
                 try {
-                    assigned = schedules.Find(s => s.Day == search.Day && s.Year == search.Year).ToList();
+                    list = schedules.Find(s => s.Day == search.Day && s.Year == search.Year).ToList();
                 }
                 catch(Exception _i) {
                     return Results.BadRequest("There was an issue");
                 }
 
-                if(search.StartTime != null) assigned = assigned.FindAll(s => s.StartTime >= search.StartTime);
+                if(search.StartTime != null) list = list.FindAll(s => s.StartTime >= search.StartTime);
                     
-                if(search.EndTime != null) assigned = assigned.FindAll(s => s.StartTime + s.Duration <= search.EndTime);
+                if(search.EndTime != null) list = list.FindAll(s => s.StartTime + s.Duration <= search.EndTime);
 
-                if(search.Coaches.Count() > 0) assigned = assigned.FindAll(s => search.Coaches.Contains(s.AccountId));
+                if(search.Coaches.Count() > 0) list = list.FindAll(s => search.Coaches.Contains(s.AccountId));
 
+                List<Schedule> assigned = new();
+                List<Schedule> preferred = new();
                 if (search.Courses.Count() > 0) {
-                    preferred = assigned;
-                    assigned = assigned.FindAll(s => search.Courses.Contains(s.CourseId));
-                    preferred = preferred.FindAll(s => accounts.Find(user => user._id == ObjectId.Parse(s.AccountId)).ToList().First().PreferredCourses.Contains(s.CourseId));
+                    foreach(string course in search.Courses) {
+                        preferred.AddRange(list.FindAll(s => accounts.Find(user => user._id == ObjectId.Parse(s.AccountId)).ToList().First().PreferredCourses.Contains(course)));
+                        assigned.AddRange(list.FindAll(s => course.Equals(s.CourseId)));
+                    }
+                }
+                else {
+                    assigned = list;
                 }
 
                 return Results.Ok(new ScheduleOrdered(assigned, preferred));

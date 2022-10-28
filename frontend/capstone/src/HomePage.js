@@ -7,7 +7,7 @@ import axios from 'axios';
 class SearchOptions extends React.Component {
     render() {
         return (
-            <div className="container horizontal max-height max-width justify-around item wireframe">
+            <div className="container horizontal max-height max-width justify-around item">
                 <Menu label="Class: " options={this.props.Courses} update={this.props.UpdateCourses} />
                 {/* <Menu label="Time: " options={} /> */}
                 <Menu label="Tutor: " options={this.props.Coaches} update={this.props.UpdateCoaches} />
@@ -134,7 +134,19 @@ class HomeFrame extends React.Component {
                 coach: coach
             };
             let schedule = [];
-            this.state.schedules.map(entry => {
+            this.state.schedules.assigned.map(entry => {
+                if (entry.accountId === coach.id) {
+                    this.state.courses.map(course => {
+                        if (course.id === entry.courseId) {
+                            entry.course = course;
+                        }
+                        return null;
+                    })
+                    schedule.push(entry);
+                }
+                return null;
+            });
+            this.state.schedules.preferred.map(entry => {
                 if (entry.accountId === coach.id) {
                     this.state.courses.map(course => {
                         if (course.id === entry.courseId) {
@@ -156,7 +168,13 @@ class HomeFrame extends React.Component {
         let coachIds = {
             accounts: []
         };
-        this.state.schedules.map(schedule => {
+        this.state.schedules.assigned.map(schedule => {
+            if (coachIds.accounts.indexOf(schedule.accountId) === -1) {
+                coachIds.accounts.push(schedule.accountId);
+            }
+            return null;
+        });
+        this.state.schedules.preferred.map(schedule => {
             if (coachIds.accounts.indexOf(schedule.accountId) === -1) {
                 coachIds.accounts.push(schedule.accountId);
             }

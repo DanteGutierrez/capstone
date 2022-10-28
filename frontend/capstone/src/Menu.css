@@ -18,6 +18,8 @@
 }
 .selected {
     background-color: #AAA;
+    padding: 2px;
+    border: 2px solid #888;
     border-radius: 20px;
 }
 .selected:hover {

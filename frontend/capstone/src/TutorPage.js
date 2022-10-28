@@ -159,7 +159,7 @@ class TutorFrame extends React.Component {
                     console.log(response.data.value);
                 }
                 else {
-                    response.data.value.map(item => {
+                    response.data.value.assigned.map(item => {
                         this.state.courses.map(course => {
                             if (course.id === item.courseId) {
                                 item.course = course;
@@ -168,7 +168,7 @@ class TutorFrame extends React.Component {
                         });
                         return null;
                     });
-                        list.push({ coach: { name: date.toDateString()}, schedule: response.data.value });
+                        list.push({ coach: { name: date.toDateString()}, schedule: response.data.value.assigned });
                     }
                 })
         }
