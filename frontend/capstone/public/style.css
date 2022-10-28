@@ -70,6 +70,7 @@ body {
 
 .button {
     user-select: none;
+    background-color: lightgray;
     border: 2px solid gray;
     border-radius: 5%;
 }
@@ -93,7 +94,9 @@ body {
 }
 
 #Framing {
-    height: calc(100% - 28px);
+    height: calc(100% - 29px);
+    padding: 1px;
+    box-sizing: border-box;
 }
 
 /* Class Code Colors */

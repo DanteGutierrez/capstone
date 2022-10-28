@@ -8,27 +8,27 @@ import Schedule from './Schedule';
 class TutorInfo extends React.Component {
     render() {
         return (
-            <div id="NameInformation" className="container horizontal max-width item wireframe">
+            <div id="NameInformation" className="container horizontal max-width item">
                 <div></div>
-                <div className="container vertical max-height max-width item wireframe">
+                <div className="container vertical max-height max-width item bubble">
                     <div id="TutorName" className="max-height max-width">{this.props.Tutor.name}</div>
                     <div id="TutorEmail" className="max-height max-width">{this.props.Tutor.email}</div>
                     {/* links */}
                 </div>
-                <div className="container vertical max-height item wireframe">
+                <div className="container vertical max-height item bubble">
                     <div className="item">Year</div>
                     <div className="item">{this.props.Year}</div>
-                    <div className="container horizontal max-width item wireframe">
+                    <div className="container horizontal max-width item">
                         <div className="item button" onClick={evt => this.props.ChangeDay(-7)}>ᐊ</div>
                         <div className="item">Week {Math.ceil(((6 - new Date(this.props.Year, 0, this.props.Day).getDay()) + this.props.Day) / 7)}</div>
                         <div className="item button" onClick={evt => this.props.ChangeDay(7)}>ᐅ</div>
                     </div>
                     {this.props.Login.admin || this.props.Login.id === this.props.Tutor.id
-                        ? <div className="item button" onClick={evt => this.props.ScheduleToggled()}>{this.props.scheduleOpen ? 'Change Schedule' : 'Open Schedule'}</div>
+                        ? <div className="item button" onClick={evt => this.props.ScheduleToggled()}>{this.props.ScheduleOpen ? 'Change Schedule' : 'Open Schedule'}</div>
                         : <></>
                     }
                 </div>
-                <div className="container vertical max-height max-width wireframe">
+                <div className="container vertical max-height max-width bubble">
                     {/* Text */}
                 </div>
             </div>
@@ -38,9 +38,9 @@ class TutorInfo extends React.Component {
 class ClassSelection extends React.Component {
     render() {
         return (
-            <div className="container horizontal align-start max-height wireframe">
-                <div className="container vertical justify-start max-height wireframe">
-                    <div className="container vertical max-width wireframe">
+            <div className="container horizontal align-start max-height">
+                <div className="container vertical justify-start max-height bubble">
+                    <div className="container vertical max-width">
                         <div className="item">Assigned:</div>
                         {
                             this.props.courses.map(course => {
@@ -55,7 +55,7 @@ class ClassSelection extends React.Component {
                             })
                         }
                     </div>
-                    <div className="preferredContainer container vertical justify-start max-height max-width wireframe">
+                    <div className="preferredContainer container vertical justify-start max-height max-width">
                         <div className="item">Also Tutors:</div>
                         <div className="container horizontal item preferred">
                             {this.props.Tutor.preferredCourses.map(courseId => {
@@ -73,7 +73,7 @@ class ClassSelection extends React.Component {
                     </div>
                 </div>
                 {this.props.Login.admin || this.props.Login.id === this.props.Tutor.id
-                    ? <div className="preferredContainer container vertical justify-start max-height item wireframe">
+                    ? <div className="preferredContainer container vertical justify-start max-height bubble">
                         <div className="item">Add to Preferred: </div>
                         <div className="container horizontal item preferred">
                             {this.props.courses.map(course => {
@@ -224,9 +224,9 @@ class TutorFrame extends React.Component {
     }
     render() {
         return (
-            <div id="Framing" className="container vertical justify-start max-width wireframe">
+            <div id="Framing" className="container vertical justify-start max-width">
                 <TutorInfo Tutor={this.props.Tutor} Year={this.state.year} Day={this.state.day} ChangeDay={this.ChangeDay} Login={this.props.Login} ScheduleToggled={this.ScheduleToggled} ScheduleOpen={this.state.scheduleOpen} />
-                <div id="TutoringInformation" className="container horizontal max-width wireframe">
+                <div id="TutoringInformation" className="container horizontal max-width">
                     <ClassSelection Tutor={this.props.Tutor} courses={this.state.courses} Login={this.props.Login} movePreferredCourse={this.movePreferredCourse} />
                     {this.state.scheduleOpen
                         ? <Calendar data={this.state.schedules} getID={this.props.getID} title={"Days of the Week"} key={this.state.schedules} DeleteSchedule={this.props.Login.id === this.props.Tutor.id || this.props.Login.admin ? this.DeleteSchedule : undefined} />

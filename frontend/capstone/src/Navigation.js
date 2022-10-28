@@ -4,7 +4,7 @@ import './Navigation.css';
 class NavButton extends React.Component {
     render() {
         return (
-            <div className="button item wireframe" onClick={this.props.Click}>
+            <div className="button item" onClick={this.props.Click}>
                 {this.props.name}
             </div>
         );

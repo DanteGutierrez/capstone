@@ -9,18 +9,18 @@ class Login extends React.Component {
     }
     render() {
         return (
-            <div className="container vertical max-width max-height wireframe">
-                <div className="container horizontal wireframe">
+            <form className="container vertical max-width max-height">
+                <div className="container horizontal">
                     <label className="item" htmlFor='Email'>Email: </label>
                     <input className="item" name="Email" type="text" placeholder="Email" onChange={this.props.UpdateCredentials}/>
                 </div>
-                <div className="container horizontal wireframe">
+                <div className="container horizontal">
                     <label className="item" htmlFor='Password'>Password: </label>
                     <input className="item" name="Password" type="password" placeholder="Password" onChange={this.props.UpdateCredentials} />
                 </div>
-                <div className="item button" onClick={async (evt) => this.setState({ error: await this.props.Login() })}>Login</div>
+                <input type="button" value="Login"className="item button" onClick={async (evt) => this.setState({ error: await this.props.Login() })}/>
                 <div className="item error">{this.state.error}</div>
-            </div>
+            </form>
         )
     }
 }

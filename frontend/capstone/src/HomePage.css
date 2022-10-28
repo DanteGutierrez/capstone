@@ -10,11 +10,24 @@
 .tab {
     width: 50px;
     height: 30px;
+    border-top-left-radius: 25%;
+    border-top-right-radius: 25%;
+    background-color: #AAA;
+    border-top: 2px solid #888;
+    border-left: 2px solid #888;
+    border-right: 2px solid #888;
 }
 .tab:hover {
     cursor:pointer;
+    background-color: #B8B8B8;
+    height:40px;
 }
 .selectedTab {
     width: 75px;
+    height: 50px;
+    background-color: #DDD;
+}
+.selectedTab:hover {
+    background-color: #EEE;
     height: 50px;
 }

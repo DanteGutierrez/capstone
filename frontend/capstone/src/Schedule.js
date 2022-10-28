@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import './Schedule.css'
 
 class ScheduleMakingFrame extends React.Component {
     constructor(props) {
@@ -7,9 +8,9 @@ class ScheduleMakingFrame extends React.Component {
         this.state = {
             Form: {
                 StartDay: '',
-                StartTime: 0,
+                StartTime: '',
                 EndDay: '',
-                EndTime: 0,
+                EndTime: '',
                 Course: "",
                 Room: "",
                 RepeatDay: [false, false, false, false, false, false, false],
@@ -126,12 +127,12 @@ class ScheduleMakingFrame extends React.Component {
     ProcessSchedules = async () => {
         if (this.state.Form.StartTime === "") { this.setState({ error: "Set a time for the tutoring to start" }); return; }
         if (this.state.Form.EndTime === "") { this.setState({ error: "Set a time for the tutoring to end" }); return; }
-        if (this.ConvertTime(this.state.Form.EndTime) < this.ConvertTime(this.state.Form.StartTime)) { this.setState({ error: "Ending Time cannot be before Starting Time" }); return; }
-        if (this.ConvertTime(this.state.Form.EndTime) > (21 * 60)) { this.setState({ error: "You must end your tutoring at or before 9 pm" }); return; }
-        if (this.ConvertTime(this.state.Form.StartTime) < (7 * 60)) { this.setState({ error: "You must start your tutoring at or after 7 am" }); return; }
         if (this.state.Form.StartDay === "") { this.setState({ error: "Set a date for your tutoring" }); return; }
         if (this.state.Form.Room === "") { this.setState({ error: "Set a room to tutor in" }); return; }
         if (this.state.Form.Course === "") { this.setState({ error: "Set a course to tutor" }); return; }
+        if (this.ConvertTime(this.state.Form.EndTime) < this.ConvertTime(this.state.Form.StartTime)) { this.setState({ error: "Ending Time cannot be before Starting Time" }); return; }
+        if (this.ConvertTime(this.state.Form.EndTime) > (21 * 60)) { this.setState({ error: "You must end your tutoring at or before 9 pm" }); return; }
+        if (this.ConvertTime(this.state.Form.StartTime) < (7 * 60)) { this.setState({ error: "You must start your tutoring at or after 7 am" }); return; }
         if (this.state.Form.Repeat) {
             if (this.state.Form.EndDay === "") { this.setState({ error: "Set an ending date for your tutoring" }); return; }
             let year = this.GetYear(this.state.Form.StartDay);
@@ -178,8 +179,8 @@ class ScheduleMakingFrame extends React.Component {
     }
     render() {
         return (
-            <div className="container vertical justify-start align-start max-width max-height wireframe">
-                <div className="container horizontal item wireframe">
+            <div className="container vertical justify-start align-start max-width max-height">
+                <div className="container horizontal item">
                     <label className="item" htmlFor='StartTime'>Start Time:</label>
                     <input className="item" type="time" name="StartTime" onChange={this.UpdateCredentials}/>
                     <label className="item" htmlFor='EndTime'>End Time:</label>
@@ -187,23 +188,23 @@ class ScheduleMakingFrame extends React.Component {
                 </div>
                 {!this.state.Form.Repeat
                     ?
-                    <div className="container horizontal item wireframe">
+                    <div className="container horizontal item">
                         <label className="item" htmlFor='Day'>Day:</label>
                         <input className="item" type="date" name="Day" onChange={this.UpdateCredentials} value={this.state.Form.StartDay} />
                     </div>
                     :
-                    <div className="container horizontal item wireframe">
+                    <div className="container horizontal item">
                         <label className="item" htmlFor='Start'>Start Day:</label>
                         <input className="item" type="date" name="Start" onChange={this.UpdateCredentials} max={this.state.Form.EndDay} value={this.state.Form.StartDay} />
                         <label className="item" htmlFor='End'>End Day:</label>
                         <input className="item" type="date" name="End" onChange={this.UpdateCredentials} min={this.state.Form.StartDay} value={this.state.Form.EndDay} />
                     </div>
                 }              
-                <div className="container horizontal item wireframe">
+                <div className="container horizontal item">
                     <label className="item" htmlFor='Room'>Room:</label>
                     <input className="item" type="text" name="Room" onChange={this.UpdateCredentials} placeholder="Room: #" />
                 </div>
-                <div className="container horizontal item wireframe" key={this.state.courses}>
+                <div className="container horizontal item" key={this.state.courses}>
                     <label className="item" htmlFor='Course'>Course:</label>
                     <select className="item" name="Course" onChange={this.UpdateCredentials}>
                         <option value="">Please Select A Course</option>
@@ -214,28 +215,42 @@ class ScheduleMakingFrame extends React.Component {
                         })}
                     </select>
                 </div>
-                <div className="container horizontal item wireframe">
+                <div className="container horizontal item">
                     <label className="item" htmlFor='Repeats'>Repeats?:</label>
                     <input className="item" type="checkbox" name="Repeats" onChange={this.UpdateCredentials} checked={this.state.Form.Repeat} />
                 </div>
                 {this.state.Form.Repeat
                     ?
                     <>
-                        <div className="container horizontal item wireframe">
-                            <label className="item" htmlFor='Sunday'>Sunday:</label>
-                            <input className="item" type="checkbox" name="Sunday" onChange={this.UpdateCredentials} checked={this.state.Form.RepeatDay[0]} />
-                            <label className="item" htmlFor='Monday'>Monday:</label>
-                            <input className="item" type="checkbox" name="Monday" onChange={this.UpdateCredentials} checked={this.state.Form.RepeatDay[1]} />
-                            <label className="item" htmlFor='Tuesday'>Tuesday:</label>
-                            <input className="item" type="checkbox" name="Tuesday" onChange={this.UpdateCredentials} checked={this.state.Form.RepeatDay[2]} />
-                            <label className="item" htmlFor='Wednesday'>Wednesday:</label>
-                            <input className="item" type="checkbox" name="Wednesday" onChange={this.UpdateCredentials} checked={this.state.Form.RepeatDay[3]} />
-                            <label className="item" htmlFor='Thursday'>Thursday:</label>
-                            <input className="item" type="checkbox" name="Thursday" onChange={this.UpdateCredentials} checked={this.state.Form.RepeatDay[4]} />
-                            <label className="item" htmlFor='Friday'>Friday:</label>
-                            <input className="item" type="checkbox" name="Friday" onChange={this.UpdateCredentials} checked={this.state.Form.RepeatDay[5]} />
-                            <label className="item" htmlFor='Saturday'>Saturday:</label>
-                            <input className="item" type="checkbox" name="Saturday" onChange={this.UpdateCredentials} checked={this.state.Form.RepeatDay[6]} />
+                        <div className="container horizontal item">
+                            <div className="container horizontal item day">
+                                <label className="item" htmlFor='Sunday'>Sunday:</label>
+                                <input className="item" type="checkbox" name="Sunday" onChange={this.UpdateCredentials} checked={this.state.Form.RepeatDay[0]} />
+                            </div>
+                            <div className="container horizontal item day">
+                                <label className="item" htmlFor='Monday'>Monday:</label>
+                                <input className="item" type="checkbox" name="Monday" onChange={this.UpdateCredentials} checked={this.state.Form.RepeatDay[1]} />
+                            </div>
+                            <div className="container horizontal item day">
+                                <label className="item" htmlFor='Tuesday'>Tuesday:</label>
+                                <input className="item" type="checkbox" name="Tuesday" onChange={this.UpdateCredentials} checked={this.state.Form.RepeatDay[2]} />
+                            </div>
+                            <div className="container horizontal item day">
+                                <label className="item" htmlFor='Wednesday'>Wednesday:</label>
+                                <input className="item" type="checkbox" name="Wednesday" onChange={this.UpdateCredentials} checked={this.state.Form.RepeatDay[3]} />
+                            </div>
+                            <div className="container horizontal item day">
+                                <label className="item" htmlFor='Thursday'>Thursday:</label>
+                                <input className="item" type="checkbox" name="Thursday" onChange={this.UpdateCredentials} checked={this.state.Form.RepeatDay[4]} />
+                            </div>
+                            <div className="container horizontal item day">
+                                <label className="item" htmlFor='Friday'>Friday:</label>
+                                <input className="item" type="checkbox" name="Friday" onChange={this.UpdateCredentials} checked={this.state.Form.RepeatDay[5]} />
+                            </div>
+                            <div className="container horizontal item day">
+                                <label className="item" htmlFor='Saturday'>Saturday:</label>
+                                <input className="item" type="checkbox" name="Saturday" onChange={this.UpdateCredentials} checked={this.state.Form.RepeatDay[6]} />
+                            </div>
                         </div>
                         
                     </>

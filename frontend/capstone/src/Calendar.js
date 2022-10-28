@@ -82,13 +82,13 @@ class Row extends React.Component {
 class CalendarFrame extends React.Component {
     render() {
         return (
-            <div id="Frame" className="max-height max-width wireframe">
+            <div id="Frame" className="max-height max-width">
                 <div className="container horizontal">
-                    <div id="Names" className="wireframe">
+                    <div id="Names" className="container vertical">
                         <div className="column title">{this.props.title}</div>
                         {this.props.data.map(data => {
                             return (
-                                <div className="column row mini-margin wireframe" key={data.coach.name}>
+                                <div className="column row name" key={data.coach.name}>
                                     {data.coach.id !== undefined
                                         ? <div className="item button" onClick={evt => this.props.TutorNavigation(data.coach.id)}>{data.coach.name}</div>
                                         : <>{data.coach.name}</>
@@ -97,7 +97,7 @@ class CalendarFrame extends React.Component {
                             )
                         })}
                     </div>
-                    <div className='container vertical justify-start align-start box-bind wireframe'>
+                    <div className='container vertical justify-start align-start box-bind'>
                         <div className="container horizontal justify-start align-start box max-height">
                                 {Times.slice(StartingPoint,EndingPoint).map((value, i) => {
                                 return (

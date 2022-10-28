@@ -19,20 +19,20 @@ class SearchOptions extends React.Component {
 class DateSelection extends React.Component {
     render() {
         return (
-            <div className="container horizontal max-height max-width justify-start item wireframe">
+            <div className="container horizontal max-height max-width justify-start item">
                 <div className="container vertical max-height item wireframe">
                     <div className="item">Year</div>
                     <div className="item">{this.props.Year}</div>
-                    <div className="container horizontal max-width item wireframe">
+                    <div className="container horizontal max-width item">
                         <div className="item button" onClick={evt => this.props.ChangeDay(-7)}>ᐊ</div>
                         <div className="item">Week {Math.ceil(((6 - new Date(this.props.Year, 0, this.props.Day).getDay()) + this.props.Day) / 7)}</div>
                         <div className="item button" onClick={evt => this.props.ChangeDay(7)}>ᐅ</div>
                     </div>
                 </div>
-                <div className="container horizontal max-height align-end item wireframe">
+                <div className="container horizontal max-height align-end item">
                     {this.props.Tabs.map(tab => {
                         return (
-                            <div className={`tab${tab.selected ? " selectedTab" : ""} wireframe`} onClick={evt => this.props.ChangeDay(tab.value)} key={tab.name}>{tab.name}</div>
+                            <div className={`tab${tab.selected ? " selectedTab" : ""}`} onClick={evt => this.props.ChangeDay(tab.value)} key={tab.name}>{tab.name}</div>
                         )
                     })}
                 </div>
@@ -235,8 +235,8 @@ class HomeFrame extends React.Component {
             return null;
         });
         return (
-            <div id="Framing" className="container vertical justify-start max-width wireframe">
-                <div className="container horizontal max-width wireframe">
+            <div id="Framing" className="container vertical justify-start max-width">
+                <div className="container horizontal max-width">
                     <DateSelection ChangeDay={this.ChangeDay} Year={this.state.search.Year} Day={this.state.search.Day} Tabs={tabs} />
                     <SearchOptions Courses={courses} Coaches={coaches} UpdateCoaches={this.UpdateCoaches} UpdateCourses={this.UpdateCourses} key={this.state.courses + this.state.coaches} />
                 </div>

@@ -13,8 +13,8 @@
 .row {
     height:100px;
 }
-.mini-margin {
-    margin: 2px;
+.name {
+    border-bottom: 2px solid black;
 }
 .column {
     width: 120px;
@@ -68,15 +68,23 @@
 }
 #Frame {
     margin: 0px;
+    border: 2px solid black;
+    box-sizing: border-box;
     overflow-x: auto;
     overflow-y: auto;
 }
 #Frame::-webkit-scrollbar-thumb {
-    background-color: #333;
+    background-color: rgba(31,31,31,.5);
     border-radius: 20px;
 }
+#Frame::-webkit-scrollbar-thumb:hover {
+    background-color: #333;
+}
 #Frame::-webkit-scrollbar-track {
-    background-color: rgba(0,0,0,0);
+    background-color:#FFF922;
+}
+#Frame::-webkit-scrollbar-corner {
+    background-color: gold;
 }
 
 #Frame::-webkit-scrollbar {
@@ -90,6 +98,7 @@
     background-color:white;
     border-right: 2px solid black;
     z-index:4;
+    box-sizing: border-box;
 }
 #Frame > div {
     width: fit-content;
