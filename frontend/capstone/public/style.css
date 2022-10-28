@@ -1,6 +1,9 @@
 /* Defaults */
 
+
 html {
+    /* font-family: 'Montserrat', sans-serif; */
+    font-family: 'Kanit', sans-serif;
     margin: 0px;
     padding: 0px;
     width: 100vw;

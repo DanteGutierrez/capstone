@@ -66,6 +66,9 @@
 .spacer {
     width:119px;
 }
+#Title {
+    font-size: 11pt;
+}
 #Frame {
     margin: 0px;
     border: 2px solid black;

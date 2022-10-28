@@ -85,12 +85,12 @@ class CalendarFrame extends React.Component {
             <div id="Frame" className="max-height max-width">
                 <div className="container horizontal">
                     <div id="Names" className="container vertical">
-                        <div className="column title">{this.props.title}</div>
+                        <div id="Title"className="column title">{this.props.title}</div>
                         {this.props.data.map(data => {
                             return (
                                 <div className="column row name" key={data.coach.name}>
                                     {data.coach.id !== undefined
-                                        ? <div className="item button" onClick={evt => this.props.TutorNavigation(data.coach.id)}>{data.coach.name}</div>
+                                        ? <div className="button" title={`Go to ${data.coach.name}'s tutor page`} onClick={evt => this.props.TutorNavigation(data.coach.id)}>{data.coach.name}</div>
                                         : <>{data.coach.name}</>
                                     }
                                 </div>

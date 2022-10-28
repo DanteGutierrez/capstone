@@ -1,5 +1,9 @@
-#Home {
-    height: calc(100% - 28px);
+
+#WeekChanger {
+    /* width is equal to size of name box + border width x 1 */
+    width: calc(120px + 2px);
+    border: 2px solid #DDD;
+    box-sizing:border-box;
 }
 
 .color {

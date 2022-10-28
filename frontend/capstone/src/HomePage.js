@@ -19,20 +19,25 @@ class SearchOptions extends React.Component {
 class DateSelection extends React.Component {
     render() {
         return (
-            <div className="container horizontal max-height max-width justify-start item">
-                <div className="container vertical max-height item wireframe">
+            <div className="container horizontal max-height max-width justify-start">
+                <div id="WeekChanger" className="container vertical max-height">
                     <div className="item">Year</div>
                     <div className="item">{this.props.Year}</div>
                     <div className="container horizontal max-width item">
-                        <div className="item button" onClick={evt => this.props.ChangeDay(-7)}>ᐊ</div>
+                        <div className="item button" title="Look at last week's shedules"onClick={evt => this.props.ChangeDay(-7)}>ᐊ</div>
                         <div className="item">Week {Math.ceil(((6 - new Date(this.props.Year, 0, this.props.Day).getDay()) + this.props.Day) / 7)}</div>
-                        <div className="item button" onClick={evt => this.props.ChangeDay(7)}>ᐅ</div>
+                        <div className="item button" title="Look at next week's schedules" onClick={evt => this.props.ChangeDay(7)}>ᐅ</div>
                     </div>
                 </div>
                 <div className="container horizontal max-height align-end item">
                     {this.props.Tabs.map(tab => {
+                        let date = new Date(this.props.Year, 0, this.props.Day + tab.value).toLocaleDateString().split('/');
+                        let stringDate = date[0] + "/" + date[1];
                         return (
-                            <div className={`tab${tab.selected ? " selectedTab" : ""}`} onClick={evt => this.props.ChangeDay(tab.value)} key={tab.name}>{tab.name}</div>
+                            <div className={`container vertical tab${tab.selected ? " selectedTab" : ""}`} title={`Look at ${stringDate}'s schedules`} onClick={evt => this.props.ChangeDay(tab.value)} key={tab.name}>
+                                <div>{tab.name}</div>
+                                {tab.selected ? <div>{stringDate}</div> : <></>}
+                            </div>
                         )
                     })}
                 </div>
