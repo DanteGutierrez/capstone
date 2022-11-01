@@ -3,38 +3,8 @@ import axios from 'axios'
 import './TutorPage.css'
 import Calendar from './Calendar';
 import Schedule from './Schedule';
+import TutorInfo from './TutorInfo';
 
-
-class TutorInfo extends React.Component {
-    render() {
-        return (
-            <div id="NameInformation" className="container horizontal max-width item">
-                <div></div>
-                <div className="container vertical max-height max-width item bubble">
-                    <div id="TutorName" className="max-height max-width">{this.props.Tutor.name}</div>
-                    <div id="TutorEmail" className="max-height max-width">{this.props.Tutor.email}</div>
-                    {/* links */}
-                </div>
-                <div className="container vertical max-height item bubble">
-                    <div className="item">Year</div>
-                    <div className="item">{this.props.Year}</div>
-                    <div className="container horizontal max-width item">
-                        <div className="item button" onClick={evt => this.props.ChangeDay(-7)}>ᐊ</div>
-                        <div className="item">Week {Math.ceil(((6 - new Date(this.props.Year, 0, this.props.Day).getDay()) + this.props.Day) / 7)}</div>
-                        <div className="item button" onClick={evt => this.props.ChangeDay(7)}>ᐅ</div>
-                    </div>
-                    {this.props.Login.admin || this.props.Login.id === this.props.Tutor.id
-                        ? <div className="item button" onClick={evt => this.props.ScheduleToggled()}>{this.props.ScheduleOpen ? 'Change Schedule' : 'Open Schedule'}</div>
-                        : <></>
-                    }
-                </div>
-                <div className="container vertical max-height max-width bubble">
-                    {/* Text */}
-                </div>
-            </div>
-        )
-    }
-}
 class ClassSelection extends React.Component {
     render() {
         return (
@@ -110,7 +80,12 @@ class TutorFrame extends React.Component {
             day: day,
             schedules: [],
             courses: [],
-            scheduleOpen: true
+            scheduleOpen: true,
+            name: {
+                preferred: '',
+                last: '',
+                preferredEdit: ''
+            }
         };
     }
     ChangeDay = (days) => {
@@ -219,13 +194,23 @@ class TutorFrame extends React.Component {
                 else this.LoadSchedules();
             })
     }
+    savePreferredName = (name) => {
+        let clone = this.props.Tutor;
+        clone.PreferredName = name;
+        this.props.updateTutor(clone);
+    }
+    createLink = (link) => {
+        let clone = this.props.Tutor;
+        clone.links.push(link);
+        this.props.updateTutor(clone);
+    }
     componentDidMount = async () => {
         await this.GetAllCourses();
     }
     render() {
         return (
             <div id="Framing" className="container vertical justify-start max-width">
-                <TutorInfo Tutor={this.props.Tutor} Year={this.state.year} Day={this.state.day} ChangeDay={this.ChangeDay} Login={this.props.Login} ScheduleToggled={this.ScheduleToggled} ScheduleOpen={this.state.scheduleOpen} />
+                <TutorInfo Tutor={this.props.Tutor} Year={this.state.year} Day={this.state.day} ChangeDay={this.ChangeDay} Login={this.props.Login} ScheduleToggled={this.ScheduleToggled} ScheduleOpen={this.state.scheduleOpen} SavePreferredName={this.savePreferredName} CreateLink={this.createLink} />
                 <div id="TutoringInformation" className="container horizontal max-width">
                     <ClassSelection Tutor={this.props.Tutor} courses={this.state.courses} Login={this.props.Login} movePreferredCourse={this.movePreferredCourse} />
                     {this.state.scheduleOpen

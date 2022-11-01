@@ -1,0 +1,69 @@
+#NameInformation {
+    height: 20%;
+    min-height: 140px;
+}
+
+#PreferredName {
+    height: 32pt;
+    font-size: 32pt;
+    border: none;
+    border-bottom: 2px solid #333;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    width:50%;
+    margin-right: 5px;
+    text-align: right;
+}
+#SaveWriting {
+    margin-right: 10px;
+    background-color: rgba(0,0,0,0);
+}
+#SaveWriting:hover {
+    cursor: pointer;
+}
+#SaveWriting > img{
+    aspect-ratio: 1;
+    height: 25px;
+}
+
+#PreferredName:hover {
+    background-color: rgba(0, 0, 0, .15);
+}
+
+#ProfilePicture {
+    aspect-ratio: 1;
+    border-radius: 100%;
+}
+#TutorName {
+    font-size: 32pt;
+}
+
+#TutorEmail {
+    font-size: 28pt;
+}
+#LinkAdding {
+    position:absolute;
+    background-color: white;
+}
+
+#Links {
+    position:relative;
+    overflow-x:auto;
+    overflow-y: hidden;
+    min-height: 40px;
+}
+.bubble {
+    border: 2px solid #DDD;
+    box-sizing: border-box;
+}
+.linkImage {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    height: 25px;
+}
+.linkImage:hover {
+    cursor: pointer;
+}
+.badInput {
+    border: 1px solid red;
+}

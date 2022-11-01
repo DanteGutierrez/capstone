@@ -1,17 +1,8 @@
-#TutorName {
-    font-size: 32pt;
-}
-#TutorEmail {
-    font-size: 28pt;
-}
+
 #TutoringInformation {
     min-height: 80%;
     height: 80%;
     padding: 1px;
-}
-#NameInformation {
-    height: 20%;
-    min-height: 140px;
 }
 .bubble {
     border: 2px solid #DDD;

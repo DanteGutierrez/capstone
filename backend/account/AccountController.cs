@@ -66,11 +66,6 @@ namespace capstone
                     var update = Builders<Account>.Update.Set(a => a.Password, account.Password);
                     await accounts.UpdateOneAsync(filter, update);
                 }
-                if (!string.IsNullOrEmpty(account.PreferredName))
-                {
-                    var update = Builders<Account>.Update.Set(a => a.PreferredName, account.PreferredName);
-                    await accounts.UpdateOneAsync(filter, update);
-                }
                 if(!string.IsNullOrEmpty(account.AssignedCourse)) {
                     var update = Builders<Account>.Update.Set(a => a.AssignedCourse, account.AssignedCourse);
                     await accounts.UpdateOneAsync(filter, update);
@@ -79,6 +74,20 @@ namespace capstone
                     var update = Builders<Account>.Update.Set(a => a.PreferredCourses, account.PreferredCourses);
                     await accounts.UpdateOneAsync(filter, update);
                 }
+                if(account.Links != null) {
+                    var update = Builders<Account>.Update.Set(a => a.Links, account.Links);
+                    await accounts.UpdateOneAsync(filter, update);
+                }
+                if (!string.IsNullOrEmpty(account.Status))
+                {
+                    var update = Builders<Account>.Update.Set(a => a.Status, account.Status);
+                    await accounts.UpdateOneAsync(filter, update);
+                }
+
+                var preferredUpdate = Builders<Account>.Update.Set(a => a.PreferredName, account.PreferredName);
+                await accounts.UpdateOneAsync(filter, preferredUpdate);
+                var profileUpdate = Builders<Account>.Update.Set(a => a.ProfilePictureURL, account.ProfilePictureURL);
+                await accounts.UpdateOneAsync(filter, profileUpdate);
 
                 return true;
             }
@@ -155,7 +164,7 @@ namespace capstone
                 catch(Exception _i) {
                     return Results.BadRequest("There was no account");
                 }
-                return Results.Ok(new LimitedAccount(account._id.ToString(), account.Email, (string.IsNullOrEmpty( account.PreferredName) ? account.FirstName : account.PreferredName) + " " + account.LastName, account.AssignedCourse, account.PreferredCourses));
+                return Results.Ok(new LimitedAccount(account._id.ToString(), account.Email, (string.IsNullOrEmpty( account.PreferredName) ? account.FirstName : account.PreferredName) + " " + account.LastName, account.AssignedCourse, account.PreferredCourses, account.ProfilePictureURL, account.Links, account.Status));
             }
             [HttpPost]
             [Route("batch")]
@@ -169,7 +178,7 @@ namespace capstone
                     catch(Exception _i) {
                         break;
                     }
-                    result.Add(new LimitedAccount(account._id.ToString(), account.Email, (string.IsNullOrEmpty(account.PreferredName) ? account.FirstName : account.PreferredName) + " " + account.LastName, account.AssignedCourse, account.PreferredCourses));
+                    result.Add(new LimitedAccount(account._id.ToString(), account.Email, (string.IsNullOrEmpty(account.PreferredName) ? account.FirstName : account.PreferredName) + " " + account.LastName, account.AssignedCourse, account.PreferredCourses, account.ProfilePictureURL, account.Links, account.Status));
                 }
                 return Results.Ok(result);
             }

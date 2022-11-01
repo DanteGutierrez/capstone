@@ -21,6 +21,12 @@ namespace capstone {
         public string? AssignedCourse { get; set; }
         [BsonElement("PreferredCourses")]
         public List<string> PreferredCourses { get; set; } = new();
+        [BsonElement("ProfilePictureURL")]
+        public string ProfilePictureURL { get; set; } = "";
+        [BsonElement("Links")]
+        public List<Link> Links { get; set; } = new();
+        [BsonElement("Status")]
+        public string Status { get; set; } = "";
         public Account()
         {
             _id = ObjectId.GenerateNewId();

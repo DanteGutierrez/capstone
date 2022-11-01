@@ -31,6 +31,7 @@
 }
 .info {
     display:none;
+    min-width: 0px;
 }
 .other:hover > .info {
     font-size: 10pt;
@@ -41,6 +42,8 @@
     min-width: 300px;
     z-index: 2;
     justify-content: flex-end;
+    animation-duration: .25s;
+    animation-name: DetailHover;
 }
 .info > div {
     color: #222;
@@ -107,4 +110,13 @@
     width: fit-content;
     height: fit-content;
 }
-
+@keyframes DetailHover {
+    from {
+        min-width:120px;
+        opacity: 0;
+    }
+    to {
+        min-width: 300px;
+        opacity: 1;
+    }
+}

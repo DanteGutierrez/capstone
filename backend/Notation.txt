@@ -138,7 +138,10 @@ POST:
   "LastName":"",
   "PreferredName":"",
   "AssignedCourse":"",
-  "PreferredCourses":[]
+  "PreferredCourses":[],
+  "ProfilePictureURL":"",
+  "Links":[{}],
+  "Status":""
 }
 returns: null
 -------------------------------------------
@@ -148,7 +151,10 @@ PUT:
   "Password":"",
   "PreferredName":"",
   "AssignedCourse":"",
-  "PreferredCourses":[]
+  "PreferredCourses":[],
+  "ProfilePictureURL":"",
+  "Links":[{}],
+  "Status":""
 }
 changes password, preferred name, assigned course, and preferred courses
 returns: message 
@@ -167,14 +173,14 @@ returns: message
 ---------------------------------------
 /view/{id}
 GET
-returns: limited account view (id, name, assigned course, and preferred courses)
+returns: limited account view (id, name, assigned course, preferred courses, profile picture url, link list, and status)
 -------------------------------------
 /batch
 POST:
 {
   "Accounts":[]
 }
-returns: list of limited account views (id, name, assigned course, and preferred courses)
+returns: list of limited account views (id, name, assigned course, preferred courses, profile picture url, link list, and status)
 ==================================================================================================
 Schedule API: 
 

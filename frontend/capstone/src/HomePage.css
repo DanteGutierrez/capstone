@@ -20,6 +20,7 @@
     border-top: 2px solid #888;
     border-left: 2px solid #888;
     border-right: 2px solid #888;
+    transition: height .1s;
 }
 .tab:hover {
     cursor:pointer;

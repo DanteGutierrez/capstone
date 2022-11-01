@@ -87,6 +87,9 @@ class Application extends React.Component {
     }
   }
   updateTutor = (tutor) => {
+    if (tutor.PreferredName === undefined) {
+      tutor.PreferredName = tutor.name.split(' ').slice(0, -1).join(' ');
+    }
     axios.put(APIS.account + `update/${tutor.id}?auth=${this.state.login.authorized}&admin=${this.state.login.id}`, tutor)
       .then(response => {
         if (response.data.statusCode !== 200) {
