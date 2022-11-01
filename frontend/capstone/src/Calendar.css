@@ -14,6 +14,7 @@
     height:100px;
 }
 .name {
+    background-color: rgba(0,0,0, .15);
     border-bottom: 2px solid black;
 }
 .column {
@@ -68,6 +69,13 @@
 }
 .spacer {
     width:119px;
+}
+.nameButton {
+    font-weight:bold;
+    text-decoration: underline;
+}
+.nameButton:hover {
+    cursor:pointer;
 }
 #Title {
     font-size: 11pt;

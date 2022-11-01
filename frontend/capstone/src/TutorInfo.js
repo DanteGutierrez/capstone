@@ -11,11 +11,17 @@ class TutorInfoFrame extends React.Component {
                 URL: "",
                 Title: ""
             },
-            linkAdderOpen: false
+            password: "",
+            status: this.props.Tutor.status,
+            linkAdderOpen: false,
+            passwordChangerOpen: false,
         }
     }
     onOpen = () => {
         this.setState({ linkAdderOpen: !this.state.linkAdderOpen, link: { ImageURL: "", URL: "", Title: ""} });
+    }
+    onPasswordOpen = () => {
+        this.setState({ passwordChangerOpen: !this.state.passwordChangerOpen });
     }
     onChange = (event) => {
         let item = event.target;
@@ -33,10 +39,20 @@ class TutorInfoFrame extends React.Component {
             case "Title":
                 link.Title = item.value;
                 break;
+            case "ChangeStatus":
+                this.setState({ status: item.value });
+                break;
+            case "Password":
+                this.setState({password: item.value})
+                break;
             default:
                 break;
         }
         this.setState({ link: link });
+    }
+    checkPassword = () => {
+        if (this.state.password === "") return null;
+        this.props.ChangePassword(this.state.password);
     }
     checkLink = () => {
         if (this.state.link.ImageURL === "" || this.state.link.URL === "") return null;
@@ -48,20 +64,39 @@ class TutorInfoFrame extends React.Component {
                 <img id="ProfilePicture" className="max-height item bubble" src={"no-profile.png"} alt="Profile" />
                 <div className="container vertical max-height max-width item bubble align-start">
                     {this.props.Login.admin || this.props.Login.id === this.props.Tutor.id
-                        ? <div id="TutorName" className="container horizontal max-height">
-                            <input id="PreferredName" type="text" name="PreferredName" value={this.state.preferredName} onChange={this.onChange} />
+                        ? <div id="TutorName" className="container horizontal justify-start max-height">
+                            <input title="Change the name you want to go by" id="PreferredName" type="text" Name="PreferredName" value={this.state.preferredName} onChange={this.onChange} />
                             <div id="SaveWriting" title="Save preferred name" onClick={evt => this.props.SavePreferredName(this.state.preferredName)}><img src={"save-writing.png"} alt="Save"></img></div>
                             <div>{this.props.Tutor.name.split(' ').pop()}</div>
                         </div>
                         : <div id="TutorName" className="max-height">{this.props.Tutor.name}</div>
                     }
-                    <div id="TutorEmail" className="max-height">{this.props.Tutor.email}</div>
+                    <div id="EmailContainer" className="container horizontal justify-start justify-space max-width">
+                        <div id="TutorEmail" className="max-height">{this.props.Tutor.email}</div>
+                        {this.props.Login.admin || this.props.Login.id === this.props.Tutor.id
+                            ? <>
+                                {this.state.passwordChangerOpen
+                                    ? <div id="PasswordChange" className="container horizontal justify-start max-height">
+                                        <input id="Password" Name="Password" type="password" title="Change current password" onChange={this.onChange} />
+                                        <div id="SavePassword" title="Save password" onClick={evt => this.checkPassword()}><img src={"save-writing.png"} alt="Save"></img></div>
+                                    </div>
+                                    : <></>
+                                }
+                                <div id="PasswordChangerShowHide" title="View / Hide password changer" onClick={evt => this.onPasswordOpen()}><img src={"password-change.png"} alt="View/Hide"/></div>
+                            </>
+                            : <></>
+                        }
+                    </div>
                     <div id="Links" className="container horizontal max-width justify-start">
                         {this.props.Tutor.links.map(link => {
                             return (
                                 <div className="container horizontal item" key={link.title}>
                                     <a className="item" href={link.url} target="_blank" rel="noreferrer"><img className="linkImage" src={link.imageURL} alt={link.title} /></a>
                                     <a className="item" href={link.url} target="_blank" rel="noreferrer">{link.title}</a>
+                                    {this.props.Login.admin || this.props.Login.id === this.props.Tutor.id
+                                        ? <div className="X item" title={`Remove '${link.title}' link`} onClick={evt => this.props.DeleteLink(link)}>✖</div>
+                                        : <></>
+                                    }
                                 </div>
                             )
                         })}
@@ -83,7 +118,7 @@ class TutorInfoFrame extends React.Component {
                                         <label htmlFor='Title'>Name: </label>
                                         <input className="item" type="text" Name="Title" placeholder="Title" onChange={this.onChange} />
                                         <div className="button item" title="Create Link" onClick={evt => this.checkLink()}>Save</div>
-                                        <div className="button item" title="Close Menu" onClick={evt => this.onOpen()}>X</div>
+                                        <div className="X item" title="Close Menu" onClick={evt => this.onOpen()}>✖</div>
                                     </div>
                                     : <img className="linkImage" src={"add-link.png"} alt="Add new link" title="Add new link" onClick={evt => this.onOpen()}/>
                                 }
@@ -96,17 +131,24 @@ class TutorInfoFrame extends React.Component {
                     <div className="item">Year</div>
                     <div className="item">{this.props.Year}</div>
                     <div className="container horizontal max-width item">
-                        <div className="item button" onClick={evt => this.props.ChangeDay(-7)}>ᐊ</div>
+                        <div className="item button" onClick={evt => this.props.ChangeDay(-7)}>◄</div>
                         <div className="item">Week {Math.ceil(((6 - new Date(this.props.Year, 0, this.props.Day).getDay()) + this.props.Day) / 7)}</div>
-                        <div className="item button" onClick={evt => this.props.ChangeDay(7)}>ᐅ</div>
+                        <div className="item button" onClick={evt => this.props.ChangeDay(7)}>►</div>
                     </div>
                     {this.props.Login.admin || this.props.Login.id === this.props.Tutor.id
                         ? <div className="item button" onClick={evt => this.props.ScheduleToggled()}>{this.props.ScheduleOpen ? 'Change Schedule' : 'Open Schedule'}</div>
                         : <></>
                     }
                 </div>
-                <div className="container vertical max-height max-width bubble">
-                    {/* Text */}
+                <div id="Status" className="container vertical align-start max-height max-width bubble">
+                    <div className="item max-height">Status:</div>
+                    {this.props.Login.admin || this.props.Login.id === this.props.Tutor.id
+                        ? <div className="container horizontal justify-start max-width max-height item">
+                            <div id="SaveStatus" title="Save current status" onClick={evt => this.props.ChangeStatus(this.state.status)}><img src={"save-writing.png"} alt="Save"></img></div>
+                            <input id="ChangeStatus" title="Change your current status" type="text" Name="ChangeStatus" value={this.state.status} onChange={this.onChange} />
+                        </div>
+                        : <div className="item">{this.props.Tutor.status === "" ? <div className="none">None</div> : this.props.Tutor.status}</div>
+                    }
                 </div>
             </div>
         )

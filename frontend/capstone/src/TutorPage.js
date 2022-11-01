@@ -16,7 +16,7 @@ class ClassSelection extends React.Component {
                             this.props.courses.map(course => {
                                 if (course.id === this.props.Tutor.assignedCourse){
                                 return (
-                                    <div className={`item course ${course.code.slice(0,3)}`} key={course.code}>{`${course.code} - ${course.name}`}</div>
+                                    <div className={`item course ${course.code.slice(0,3)}`} title="The course this coach is assigned to"key={course.code}>{`${course.code} - ${course.name}`}</div>
                                     )
                                 }
                                 else {
@@ -36,7 +36,7 @@ class ClassSelection extends React.Component {
                                 }) 
                                 if (foundCourse.code === "TST000") return null;
                                 return (
-                                    <div className={`item course ${foundCourse.code.slice(0, 3)}`} key={foundCourse.code} onClick={evt => this.props.movePreferredCourse(foundCourse.id)}>{`${foundCourse.code} - ${foundCourse.name}`}</div>
+                                    <div className={`item course ${foundCourse.code.slice(0, 3)}`} title={this.props.Login.admin || this.props.Login.id === this.props.Tutor.id ? "Remove from 'Preferred Courses' section" : "A course this coach can tutor" } key={foundCourse.code} onClick={evt => this.props.movePreferredCourse(foundCourse.id)}>{`${foundCourse.code} - ${foundCourse.name}`}</div>
                                 )
                             })}
                         </div>
@@ -54,7 +54,7 @@ class ClassSelection extends React.Component {
                                 });
                                 if (error) return null;
                                 return (
-                                    <div className={`item course ${course.code.slice(0, 3)}`} key={course.code} onClick={evt => this.props.movePreferredCourse(course.id)}>{`${course.code} - ${course.name}`}</div>
+                                    <div className={`item course ${course.code.slice(0, 3)}`} title="Add to 'Preferred Courses' section" key={course.code} onClick={evt => this.props.movePreferredCourse(course.id)}>{`${course.code} - ${course.name}`}</div>
                                 )
                             })}
                         </div>
@@ -204,13 +204,28 @@ class TutorFrame extends React.Component {
         clone.links.push(link);
         this.props.updateTutor(clone);
     }
+    deleteLink = (link) => {
+        let clone = this.props.Tutor;
+        clone.links.splice(clone.links.indexOf(link), 1);
+        this.props.updateTutor(clone);
+    }
+    changeStatus = (status) => {
+        let clone = this.props.Tutor;
+        clone.status = status;
+        this.props.updateTutor(clone);
+    }
+    changePassword = (password) => {
+        let clone = this.props.Tutor;
+        clone.Password = password;
+        this.props.updateTutor(clone);
+    }
     componentDidMount = async () => {
         await this.GetAllCourses();
     }
     render() {
         return (
             <div id="Framing" className="container vertical justify-start max-width">
-                <TutorInfo Tutor={this.props.Tutor} Year={this.state.year} Day={this.state.day} ChangeDay={this.ChangeDay} Login={this.props.Login} ScheduleToggled={this.ScheduleToggled} ScheduleOpen={this.state.scheduleOpen} SavePreferredName={this.savePreferredName} CreateLink={this.createLink} />
+                <TutorInfo Tutor={this.props.Tutor} Year={this.state.year} Day={this.state.day} ChangeDay={this.ChangeDay} Login={this.props.Login} ScheduleToggled={this.ScheduleToggled} ScheduleOpen={this.state.scheduleOpen} SavePreferredName={this.savePreferredName} CreateLink={this.createLink} DeleteLink={this.deleteLink} ChangeStatus={this.changeStatus} ChangePassword={this.changePassword} />
                 <div id="TutoringInformation" className="container horizontal max-width">
                     <ClassSelection Tutor={this.props.Tutor} courses={this.state.courses} Login={this.props.Login} movePreferredCourse={this.movePreferredCourse} />
                     {this.state.scheduleOpen
