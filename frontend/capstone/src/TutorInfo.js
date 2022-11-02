@@ -65,7 +65,7 @@ class TutorInfoFrame extends React.Component {
                 <div className="container vertical max-height max-width item bubble align-start">
                     {this.props.Login.admin || this.props.Login.id === this.props.Tutor.id
                         ? <div id="TutorName" className="container horizontal justify-start max-height">
-                            <input title="Change the name you want to go by" id="PreferredName" type="text" Name="PreferredName" value={this.state.preferredName} onChange={this.onChange} />
+                            <input title="Change the name you want to go by" id="PreferredName" type="text" name="PreferredName" value={this.state.preferredName} onChange={this.onChange} />
                             <div id="SaveWriting" title="Save preferred name" onClick={evt => this.props.SavePreferredName(this.state.preferredName)}><img src={"save-writing.png"} alt="Save"></img></div>
                             <div>{this.props.Tutor.name.split(' ').pop()}</div>
                         </div>
@@ -77,7 +77,7 @@ class TutorInfoFrame extends React.Component {
                             ? <>
                                 {this.state.passwordChangerOpen
                                     ? <div id="PasswordChange" className="container horizontal justify-start max-height">
-                                        <input id="Password" Name="Password" type="password" title="Change current password" onChange={this.onChange} />
+                                        <input id="Password" name="Password" type="password" title="Change current password" onChange={this.onChange} />
                                         <div id="SavePassword" title="Save password" onClick={evt => this.checkPassword()}><img src={"save-writing.png"} alt="Save"></img></div>
                                     </div>
                                     : <></>
@@ -105,7 +105,7 @@ class TutorInfoFrame extends React.Component {
                                 {this.state.linkAdderOpen
                                     ? <div id="LinkAdding" className="container horizontal max-height max-width">
                                         <label htmlFor='ImageURL'>Link Image: </label>
-                                        <select className={`item${this.state.link.ImageURL === "" ? " badInput" : ""}`} Name="ImageURL" onChange={this.onChange}>
+                                        <select className={`item${this.state.link.ImageURL === "" ? " badInput" : ""}`} name="ImageURL" onChange={this.onChange}>
                                             <option value="">Choose</option>
                                             <option value="teams-logo.jfif">Teams</option>
                                             <option value="twitter-logo.jpg">Twitter</option>
@@ -114,9 +114,9 @@ class TutorInfoFrame extends React.Component {
                                             <option value="link-default.png">Other</option>
                                         </select>
                                         <label htmlFor='URL'>URL: </label>
-                                        <input className={`item${this.state.link.URL === "" ? " badInput" : ""}`} type="text" Name="URL" placeholder="ex: https://google.com" onChange={this.onChange}/>
+                                        <input className={`item${this.state.link.URL === "" ? " badInput" : ""}`} type="text" name="URL" placeholder="ex: https://google.com" onChange={this.onChange}/>
                                         <label htmlFor='Title'>Name: </label>
-                                        <input className="item" type="text" Name="Title" placeholder="Title" onChange={this.onChange} />
+                                        <input className="item" type="text" name="Title" placeholder="Title" onChange={this.onChange} />
                                         <div className="button item" title="Create Link" onClick={evt => this.checkLink()}>Save</div>
                                         <div className="X item" title="Close Menu" onClick={evt => this.onOpen()}>✖</div>
                                     </div>
@@ -145,7 +145,7 @@ class TutorInfoFrame extends React.Component {
                     {this.props.Login.admin || this.props.Login.id === this.props.Tutor.id
                         ? <div className="container horizontal justify-start max-width max-height item">
                             <div id="SaveStatus" title="Save current status" onClick={evt => this.props.ChangeStatus(this.state.status)}><img src={"save-writing.png"} alt="Save"></img></div>
-                            <input id="ChangeStatus" title="Change your current status" type="text" Name="ChangeStatus" value={this.state.status} onChange={this.onChange} />
+                            <input id="ChangeStatus" title="Change your current status" type="text" name="ChangeStatus" value={this.state.status} onChange={this.onChange} />
                         </div>
                         : <div className="item">{this.props.Tutor.status === "" ? <div className="none">None</div> : this.props.Tutor.status}</div>
                     }

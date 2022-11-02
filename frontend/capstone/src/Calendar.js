@@ -24,7 +24,7 @@ class Delete extends React.Component {
     }
     render() {
         return (
-            <div className="container vertical max-height justify-start">
+            <div className="deleteButton container vertical max-height justify-start">
                 {this.state.open 
                     ?
                     <>
@@ -55,14 +55,19 @@ class Row extends React.Component {
                     else if (entry.startTime + entry.duration > (EndingPoint * 60)) {
                         entryWidth = ((EndingPoint - entry.startTime) / 60) * width;
                     }
+                    let style = { width: entryWidth + "px" };
+                    if (entryLeft > (((EndingPoint - StartingPoint) * width) / 2)) {
+                        style.right = ((((EndingPoint - StartingPoint) * width) - entryLeft) - entryWidth) + "px";
+                    }
+                    else style.left = entryLeft + "px";
                     if (entryWidth > 0) {
                         return (
-                            <div key={entry.year + '' + entry.day + '' + entry.startTime} className={`row other ${courseCode}`} style={{ width: entryWidth + 'px', left: entryLeft + 'px' }}>
-                                <div className={`info container horizontal max-height max-width ${courseCode}`} style={entryLeft > (EndingPoint - StartingPoint) * (width / 2) ? { right: '0px' } : { left: '0px' }}>
-                                    <div className="container vertical max-width align-start">
+                            <div key={entry.year + '' + entry.day + '' + entry.startTime} className={`row time-block ${courseCode}`} style={style}>
+                                <div className={`interactive-time-block container horizontal max-height max-width`}>
+                                    <div className={`${entryWidth < 180 ? "time-block-text" : ""} container vertical max-width align-start`}>
                                         <div className="item text-left">{this.props.data.coach.name}</div>
-                                        <div className="item">{TimeConvert(entry.startTime) + " - " + TimeConvert(entry.startTime + entry.duration)}</div>
-                                        <div className="item">Room: {entry.room === null ? 'Unspecified' : entry.room}</div>
+                                        <div className="item text-left">{TimeConvert(entry.startTime) + " - " + TimeConvert(entry.startTime + entry.duration)}</div>
+                                        <div className="item text-left">Room: {entry.room === null ? 'Unspecified' : entry.room}</div>
                                         <div className="item text-left">{fullCourseCode} - {fullCourseName}</div>
                                     </div>
                                     {this.props.DeleteSchedule !== undefined
@@ -70,7 +75,7 @@ class Row extends React.Component {
                                         : <></>
                                     }
                                 </div>
-                                {entryWidth >= 240
+                                {/* {entryWidth >= 240
                                     ? <div className="infoDefault container vertical max-width max-height align-start">
                                         <div className="item text-left">{this.props.data.coach.name}</div>
                                         <div className="item">{TimeConvert(entry.startTime) + " - " + TimeConvert(entry.startTime + entry.duration)}</div>
@@ -78,7 +83,7 @@ class Row extends React.Component {
                                         <div className="item text-left">{fullCourseCode} - {fullCourseName}</div>
                                     </div>
                                     :<></>
-                                }
+                                } */}
                             </div>
                         )
                     }
@@ -108,14 +113,21 @@ class CalendarFrame extends React.Component {
                     </div>
                     <div className='container vertical justify-start align-start box-bind'>
                         <div className="container horizontal justify-start align-start box max-height">
-                                {Times.slice(StartingPoint,EndingPoint).map((value, i) => {
+                            {this.props.Auxilary !== undefined && this.props.Auxilary.StartTime !== undefined
+                                ? <div className="auxilaryWings max-height" style={{ width: Math.max((((this.props.Auxilary.StartTime - (StartingPoint * 60)) / 60) * width), 0) + "px", left: "0px" }}></div>
+                                : <></>
+                            }
+                            {Times.slice(StartingPoint,EndingPoint).map((value, i) => {
                                 return (
                                     <React.Fragment key = {i}>
-                                        <div className="spacer"></div>
-                                        <div className="lines max-height"></div>
+                                        <div className="spacer column max-height"></div>
                                     </React.Fragment>
                                 )
                             })}
+                            {this.props.Auxilary !== undefined && this.props.Auxilary.EndTime !== undefined
+                                ? <div className="auxilaryWings max-height" style={{ width: Math.max(((((EndingPoint * 60) - this.props.Auxilary.EndTime) / 60) * width), 0) + "px", right: "0px" }}></div>
+                                : <></>
+                            }
                         </div>
                         <div className="container horizontal justify-start align-start title">
                             {Times.slice(StartingPoint, EndingPoint).map(value => {

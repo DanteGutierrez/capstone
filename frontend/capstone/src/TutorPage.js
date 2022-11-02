@@ -16,7 +16,7 @@ class ClassSelection extends React.Component {
                             this.props.courses.map(course => {
                                 if (course.id === this.props.Tutor.assignedCourse){
                                 return (
-                                    <div className={`item course ${course.code.slice(0, 3)}`} title="The course this coach is assigned to" key={course.code} onClick={this.props.Login.admin ? evt => this.props.movePreferredCourse(course.id) : null}>{`${course.code} - ${course.name}`}</div>
+                                    <div className={`item course ${course.code.slice(0, 3)}`} title={this.props.Login.admin ? "Click to remove from 'Assigned Course'": "The assigned course for this tutor"} key={course.code} onClick={this.props.Login.admin ? evt => this.props.movePreferredCourse(course.id) : null}>{`${course.code} - ${course.name}`}</div>
                                     )
                                 }
                                 else {
@@ -29,14 +29,14 @@ class ClassSelection extends React.Component {
                         <div className="item">Also Tutors:</div>
                         <div className="container horizontal item preferred">
                             {this.props.Tutor.preferredCourses.map(courseId => {
-                                let foundCourse = {code: "TST000", name:"ERROR"};
+                                let foundCourse = { code: "TST000", name: "ERROR" };
                                 this.props.courses.map(course => {
                                     if (course.id === courseId) foundCourse = course;
                                     return null;
-                                }) 
+                                })
                                 if (foundCourse.code === "TST000") return null;
                                 return (
-                                    <div className={`item course ${foundCourse.code.slice(0, 3)}`} title={this.props.Login.admin || this.props.Login.id === this.props.Tutor.id ? "Remove from 'Preferred Courses' section" : "A course this coach can tutor" } key={foundCourse.code} onClick={evt => this.props.movePreferredCourse(foundCourse.id)}>{`${foundCourse.code} - ${foundCourse.name}`}</div>
+                                    <div className={`item course ${foundCourse.code.slice(0, 3)}`} title={this.props.Login.admin || this.props.Login.id === this.props.Tutor.id ? (this.props.Login.admin && this.props.Tutor.assignedCourse === "" ? "Click to add to 'Assigned Course'" : "Click to remove from 'Also Tutors' section") : "A course this coach can tutor" } key={foundCourse.code} onClick={evt => this.props.movePreferredCourse(foundCourse.id)}>{`${foundCourse.code} - ${foundCourse.name}`}</div>
                                 )
                             })}
                         </div>
@@ -54,7 +54,7 @@ class ClassSelection extends React.Component {
                                 });
                                 if (error) return null;
                                 return (
-                                    <div className={`item course ${course.code.slice(0, 3)}`} title="Add to 'Preferred Courses' section" key={course.code} onClick={evt => this.props.movePreferredCourse(course.id)}>{`${course.code} - ${course.name}`}</div>
+                                    <div className={`item course ${course.code.slice(0, 3)}`} title={this.props.Login.admin && this.props.Tutor.assignedCourse === "" ? "Click to add to 'Assigned Course'" : "Click to add to 'Also Tutors' section"} key={course.code} onClick={evt => this.props.movePreferredCourse(course.id)}>{`${course.code} - ${course.name}`}</div>
                                 )
                             })}
                         </div>
@@ -175,20 +175,18 @@ class TutorFrame extends React.Component {
         this.setState({ scheduleOpen: !this.state.scheduleOpen }, async () => this.LoadSchedules());
     }  
     movePreferredCourse = (id) => {
-        let preferred = false;
         let clone = this.props.Tutor;
         if (this.props.Login.admin && clone.assignedCourse === id) {
             clone.assignedCourse = "";
         }
         else if (this.props.Login.admin && clone.assignedCourse === "") {
+            let index = clone.preferredCourses.indexOf(id);
+            if (index !== -1) clone.preferredCourses.splice(index, 1);
             clone.assignedCourse = id;
         }
         else {
-            clone.preferredCourses.map(course => {
-                if (course === id) preferred = true;
-                return null;
-            });
-            if (preferred) clone.preferredCourses.splice(clone.preferredCourses.indexOf(id), 1);
+            let index = clone.preferredCourses.indexOf(id);
+            if (index !== -1) clone.preferredCourses.splice(index, 1);
             else clone.preferredCourses.push(id);
         }
         this.props.updateTutor(clone);

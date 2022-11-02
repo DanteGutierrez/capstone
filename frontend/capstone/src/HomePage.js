@@ -9,7 +9,18 @@ class SearchOptions extends React.Component {
         return (
             <div className="container horizontal max-height max-width justify-around item">
                 <Menu label="Class: " options={this.props.Courses} update={this.props.UpdateCourses} />
-                {/* <Menu label="Time: " options={} /> */}
+                <div className="container vertical max-width max-height">
+                    <div className="container horizontal item max-width">
+                        <label className="item" htmlFor='StartTime'>Start Time: </label>
+                        <input className="item" name="StartTime" type="time" onChange={event => this.props.UpdateTime(event)} value={this.props.Time.StartTime} />
+                    </div>
+                    <div className="item error">{this.props.Time.StartTimeError}</div>
+                    <div className="container horizontal item max-width">
+                        <label className="item" htmlFor='EndTime'>End Time: </label>
+                        <input className="item" name="EndTime" type="time" onChange={evt => this.props.UpdateTime(evt)} value={this.props.Time.EndTime} />
+                    </div>
+                    <div className="item error">{this.props.Time.EndTimeError}</div>
+                </div>
                 <Menu label="Tutor: " options={this.props.Coaches} update={this.props.UpdateCoaches} />
             </div>
         )
@@ -56,7 +67,9 @@ class HomeFrame extends React.Component {
         this.state = {
             search: {
                 Year: now.getFullYear(),
-                Day: day
+                Day: day,
+                StartTime: (7 * 60),
+                EndTime: (21 * 60)
             },
             schedules: [],
             coaches: [],
@@ -64,7 +77,13 @@ class HomeFrame extends React.Component {
             calendarData: [],
             selections: {
                 coaches: [],
-                courses: []
+                courses: [],
+                time: {
+                    StartTime: "07:00",
+                    EndTime: "21:00",
+                    StartTimeError: "",
+                    EndTimeError: ""
+                }
             }
         };
     }
@@ -85,7 +104,10 @@ class HomeFrame extends React.Component {
         this.setState({ search: search }, async () => this.LoadSchedules());
     }
     UpdateTime = (start, end) => {
-
+        let search = this.state.search;
+        if (start !== NaN) search.StartTime = start;
+        if (end !== NaN) search.EndTime = end;
+        this.setState({ search: search }, async () => this.LoadSchedules());
     }
     UpdateCourses = (courses) => {
         let selection = this.state.selections;
@@ -223,6 +245,37 @@ class HomeFrame extends React.Component {
                 }
             })
     }
+    ChangeTime = (event) => {
+        let item = event.target;
+        let selections = this.state.selections;
+        switch (item.name) {
+            case "StartTime":
+                if (this.ConvertTime(item.value) > this.ConvertTime(selections.time.EndTime)) {
+                    selections.time.StartTimeError = "Cannot set a time bigger than the end time";
+                }
+                else {
+                    selections.time.StartTime = item.value;
+                    selections.time.StartTimeError = "";
+                    this.UpdateTime(this.ConvertTime(item.value), this.ConvertTime(selections.time.EndTime));
+                }
+                break;
+            case "EndTime":
+                if (this.ConvertTime(item.value) < this.ConvertTime(selections.time.StartTime)) {
+                    selections.time.EndTimeError = "Cannot set a time smaller than the start time";
+                }
+                else {
+                    selections.time.EndTime = item.value;
+                    selections.time.EndTimeError = "";
+                    this.UpdateTime(this.ConvertTime(selections.time.StartTime), this.ConvertTime(item.value));
+                }
+                break;
+        }
+        this.setState({ selections: selections });
+    }
+    ConvertTime = (time) => {
+        let brokenTime = time.split(":");
+        return (Number(brokenTime[0]) * 60) + Number(brokenTime[1]);
+    }
     componentDidMount = async () => {
         await this.GetAllCourses();
     }
@@ -261,9 +314,9 @@ class HomeFrame extends React.Component {
             <div id="Framing" className="container vertical justify-start max-width">
                 <div className="container horizontal max-width">
                     <DateSelection ChangeDay={this.ChangeDay} Year={this.state.search.Year} Day={this.state.search.Day} Tabs={tabs} />
-                    <SearchOptions Courses={courses} Coaches={coaches} UpdateCoaches={this.UpdateCoaches} UpdateCourses={this.UpdateCourses} key={this.state.courses + this.state.coaches} />
+                    <SearchOptions Courses={courses} Coaches={coaches} Time={this.state.selections.time} UpdateCoaches={this.UpdateCoaches} UpdateCourses={this.UpdateCourses} UpdateTime={this.ChangeTime} key={this.state.courses + this.state.coaches} />
                 </div>
-                <Calendar TutorNavigation={this.props.TutorNavigation} data={this.state.calendarData} title={"Coaches"} key={this.state.calendarData}/>
+                <Calendar TutorNavigation={this.props.TutorNavigation} Auxilary={this.state.search} data={this.state.calendarData} title={"Coaches"} key={this.state.calendarData}/>
             </div>
         )
     }
