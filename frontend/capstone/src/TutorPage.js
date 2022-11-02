@@ -16,7 +16,7 @@ class ClassSelection extends React.Component {
                             this.props.courses.map(course => {
                                 if (course.id === this.props.Tutor.assignedCourse){
                                 return (
-                                    <div className={`item course ${course.code.slice(0,3)}`} title="The course this coach is assigned to"key={course.code}>{`${course.code} - ${course.name}`}</div>
+                                    <div className={`item course ${course.code.slice(0, 3)}`} title="The course this coach is assigned to" key={course.code} onClick={this.props.Login.admin ? evt => this.props.movePreferredCourse(course.id) : null}>{`${course.code} - ${course.name}`}</div>
                                     )
                                 }
                                 else {
@@ -177,12 +177,20 @@ class TutorFrame extends React.Component {
     movePreferredCourse = (id) => {
         let preferred = false;
         let clone = this.props.Tutor;
-        clone.preferredCourses.map(course => {
-            if (course === id) preferred = true;
-            return null;
-        });
-        if (preferred) clone.preferredCourses.splice(clone.preferredCourses.indexOf(id), 1);
-        else clone.preferredCourses.push(id);
+        if (this.props.Login.admin && clone.assignedCourse === id) {
+            clone.assignedCourse = "";
+        }
+        else if (this.props.Login.admin && clone.assignedCourse === "") {
+            clone.assignedCourse = id;
+        }
+        else {
+            clone.preferredCourses.map(course => {
+                if (course === id) preferred = true;
+                return null;
+            });
+            if (preferred) clone.preferredCourses.splice(clone.preferredCourses.indexOf(id), 1);
+            else clone.preferredCourses.push(id);
+        }
         this.props.updateTutor(clone);
     }
     DeleteSchedule = (id) => {

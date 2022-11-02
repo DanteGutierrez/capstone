@@ -72,7 +72,7 @@ class TutorInfoFrame extends React.Component {
                         : <div id="TutorName" className="max-height">{this.props.Tutor.name}</div>
                     }
                     <div id="EmailContainer" className="container horizontal justify-start justify-space max-width">
-                        <div id="TutorEmail" className="max-height">{this.props.Tutor.email}</div>
+                        <a id="TutorEmail" className="max-height" href={`mailto:${this.props.Tutor.email}?subject=Tutoring`}>{this.props.Tutor.email}</a>
                         {this.props.Login.admin || this.props.Login.id === this.props.Tutor.id
                             ? <>
                                 {this.state.passwordChangerOpen

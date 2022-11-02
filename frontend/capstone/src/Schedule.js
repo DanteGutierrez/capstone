@@ -11,7 +11,7 @@ class ScheduleMakingFrame extends React.Component {
                 StartTime: '',
                 EndDay: '',
                 EndTime: '',
-                Course: "",
+                Course: this.props.Tutor.assignedCourse,
                 Room: "",
                 RepeatDay: [false, false, false, false, false, false, false],
                 Repeat: false,
@@ -206,7 +206,7 @@ class ScheduleMakingFrame extends React.Component {
                 </div>
                 <div className="container horizontal item" key={this.state.courses}>
                     <label className="item" htmlFor='Course'>Course:</label>
-                    <select className="item" name="Course" onChange={this.UpdateCredentials}>
+                    <select className="item" name="Course" onChange={this.UpdateCredentials} defaultValue={this.state.Form.Course}>
                         <option value="">Please Select A Course</option>
                         {this.state.courses.map(course => {
                             return (
@@ -223,10 +223,10 @@ class ScheduleMakingFrame extends React.Component {
                     ?
                     <>
                         <div className="container horizontal item">
-                            <div className="container horizontal item day">
+                            {/* <div className="container horizontal item day">
                                 <label className="item" htmlFor='Sunday'>Sunday:</label>
                                 <input className="item" type="checkbox" name="Sunday" onChange={this.UpdateCredentials} checked={this.state.Form.RepeatDay[0]} />
-                            </div>
+                            </div> */}
                             <div className="container horizontal item day">
                                 <label className="item" htmlFor='Monday'>Monday:</label>
                                 <input className="item" type="checkbox" name="Monday" onChange={this.UpdateCredentials} checked={this.state.Form.RepeatDay[1]} />

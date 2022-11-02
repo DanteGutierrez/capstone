@@ -45,7 +45,7 @@ class Row extends React.Component {
                 {this.props.data.schedule.map(entry => {
                     let fullCourseCode = entry.course !== undefined ? entry.course.code : "";
                     let fullCourseName = entry.course !== undefined ? entry.course.name : "";
-                    let courseCode = entry.course !== undefined ? entry.course.code.slice(0, 3) : "";
+                    let courseCode = entry.course !== undefined ? entry.course.code.slice(0, 3) : "TST";
                     let entryWidth = (entry.duration / 60) * width;
                     let entryLeft = ((entry.startTime - (StartingPoint * 60)) / 60) * width;
                     if (entry.startTime < (StartingPoint * 60)) {
@@ -60,16 +60,25 @@ class Row extends React.Component {
                             <div key={entry.year + '' + entry.day + '' + entry.startTime} className={`row other ${courseCode}`} style={{ width: entryWidth + 'px', left: entryLeft + 'px' }}>
                                 <div className={`info container horizontal max-height max-width ${courseCode}`} style={entryLeft > (EndingPoint - StartingPoint) * (width / 2) ? { right: '0px' } : { left: '0px' }}>
                                     <div className="container vertical max-width align-start">
-                                        <div className="item">{this.props.data.coach.name}</div>
+                                        <div className="item text-left">{this.props.data.coach.name}</div>
                                         <div className="item">{TimeConvert(entry.startTime) + " - " + TimeConvert(entry.startTime + entry.duration)}</div>
                                         <div className="item">Room: {entry.room === null ? 'Unspecified' : entry.room}</div>
-                                        <div className="item">{fullCourseCode} - {fullCourseName}</div>
+                                        <div className="item text-left">{fullCourseCode} - {fullCourseName}</div>
                                     </div>
                                     {this.props.DeleteSchedule !== undefined
                                         ? < Delete DeleteSchedule={this.props.DeleteSchedule} id={this.props.getID(entry._id)} />
                                         : <></>
                                     }
                                 </div>
+                                {entryWidth >= 240
+                                    ? <div className="infoDefault container vertical max-width max-height align-start">
+                                        <div className="item text-left">{this.props.data.coach.name}</div>
+                                        <div className="item">{TimeConvert(entry.startTime) + " - " + TimeConvert(entry.startTime + entry.duration)}</div>
+                                        <div className="item">Room: {entry.room === null ? 'Unspecified' : entry.room}</div>
+                                        <div className="item text-left">{fullCourseCode} - {fullCourseName}</div>
+                                    </div>
+                                    :<></>
+                                }
                             </div>
                         )
                     }
