@@ -244,7 +244,7 @@ class TutorFrame extends React.Component {
                 <div id="TutoringInformation" className="container horizontal max-width">
                     <ClassSelection Tutor={this.props.Tutor} courses={this.state.courses} Login={this.props.Login} movePreferredCourse={this.movePreferredCourse} />
                     {this.state.scheduleOpen
-                        ? <Calendar data={this.state.schedules} getID={this.props.getID} title={"Days of the Week"} key={this.state.schedules} Courses={this.state.courses} DeleteSchedule={this.props.Login.id === this.props.Tutor.id || this.props.Login.admin ? this.DeleteSchedule : undefined} UpdateSchedule={this.props.Login.id === this.props.Tutor.id || this.props.Login.admin ? this.UpdateSchedule : undefined} />
+                        ? <Calendar data={this.state.schedules} getID={this.props.getID} title={"Days of the Week"} key={this.state.schedules} Admin={this.props.Login.admin} Courses={this.state.courses} DeleteSchedule={this.props.Login.id === this.props.Tutor.id || this.props.Login.admin ? this.DeleteSchedule : undefined} UpdateSchedule={this.props.Login.id === this.props.Tutor.id || this.props.Login.admin ? this.UpdateSchedule : undefined} />
                         : <Schedule APIS={this.props.APIS} getID={this.props.getID} Login={this.props.Login} Tutor={this.props.Tutor} />
                     }
                 </div>

@@ -146,12 +146,13 @@ class Row extends React.Component {
                         style.right = ((((EndingPoint - StartingPoint) * width) - entryLeft) - entryWidth) + "px";
                     }
                     else style.left = entryLeft + "px";
+                    let NotOld = new Date(entry.year, 0, entry.day).getTime() >= new Date(new Date(Date.now()).toLocaleDateString()).getTime();
                     if (entryWidth > 0) {
                         return (
                             <div key={entry.year + '' + entry.day + '' + entry.startTime} className={`row time-block ${courseCode}`} style={style}>
                                 <div className={`interactive-time-block container horizontal max-height max-width`}>
                                     <div className={`${entryWidth < 180 ? "time-block-text" : ""} container vertical max-width align-start`}>
-                                        {this.props.UpdateSchedule !== undefined
+                                        {this.props.UpdateSchedule !== undefined && (this.props.Admin || NotOld)
                                             ? <Update Schedule={entry} CoachName={this.props.data.coach.name} Courses={this.props.Courses} UpdateSchedule={this.props.UpdateSchedule} />
                                             : <>
                                                 <div className="item text-left">{this.props.data.coach.name}</div>
@@ -161,7 +162,7 @@ class Row extends React.Component {
                                             </>
                                         }
                                     </div>
-                                    {this.props.DeleteSchedule !== undefined
+                                    {this.props.DeleteSchedule !== undefined && (this.props.Admin || NotOld)
                                         ? < Delete DeleteSchedule={this.props.DeleteSchedule} id={this.props.getID(entry._id)} />
                                         : <></>
                                     }
@@ -219,7 +220,7 @@ class CalendarFrame extends React.Component {
                             })}
                         </div>
                         {this.props.data.map(data => {
-                            return (<Row data={data} key={data.coach.name} DeleteSchedule={this.props.DeleteSchedule} UpdateSchedule={this.props.UpdateSchedule} getID={this.props.getID} Courses={this.props.Courses} />)
+                            return (<Row data={data} Admin={this.props.Admin} key={data.coach.name} DeleteSchedule={this.props.DeleteSchedule} UpdateSchedule={this.props.UpdateSchedule} getID={this.props.getID} Courses={this.props.Courses} />)
                             })}
                     </div>
                 </div>
