@@ -12,6 +12,17 @@ const TimeConvert = (start) => {
     value += `${time % 12 === 0 ? 12 : time % 12}:${minutes < 10 ? "0" + minutes : minutes} ${time > 11 ? "pm" : "am"}`;
     return value;
 }
+const TimeConvertInput = (start) => {
+    let value = "";
+    let minutes = start % 60;
+    let hour = (start - minutes) / 60;
+    value += (hour < 10 ? "0" + hour : hour) + ":" + (minutes < 10 ? "0" + minutes : minutes);
+    return value;
+}
+const ConvertTime = (time) => {
+    let brokenTime = time.split(":");
+    return (Number(brokenTime[0]) * 60) + Number(brokenTime[1]);
+}
 class Delete extends React.Component {
     constructor(props) {
         super(props);
@@ -35,6 +46,81 @@ class Delete extends React.Component {
                     : < div className="item button" onClick={evt => this.Toggle()}>Delete</div>
                 }
             </div>
+        )
+    }
+}
+class Update extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            StartTime: TimeConvertInput(this.props.Schedule.startTime),
+            EndTime: TimeConvertInput(this.props.Schedule.startTime + this.props.Schedule.duration),
+            TimeIssue: false,
+            Room: this.props.Schedule.room,
+            CourseId: this.props.Schedule.courseId
+        }
+    }
+    UpdateInput = (event) => {
+        let item = event.target;
+        switch (item.name) {
+            case "StartTime":
+                if (ConvertTime(item.value) < ConvertTime(this.state.EndTime)) {
+                    this.setState({ TimeIssue: false });
+                }
+                this.setState({ StartTime: item.value });
+                break;
+            case "EndTime":
+                if (ConvertTime(item.value) > ConvertTime(this.state.StartTime)) {
+                    this.setState({TimeIssue: false});
+                }
+                this.setState({ EndTime: item.value });
+                break;
+            case "Room":
+                this.setState({ Room: item.value });
+                break;
+            case "Course":
+                this.setState({ CourseId: item.value });
+                break;
+        }
+    }
+    CheckSchedule = () => {
+        if (ConvertTime(this.state.StartTime) > ConvertTime(this.state.EndTime)) {
+            this.setState({ TimeIssue: true });
+            return;
+        }
+        let schedule = this.props.Schedule;
+        schedule.startTime = ConvertTime(this.state.StartTime);
+        schedule.duration = ConvertTime(this.state.EndTime) - ConvertTime(this.state.StartTime);
+        schedule.room = this.state.Room;
+        schedule.courseId = this.state.CourseId;
+        this.props.UpdateSchedule(schedule);
+    }
+    render() {
+        return (
+            <>
+                <div className="item text-left">{this.props.CoachName}</div>
+                <div className="container horizontal max-width justify-start">
+                    <input className={"item mini-input" + (this.state.TimeIssue ? " issue": "")} name="StartTime" type="time" value={this.state.StartTime} onChange={this.UpdateInput} />
+                    <div className="item"> - </div>
+                    <input className={"item mini-input" + (this.state.TimeIssue ? " issue" : "")} name="EndTime" type="time" value={this.state.EndTime} onChange={this.UpdateInput} />
+                    <img className="item mini-save" src={"save-writing.png"} alt="Save Time" title="Save Time" onClick={evt => this.CheckSchedule()} />
+                </div>
+                <div className="container horizontal max-width justify-start">
+                    <div className="item">Room: </div>
+                    <input className="item mini-input" name="Room" type="text" value={this.state.Room} onChange={this.UpdateInput} />
+                    <img className="item mini-save" src={"save-writing.png"} alt="Save Room" title="Save Room" onClick={evt => this.CheckSchedule()} />
+                </div>
+                <div className="container horizontal max-width justify-start">
+                    <select className="item mini-select" name="Course" onChange={this.UpdateInput} defaultValue={this.state.CourseId}>
+                        {this.props.Courses.map(course => {
+                            return (
+                                <option value={course.id} key={course.id}>{course.code} - {course.name}</option>
+                            )
+                        })}
+                    </select>
+                    <img className="item mini-save" src={"save-writing.png"} alt="Save Course" title="Save Course" onClick={evt => this.CheckSchedule()} />
+                </div>
+            </>
         )
     }
 }
@@ -65,25 +151,21 @@ class Row extends React.Component {
                             <div key={entry.year + '' + entry.day + '' + entry.startTime} className={`row time-block ${courseCode}`} style={style}>
                                 <div className={`interactive-time-block container horizontal max-height max-width`}>
                                     <div className={`${entryWidth < 180 ? "time-block-text" : ""} container vertical max-width align-start`}>
-                                        <div className="item text-left">{this.props.data.coach.name}</div>
-                                        <div className="item text-left">{TimeConvert(entry.startTime) + " - " + TimeConvert(entry.startTime + entry.duration)}</div>
-                                        <div className="item text-left">Room: {entry.room === null ? 'Unspecified' : entry.room}</div>
-                                        <div className="item text-left">{fullCourseCode} - {fullCourseName}</div>
+                                        {this.props.UpdateSchedule !== undefined
+                                            ? <Update Schedule={entry} CoachName={this.props.data.coach.name} Courses={this.props.Courses} UpdateSchedule={this.props.UpdateSchedule} />
+                                            : <>
+                                                <div className="item text-left">{this.props.data.coach.name}</div>
+                                                <div className="item text-left">{TimeConvert(entry.startTime) + " - " + TimeConvert(entry.startTime + entry.duration)}</div>
+                                                <div className="item text-left">Room: {entry.room === null || entry.room === "" ? 'Unspecified' : entry.room}</div>
+                                                <div className="item text-left">{fullCourseCode} - {fullCourseName}</div>
+                                            </>
+                                        }
                                     </div>
                                     {this.props.DeleteSchedule !== undefined
                                         ? < Delete DeleteSchedule={this.props.DeleteSchedule} id={this.props.getID(entry._id)} />
                                         : <></>
                                     }
                                 </div>
-                                {/* {entryWidth >= 240
-                                    ? <div className="infoDefault container vertical max-width max-height align-start">
-                                        <div className="item text-left">{this.props.data.coach.name}</div>
-                                        <div className="item">{TimeConvert(entry.startTime) + " - " + TimeConvert(entry.startTime + entry.duration)}</div>
-                                        <div className="item">Room: {entry.room === null ? 'Unspecified' : entry.room}</div>
-                                        <div className="item text-left">{fullCourseCode} - {fullCourseName}</div>
-                                    </div>
-                                    :<></>
-                                } */}
                             </div>
                         )
                     }
@@ -137,7 +219,7 @@ class CalendarFrame extends React.Component {
                             })}
                         </div>
                         {this.props.data.map(data => {
-                            return (<Row data={data} key={data.coach.name} DeleteSchedule={this.props.DeleteSchedule} getID={this.props.getID} />)
+                            return (<Row data={data} key={data.coach.name} DeleteSchedule={this.props.DeleteSchedule} UpdateSchedule={this.props.UpdateSchedule} getID={this.props.getID} Courses={this.props.Courses} />)
                             })}
                     </div>
                 </div>

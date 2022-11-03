@@ -86,6 +86,39 @@ namespace capstone
                 await schedules.InsertOneAsync(schedule);
                 return Results.Ok();
             }
+            [HttpPut]
+            [Route("update/{id}")]
+            public async Task<IResult> UpdateSchedule(Schedule schedule, string id, string? auth, string? admin) {
+
+                if (await CheckAdmin(admin))
+                {
+                    if (!await CheckAuthorization(admin, auth)) return Results.BadRequest("Invalid authorization");
+                }
+                else
+                {
+                    if (!await CheckAuthorization(schedule.AccountId, auth)) return Results.BadRequest("Invalid authorization");
+                }
+
+                if (!schedules.Find(s => s._id == ObjectId.Parse(id)).ToList().Any()) return Results.BadRequest("No schedule exists with this id");
+
+                if (!await VerifyCourse(schedule.CourseId)) return Results.BadRequest("Invalid Course");
+                if (schedule.Duration <= 0) return Results.BadRequest("Invalid Duration");
+                if (schedule.StartTime <= 0 || schedule.StartTime + schedule.Duration > 1440) return Results.BadRequest("Invalid Start Time");
+
+                var filter = Builders<Schedule>.Filter.Eq(s => s._id, ObjectId.Parse(id));
+
+                var StartTimeUpdate = Builders<Schedule>.Update.Set(s => s.StartTime, schedule.StartTime);
+                var DurationUpdate = Builders<Schedule>.Update.Set(s => s.Duration, schedule.Duration);
+                var CourseIdUpdate = Builders<Schedule>.Update.Set(s => s.CourseId, schedule.CourseId);
+                var RoomUpdate = Builders<Schedule>.Update.Set(s => s.Room, schedule.Room);
+
+                await schedules.UpdateOneAsync(filter, StartTimeUpdate);
+                await schedules.UpdateOneAsync(filter, DurationUpdate);
+                await schedules.UpdateOneAsync(filter, CourseIdUpdate);
+                await schedules.UpdateOneAsync(filter, RoomUpdate);
+
+                return Results.Ok("Updated");
+            }
             [HttpDelete]
             [Route("delete/{id}")]
             public async Task<IResult> DeleteSchedule(string? userid, string id, string? auth) {
