@@ -17,12 +17,18 @@ class TutorInfoFrame extends React.Component {
             passwordChangerOpen: false,
         }
     }
+
+    // Opening or closing the link creation box
     onOpen = () => {
         this.setState({ linkAdderOpen: !this.state.linkAdderOpen, link: { ImageURL: "", URL: "", Title: ""} });
     }
+
+    // Opening or closing the password changing box
     onPasswordOpen = () => {
         this.setState({ passwordChangerOpen: !this.state.passwordChangerOpen });
     }
+
+    // Updating credentials of anything about the tutor
     onChange = (event) => {
         let item = event.target;
         let link = this.state.link;
@@ -50,14 +56,19 @@ class TutorInfoFrame extends React.Component {
         }
         this.setState({ link: link });
     }
+
+    // Validating password
     checkPassword = () => {
         if (this.state.password === "") return null;
         this.props.ChangePassword(this.state.password);
     }
+
+    // Validating link
     checkLink = () => {
         if (this.state.link.ImageURL === "" || this.state.link.URL === "") return null;
         this.props.CreateLink(this.state.link);
     }
+    
     render() {
         return (
             <div id="NameInformation" className="container horizontal max-width item">

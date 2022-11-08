@@ -1,9 +1,11 @@
 import React from 'react';
+import axios from 'axios';
 import './HomePage.css';
+
 import Menu from './Menu';
 import Calendar from './Calendar';
-import axios from 'axios';
 
+// The area for the filters of the calendar
 class SearchOptions extends React.Component {
     render() {
         return (
@@ -12,14 +14,12 @@ class SearchOptions extends React.Component {
                 <div className="container vertical max-width max-height">
                     <div className="container horizontal item max-width">
                         <label className="item" htmlFor='StartTime'>Start Time: </label>
-                        <input className="item" name="StartTime" type="time" onChange={event => this.props.UpdateTime(event)} value={this.props.Time.StartTime} />
+                        <input className={`item timeInput ${this.props.Time.StartTimeError !== "" ? "timeInputIssue" : ""}`} name="StartTime" type="time" onChange={event => this.props.UpdateTime(event)} value={this.props.Time.StartTime} />
                     </div>
-                    <div className="item error">{this.props.Time.StartTimeError}</div>
                     <div className="container horizontal item max-width">
                         <label className="item" htmlFor='EndTime'>End Time: </label>
-                        <input className="item" name="EndTime" type="time" onChange={evt => this.props.UpdateTime(evt)} value={this.props.Time.EndTime} />
+                        <input className={`item timeInput ${this.props.Time.EndTimeError !== "" ? "timeInputIssue" : ""}`} name="EndTime" type="time" onChange={evt => this.props.UpdateTime(evt)} value={this.props.Time.EndTime} />
                     </div>
-                    <div className="item error">{this.props.Time.EndTimeError}</div>
                 </div>
                 <Menu label="Tutor: " options={this.props.Coaches} update={this.props.UpdateCoaches} />
             </div>
@@ -59,6 +59,8 @@ class DateSelection extends React.Component {
 class HomeFrame extends React.Component {
     constructor(props) {
         super(props);
+
+        // Loading current day's information
         let now = new Date();
         let start = new Date(now.getFullYear(), 0, 0);
         let diff = now - start;
@@ -87,9 +89,13 @@ class HomeFrame extends React.Component {
             }
         };
     }
+
+    // Changes the current viewed day
     ChangeDay = (days) => {
         let day = this.state.search.Day + days;
         let year = this.state.search.Year;
+
+        // Rolls the year forward or backwards after adjusting days to request amount
         if (day < 1) {
             day += ((this.state.year % 4 === 0 && (this.state.year % 100 !== 0 || this.state.year % 400 === 0)) ? 366 : 365);
             year -= 1;
@@ -103,12 +109,16 @@ class HomeFrame extends React.Component {
         search.Year = year;
         this.setState({ search: search }, async () => this.LoadSchedules());
     }
+
+    // Changes the time filter
     UpdateTime = (start, end) => {
         let search = this.state.search;
-        if (start !== NaN) search.StartTime = start;
-        if (end !== NaN) search.EndTime = end;
+        if (!isNaN(start)) search.StartTime = start;
+        if (!isNaN(end)) search.EndTime = end;
         this.setState({ search: search }, async () => this.LoadSchedules());
     }
+
+    // Changes the course filter
     UpdateCourses = (courses) => {
         let selection = this.state.selections;
         selection.courses = courses;
@@ -129,6 +139,8 @@ class HomeFrame extends React.Component {
 
         this.setState({ search: search }, async () => this.LoadSchedules());
     }
+
+    // Changes the coach filter
     UpdateCoaches = (coaches) => {
         let selection = this.state.selections;
         selection.coaches = coaches;
@@ -149,6 +161,8 @@ class HomeFrame extends React.Component {
 
         this.setState({ search: search }, async () => this.LoadSchedules());
     }
+
+    // Cleans the data up, assigning schedules to coaches
     CalendarData = async () => {
         let list = [];
         this.state.coaches.map(coach => {
@@ -156,6 +170,8 @@ class HomeFrame extends React.Component {
                 coach: coach
             };
             let schedule = [];
+            
+            // Builds the assigned tutor rows first
             this.state.schedules.assigned.map(entry => {
                 if (entry.accountId === coach.id) {
                     this.state.courses.map(course => {
@@ -168,6 +184,8 @@ class HomeFrame extends React.Component {
                 }
                 return null;
             });
+
+            // Builds the preferred tutor rows after the assigned
             this.state.schedules.preferred.map(entry => {
                 if (entry.accountId === coach.id) {
                     this.state.courses.map(course => {
@@ -186,16 +204,22 @@ class HomeFrame extends React.Component {
         });
         this.setState({ calendarData: list });
     }
+
+    // Grabs a list of coaches based on all of the returned schedules of the day
     LoadCoaches = async () => {
         let coachIds = {
             accounts: []
         };
+
+        // Putting the assigned coaches of the day first (matters when working with a course filter)
         this.state.schedules.assigned.map(schedule => {
             if (coachIds.accounts.indexOf(schedule.accountId) === -1) {
                 coachIds.accounts.push(schedule.accountId);
             }
             return null;
         });
+
+        // Putting any other coach of the day after the assignments
         this.state.schedules.preferred.map(schedule => {
             if (coachIds.accounts.indexOf(schedule.accountId) === -1) {
                 coachIds.accounts.push(schedule.accountId);
@@ -212,8 +236,9 @@ class HomeFrame extends React.Component {
                 }
             });
     }
+
     LoadSchedules = async () => {
-        axios.post(this.props.APIS.schedule + 'find', this.state.search,)
+        axios.post(this.props.APIS.schedule + 'find', this.state.search)
             .then(response => {
                 if (response.data.statusCode !== 200) {
                     console.log(response.data.value);
@@ -223,6 +248,7 @@ class HomeFrame extends React.Component {
                 }
             });
     }
+
     GetAllCourses = async () => {
         await axios.get(this.props.APIS.course + "view")
             .then(response => {
@@ -245,6 +271,8 @@ class HomeFrame extends React.Component {
                 }
             })
     }
+
+    // Interprets the time input and makes the appropriate adjustments to the filter
     ChangeTime = (event) => {
         let item = event.target;
         let selections = this.state.selections;
@@ -269,18 +297,28 @@ class HomeFrame extends React.Component {
                     this.UpdateTime(this.ConvertTime(selections.time.StartTime), this.ConvertTime(item.value));
                 }
                 break;
+            default:
+                break;
         }
         this.setState({ selections: selections });
     }
+
+    // Turns the time from input time to seconds since midnight
     ConvertTime = (time) => {
         let brokenTime = time.split(":");
         return (Number(brokenTime[0]) * 60) + Number(brokenTime[1]);
     }
+
+    // Loads the courses, which loads the schedules, which loads coaches, and eventually the calendar
     componentDidMount = async () => {
         await this.GetAllCourses();
     }
     render() {
+
+        // Grabs day of the week from sunday to do calculations
         let date = new Date(this.state.search.Year, 0, this.state.search.Day).getDay();
+
+        // Generates the necessary data for the day tabs
         let tabs = [
             { name: "Sun", selected: date === 0, value: 0 - date},
             { name: "Mon", selected: date === 1, value: 1 - date },
@@ -290,6 +328,8 @@ class HomeFrame extends React.Component {
             { name: "Fri", selected: date === 5, value: 5 - date },
             { name: "Sat", selected: date === 6, value: 6 - date }
         ];
+
+        // Preparing data for the filters
         let courses = {
             selected: this.state.selections.courses,
             unselected: []

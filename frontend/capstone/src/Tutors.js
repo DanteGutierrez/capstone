@@ -19,6 +19,7 @@ class TutorCreationFrame extends React.Component {
             success: ""
         }
     }
+
     GetAllCourses = async () => {
         await axios.get(this.props.APIS.course + "view")
             .then(response => {
@@ -41,6 +42,7 @@ class TutorCreationFrame extends React.Component {
                 }
             })
     }
+
     UpdateCredentials = (event) => {
         let account = this.state.Account;
         switch (event.target.name) {
@@ -67,6 +69,7 @@ class TutorCreationFrame extends React.Component {
         }
         this.setState({ Account: account });
     }
+
     CreateAccount = () => {
         axios.post(this.props.APIS.account + `create?auth=${this.props.Login.authorized}&admin=${this.props.Login.id}`, this.state.Account)
             .then(response => {
@@ -88,6 +91,8 @@ class TutorCreationFrame extends React.Component {
                 PreferredCourses: []
             }});
     }
+
+    // Validates that all the information has been entered correctly to generate a tutor account
     CheckAccount = () => {
         let error = "";
         if (this.state.Account.AssignedCourse === "") error = "Please select an assigned course";
@@ -98,9 +103,11 @@ class TutorCreationFrame extends React.Component {
         else this.CreateAccount();
         this.setState({ error: error });
     }
+
     componentDidMount = async() => {
         await this.GetAllCourses();
     }
+    
     render() {
         return (
             <div className="container vertical align-start max-height">

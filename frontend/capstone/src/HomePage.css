@@ -36,3 +36,10 @@
     background-color: #EEE;
     height: 50px;
 }
+
+.timeInput {
+    width: 100px;
+}
+.timeInputIssue {
+    border-color: red;
+}

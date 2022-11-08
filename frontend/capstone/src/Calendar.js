@@ -2,9 +2,14 @@ import React from 'react';
 import './Calendar.css';
 
 const Times = ["12 am", "1 am", "2 am", "3 am", "4 am", "5 am", "6 am", "7 am", "8 am", "9 am", "10 am", "11 am", "12 pm", "1 pm", "2 pm", "3 pm", "4 pm", "5 pm", "6 pm", "7 pm", "8 pm", "9 pm", "10 pm", "11 pm"]
-const StartingPoint = 7;
-const EndingPoint = 21;
+
+// Sarah wants tutors to only work between 7 am and 9 pm
+const StartingPoint = 7; const EndingPoint = 21; // 9 + 12
+
+// The width of each hour on the calendar
 const width = 120;
+
+// Converts seconds since midnight to am / pm time
 const TimeConvert = (start) => {
     let value = "";
     let minutes = start % 60;
@@ -12,6 +17,8 @@ const TimeConvert = (start) => {
     value += `${time % 12 === 0 ? 12 : time % 12}:${minutes < 10 ? "0" + minutes : minutes} ${time > 11 ? "pm" : "am"}`;
     return value;
 }
+
+// Converts seconds since midnight to input time
 const TimeConvertInput = (start) => {
     let value = "";
     let minutes = start % 60;
@@ -19,11 +26,14 @@ const TimeConvertInput = (start) => {
     value += (hour < 10 ? "0" + hour : hour) + ":" + (minutes < 10 ? "0" + minutes : minutes);
     return value;
 }
+
+// Converts input time to seconds since midnight
 const ConvertTime = (time) => {
     let brokenTime = time.split(":");
     return (Number(brokenTime[0]) * 60) + Number(brokenTime[1]);
 }
-class Delete extends React.Component {
+
+class DeleteButton extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -49,7 +59,8 @@ class Delete extends React.Component {
         )
     }
 }
-class Update extends React.Component {
+
+class ScheduleUpdateDisplay extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -60,6 +71,7 @@ class Update extends React.Component {
             CourseId: this.props.Schedule.courseId
         }
     }
+
     UpdateInput = (event) => {
         let item = event.target;
         switch (item.name) {
@@ -81,8 +93,12 @@ class Update extends React.Component {
             case "Course":
                 this.setState({ CourseId: item.value });
                 break;
+            default:
+                break;
         }
     }
+
+    // Verifies all information in the schedule is valid before updating
     CheckSchedule = () => {
         if (ConvertTime(this.state.StartTime) > ConvertTime(this.state.EndTime)) {
             this.setState({ TimeIssue: true });
@@ -95,6 +111,7 @@ class Update extends React.Component {
         schedule.courseId = this.state.CourseId;
         this.props.UpdateSchedule(schedule);
     }
+
     render() {
         return (
             <>
@@ -124,14 +141,19 @@ class Update extends React.Component {
         )
     }
 }
+
 class Row extends React.Component {
     render() {
         return (
             <div className="container horizontal max-width time-row row">
                 {this.props.data.schedule.map(entry => {
+
+                    // Ensures a bad input does not break the calendar
                     let fullCourseCode = entry.course !== undefined ? entry.course.code : "";
                     let fullCourseName = entry.course !== undefined ? entry.course.name : "";
                     let courseCode = entry.course !== undefined ? entry.course.code.slice(0, 3) : "TST";
+                    
+                    // Calculating the size and positioning of the schedule object on the calendar
                     let entryWidth = (entry.duration / 60) * width;
                     let entryLeft = ((entry.startTime - (StartingPoint * 60)) / 60) * width;
                     if (entry.startTime < (StartingPoint * 60)) {
@@ -142,18 +164,24 @@ class Row extends React.Component {
                         entryWidth = ((EndingPoint - entry.startTime) / 60) * width;
                     }
                     let style = { width: entryWidth + "px" };
+
+                    // Switches a schedule between opening left or right depending on it's distance to an edge
                     if (entryLeft > (((EndingPoint - StartingPoint) * width) / 2)) {
                         style.right = ((((EndingPoint - StartingPoint) * width) - entryLeft) - entryWidth) + "px";
                     }
                     else style.left = entryLeft + "px";
+
+                    // Checking to see if the schedule that was generated is older than the current day (to disable editing of that schedule)
                     let NotOld = new Date(entry.year, 0, entry.day).getTime() >= new Date(new Date(Date.now()).toLocaleDateString()).getTime();
+
+                    // Only renders a schedule if it appears on the calendar at all
                     if (entryWidth > 0) {
                         return (
                             <div key={entry.year + '' + entry.day + '' + entry.startTime} className={`row time-block ${courseCode}`} style={style}>
                                 <div className={`interactive-time-block container horizontal max-height max-width`}>
                                     <div className={`${entryWidth < 180 ? "time-block-text" : ""} container vertical max-width align-start`}>
                                         {this.props.UpdateSchedule !== undefined && (this.props.Admin || NotOld)
-                                            ? <Update Schedule={entry} CoachName={this.props.data.coach.name} Courses={this.props.Courses} UpdateSchedule={this.props.UpdateSchedule} />
+                                            ? <ScheduleUpdateDisplay Schedule={entry} CoachName={this.props.data.coach.name} Courses={this.props.Courses} UpdateSchedule={this.props.UpdateSchedule} />
                                             : <>
                                                 <div className="item text-left">{this.props.data.coach.name}</div>
                                                 <div className="item text-left">{TimeConvert(entry.startTime) + " - " + TimeConvert(entry.startTime + entry.duration)}</div>
@@ -163,7 +191,7 @@ class Row extends React.Component {
                                         }
                                     </div>
                                     {this.props.DeleteSchedule !== undefined && (this.props.Admin || NotOld)
-                                        ? < Delete DeleteSchedule={this.props.DeleteSchedule} id={this.props.getID(entry._id)} />
+                                        ? < DeleteButton DeleteSchedule={this.props.DeleteSchedule} id={this.props.getID(entry._id)} />
                                         : <></>
                                     }
                                 </div>
@@ -176,6 +204,7 @@ class Row extends React.Component {
         )
     }
 }
+
 class CalendarFrame extends React.Component {
     render() {
         return (
@@ -196,10 +225,12 @@ class CalendarFrame extends React.Component {
                     </div>
                     <div className='container vertical justify-start align-start box-bind'>
                         <div className="container horizontal justify-start align-start box max-height">
+                            {/* Generates bars that visually represent a time filter's effect */}
                             {this.props.Auxilary !== undefined && this.props.Auxilary.StartTime !== undefined
                                 ? <div className="auxilaryWings max-height" style={{ width: Math.max((((this.props.Auxilary.StartTime - (StartingPoint * 60)) / 60) * width), 0) + "px", left: "0px" }}></div>
                                 : <></>
                             }
+                            {/* Generates the vertical bars that represent each hour */}
                             {Times.slice(StartingPoint,EndingPoint).map((value, i) => {
                                 return (
                                     <React.Fragment key = {i}>
@@ -207,12 +238,14 @@ class CalendarFrame extends React.Component {
                                     </React.Fragment>
                                 )
                             })}
+                            {/* Generates bars that visually represent a time filter's effect */}
                             {this.props.Auxilary !== undefined && this.props.Auxilary.EndTime !== undefined
                                 ? <div className="auxilaryWings max-height" style={{ width: Math.max(((((EndingPoint * 60) - this.props.Auxilary.EndTime) / 60) * width), 0) + "px", right: "0px" }}></div>
                                 : <></>
                             }
                         </div>
                         <div className="container horizontal justify-start align-start title">
+                            {/* Labels the hours that are being displayed on the calendar */}
                             {Times.slice(StartingPoint, EndingPoint).map(value => {
                                 return (
                                     <div className="column times" key={value}>{value}</div>

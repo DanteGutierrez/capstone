@@ -1,10 +1,12 @@
 import React from 'react'
 import axios from 'axios'
 import './TutorPage.css'
+
 import Calendar from './Calendar';
 import Schedule from './Schedule';
 import TutorInfo from './TutorInfo';
 
+// Seperate rendering component to display all courses available to be selected / removed for a given tutor
 class ClassSelection extends React.Component {
     render() {
         return (
@@ -66,10 +68,11 @@ class ClassSelection extends React.Component {
     }
 }
 
-//const DayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 class TutorFrame extends React.Component {
     constructor(props) {
         super(props);
+
+        // Loads tutor calendar at current week
         let now = new Date();
         let start = new Date(now.getFullYear(), 0, 0);
         let diff = now - start;
@@ -88,6 +91,8 @@ class TutorFrame extends React.Component {
             }
         };
     }
+
+    // Changes the current viewed day / week of the calendar
     ChangeDay = (days) => {
         let day = this.state.day + days;
         let year = this.state.year;
@@ -101,6 +106,7 @@ class TutorFrame extends React.Component {
         }
         this.setState({ year: year, day: day }, async () => this.LoadSchedules());
     }
+
     LoadSchedules = async () => {
         let list = [];
         let search = {
@@ -149,6 +155,7 @@ class TutorFrame extends React.Component {
         }
         this.setState({ schedules: list });
     }
+
     GetAllCourses = async () => {
         await axios.get(this.props.APIS.course + "view")
             .then(response => {
@@ -171,9 +178,13 @@ class TutorFrame extends React.Component {
                 }
             })
     }
+
+    // Updates the display between schedule adding and viewing the calendar
     ScheduleToggled = async () => {
         this.setState({ scheduleOpen: !this.state.scheduleOpen }, async () => this.LoadSchedules());
     }  
+
+    // Moves a schedule between the assigned, preferred, and unselected areas
     movePreferredCourse = (id) => {
         let clone = this.props.Tutor;
         if (this.props.Login.admin && clone.assignedCourse === id) {
@@ -191,6 +202,7 @@ class TutorFrame extends React.Component {
         }
         this.props.updateTutor(clone);
     }
+
     DeleteSchedule = (id) => {
         axios.delete(`${this.props.APIS.schedule}delete/${id}?auth=${this.props.Login.authorized}&userid=${this.props.Login.id}`)
             .then(response => {
@@ -200,6 +212,7 @@ class TutorFrame extends React.Component {
                 else this.LoadSchedules();
             })
     }
+
     UpdateSchedule = (schedule) => {
         axios.put(`${this.props.APIS.schedule}update/${this.props.getID(schedule._id)}?auth=${this.props.Login.authorized}&admin=${this.props.Login.id}`, schedule)
             .then(response => {
@@ -209,34 +222,41 @@ class TutorFrame extends React.Component {
                 else this.LoadSchedules();
             });
     }
+
     savePreferredName = (name) => {
         let clone = this.props.Tutor;
         clone.PreferredName = name;
         this.props.updateTutor(clone);
     }
+
     createLink = (link) => {
         let clone = this.props.Tutor;
         clone.links.push(link);
         this.props.updateTutor(clone);
     }
+
     deleteLink = (link) => {
         let clone = this.props.Tutor;
         clone.links.splice(clone.links.indexOf(link), 1);
         this.props.updateTutor(clone);
     }
+
     changeStatus = (status) => {
         let clone = this.props.Tutor;
         clone.status = status;
         this.props.updateTutor(clone);
     }
+
     changePassword = (password) => {
         let clone = this.props.Tutor;
         clone.Password = password;
         this.props.updateTutor(clone);
     }
+
     componentDidMount = async () => {
         await this.GetAllCourses();
     }
+
     render() {
         return (
             <div id="Framing" className="container vertical justify-start max-width">

@@ -12,9 +12,13 @@
     overflow-x: scroll;
     max-width: 250px;
 }
+.option {
+    transition: color .25s, background-color .25s;
+}
 .option:hover {
     cursor: pointer;
-    background-color: #AAA;
+    color: white;
+    background-color: #bbb;
 }
 .selected {
     background-color: #AAA;

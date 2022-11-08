@@ -21,14 +21,20 @@ class ScheduleMakingFrame extends React.Component {
             success: ""
         };
     }
+
+    // Converts time from input to seconds since midnight
     ConvertTime = (time) => {
         let brokenTime = time.split(":");
         return (Number(brokenTime[0]) * 60) + Number(brokenTime[1]);
     }
+
+    // Grabs the year from the input
     GetYear = (date) => {
         let brokenDate = date.split("-");
         return Number(brokenDate[0]);
     }
+
+    // Grabs the day of the year from day of month
     GetDay = (date) => {
         const MonthToDays = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
         let brokenDate = date.split("-");
@@ -37,6 +43,7 @@ class ScheduleMakingFrame extends React.Component {
         if (days > 59 && (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0))) days += 1;
         return days;
     }
+
     UpdateCredentials = (event) => {
         let form = this.state.Form;
         switch (event.target.name) {
@@ -90,6 +97,7 @@ class ScheduleMakingFrame extends React.Component {
         }
         this.setState({ Form: form });
     }
+
     GetAllCourses = async () => {
         await axios.get(this.props.APIS.course + "view")
             .then(response => {
@@ -112,6 +120,7 @@ class ScheduleMakingFrame extends React.Component {
                 }
             })
     }
+
     CreateSchedule = async (schedule) => {
         return await axios.post(this.props.APIS.schedule + `create?auth=${this.props.Login.authorized}&admin=${this.props.Login.id}`, schedule)
             .then(response => {
@@ -124,7 +133,11 @@ class ScheduleMakingFrame extends React.Component {
                 }
             });
     }
+
+    // Takes inputs and determines how to generate the schedules requested
     ProcessSchedules = async () => {
+
+        // Displays any errors from invalid form data
         if (this.state.Form.StartTime === "") { this.setState({ error: "Set a time for the tutoring to start" }); return; }
         if (this.state.Form.EndTime === "") { this.setState({ error: "Set a time for the tutoring to end" }); return; }
         if (this.state.Form.StartDay === "") { this.setState({ error: "Set a date for your tutoring" }); return; }
@@ -133,9 +146,13 @@ class ScheduleMakingFrame extends React.Component {
         if (this.ConvertTime(this.state.Form.EndTime) < this.ConvertTime(this.state.Form.StartTime)) { this.setState({ error: "Ending Time cannot be before Starting Time" }); return; }
         if (this.ConvertTime(this.state.Form.EndTime) > (21 * 60)) { this.setState({ error: "You must end your tutoring at or before 9 pm" }); return; }
         if (this.ConvertTime(this.state.Form.StartTime) < (7 * 60)) { this.setState({ error: "You must start your tutoring at or after 7 am" }); return; }
+
         if (this.state.Form.Repeat) {
             if (this.state.Form.EndDay === "") { this.setState({ error: "Set an ending date for your tutoring" }); return; }
+
             let year = this.GetYear(this.state.Form.StartDay);
+
+            // Calculates the amount of schedules that should be generated, capping at 100
             let loops = this.GetDay(this.state.Form.EndDay) - this.GetDay(this.state.Form.StartDay) + (year !== this.GetYear(this.state.Form.EndDay) ? (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0) ? 366 : 365) : 0);
             if (loops < 0 || loops > 100) this.setState({ error: "You cannot set more than 100 schedules at once." });
             else {
@@ -174,9 +191,11 @@ class ScheduleMakingFrame extends React.Component {
             else this.setState({ success: '', error: 'Failed creating meeting' });
         }
     }
+
     componentDidMount = async () => {
         await this.GetAllCourses();
     }
+
     render() {
         return (
             <div className="container vertical justify-start align-start max-width max-height">
@@ -223,6 +242,7 @@ class ScheduleMakingFrame extends React.Component {
                     ?
                     <>
                         <div className="container horizontal item">
+                            {/* Sarah does not want a schedule to be created on sundays */}
                             {/* <div className="container horizontal item day">
                                 <label className="item" htmlFor='Sunday'>Sunday:</label>
                                 <input className="item" type="checkbox" name="Sunday" onChange={this.UpdateCredentials} checked={this.state.Form.RepeatDay[0]} />

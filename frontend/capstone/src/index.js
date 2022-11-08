@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
 import axios from 'axios';
+
+//Custom Pages
 import HomePage from './HomePage';
 import Navigation from './Navigation';
 import Login from './Login';
@@ -42,7 +44,10 @@ class Application extends React.Component {
       courses: [],
     };
   };
-  updateCredentials  = (event) => {
+
+  // Takes in input changes for Tutor Creation
+
+  TutorCreationUpdateCredentials  = (event) => {
     let target = event.target;
     let loginInfo = this.state.login;
     switch (target.name) {
@@ -63,6 +68,7 @@ class Application extends React.Component {
     }
     this.setState({ login: loginInfo });
   }
+
   Login = async () => {
     if (this.state.login.email === "" || this.state.login.password === "") {
       return "Make sure both and email and password are entered";
@@ -80,13 +86,16 @@ class Application extends React.Component {
             loginInfo.admin = response.data.value.admin;
             loginInfo.id = response.data.value.id;
             loginInfo.authorized = response.data.value.auth;
-            this.setState({ login: loginInfo }, this.onNavButtonClicked('home'));
+            this.setState({ login: loginInfo }, this.CreatePage('home'));
             return "";
           }
         });
     }
   }
-  updateTutor = (tutor) => {
+
+  UpdateTutorInformation = (tutor) => {
+    // Since a tutor's preferred name can be blank,
+    // This prevents the name from showing up as blank space
     if (tutor.PreferredName === undefined) {
       tutor.PreferredName = tutor.name.split(' ').slice(0, -1).join(' ');
     }
@@ -96,28 +105,31 @@ class Application extends React.Component {
           console.log(response.data.value);
         }
         else {
-          this.onTutorNavigate(tutor.id);
+          this.CreateTutorInfoPage(tutor.id);
         }
     })
   }
-  onTutorNavigate = (id) => {
+
+  CreateTutorInfoPage = (id) => {
     axios.get(APIS.account + "view/" + id)
       .then(response => {
         if (response.data.statusCode !== 200) {
           console.log(response.data.value);
         }
         else {
-          this.setState({ page: <TutorPage APIS={APIS} getID={getID} Login={this.state.login} Tutor={response.data.value} updateTutor={this.updateTutor} key={response.data.value.id} onNavButtonClicked={this.onNavButtonClicked} /> });
+          this.setState({ page: <TutorPage APIS={APIS} getID={getID} Login={this.state.login} Tutor={response.data.value} updateTutor={this.UpdateTutorInformation} key={response.data.value.id} onNavButtonClicked={this.CreatePage} /> });
         }
       })
   };
-  onNavButtonClicked = (page) => {
+
+  CreatePage = (page) => {
+    // Generates a page to display based on the string passed through
     switch (page) {
       case "home":
-        this.setState({ page: <HomePage APIS={APIS} getID={getID} TutorNavigation={this.onTutorNavigate} /> });
+        this.setState({ page: <HomePage APIS={APIS} getID={getID} TutorNavigation={this.CreateTutorInfoPage} /> });
         break;
       case "login":
-        this.setState({ page: <Login UpdateCredentials={this.updateCredentials} Login={this.Login} /> });
+        this.setState({ page: <Login UpdateCredentials={this.TutorCreationUpdateCredentials} Login={this.Login} /> });
         break;
       case "tutors":
         this.setState({ page: <Tutors APIS={APIS} getID={getID} Login={this.state.login}/> });
@@ -135,20 +147,26 @@ class Application extends React.Component {
             preferredName: ""
           }
         });
-        this.setState({ page: <HomePage APIS={APIS} getID={getID} TutorNavigation={this.onTutorNavigate} /> });
+        this.setState({ page: <HomePage APIS={APIS} getID={getID} TutorNavigation={this.CreateTutorInfoPage} /> });
         axios.get(APIS.account + `logout/${this.state.login.id}`);
         break;
       default:
         break;
     }
   };
+
+  // Starts off at the home page after the frame is loaded
   componentDidMount = async () => {
-    this.onNavButtonClicked("home");
+    this.CreatePage("home");
   };
+
+  // Rendering pages come from the state 'page' instead of
+  // using url routing, this allows for the utilization of
+  // react's state based loading of pages.
   render() {
     return (
       <div id="Main" className="container vertical justify-start max-width max-height">
-        <Navigation Login={this.state.login} NavClick={this.onNavButtonClicked} TutorNavigation={this.onTutorNavigate} />
+        <Navigation Login={this.state.login} NavClick={this.CreatePage} TutorNavigation={this.CreateTutorInfoPage} />
         {this.state.page}
       </div>
     );
