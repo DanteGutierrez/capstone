@@ -68,6 +68,15 @@ class TutorCreationFrame extends React.Component {
         this.setState({ Account: account });
     }
     CreateAccount = () => {
+        axios.post(this.props.APIS.account + `create?auth=${this.props.Login.authorized}&admin=${this.props.Login.id}`, this.state.Account)
+            .then(response => {
+                if (response.data.statusCode !== 200) {
+                    this.setState({ error: response.data.value, success: "" });
+                }
+                else {
+                    this.setState({ error: "", success: "Succesfully created an account" });
+                }
+            });
         this.setState({
             Account: {
                 Admin: false,
@@ -78,16 +87,6 @@ class TutorCreationFrame extends React.Component {
                 AssignedCourse: "",
                 PreferredCourses: []
             }});
-
-        axios.post(this.props.APIS.account + `create?auth=${this.props.Login.authorized}&admin=${this.props.Login.id}`, this.state.Account)
-            .then(response => {
-                if (response.data.statusCode !== 200) {
-                    this.setState({ error: response.data.value, success: "" });
-                }
-                else {
-                    this.setState({ error: "", success: "Succesfully created an account" });
-                }
-            })
     }
     CheckAccount = () => {
         let error = "";
