@@ -24,7 +24,7 @@ class Menu extends React.Component {
     }
     render() {
         return (
-            <div className="container vertical justify-start item max-height max-width">
+            <div className="container vertical justify-start item">
                 <div className="container horizontal align-start item">
                     <div className="item bolded" title="Change this filter">{this.state.label}</div>
                     <div className="container vertical item">

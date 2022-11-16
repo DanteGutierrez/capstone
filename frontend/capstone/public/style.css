@@ -8,8 +8,8 @@ html {
     padding: 0px;
     width: 100vw;
     height: 100vh;
-    min-width:1000px;
-    min-height:400px;
+    /* min-width:1000px;
+    min-height:400px; */
     /* overflow-x: hidden;
     overflow-y: hidden; */
 }
@@ -98,7 +98,7 @@ body {
 
 #Framing {
     height: calc(100% - 29px);
-    padding: 1px;
+    /* padding: 1px; */
     box-sizing: border-box;
 }
 

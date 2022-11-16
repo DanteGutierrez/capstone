@@ -7,7 +7,9 @@ const Times = ["12 am", "1 am", "2 am", "3 am", "4 am", "5 am", "6 am", "7 am", 
 const StartingPoint = 7; const EndingPoint = 21; // 9 + 12
 
 // The width of each hour on the calendar
-const width = 120;
+// let width = 120;
+// if (window.innerWidth < 993) width = 90;
+// if (window.innerWidth < 525) width = 60;
 
 // Converts seconds since midnight to am / pm time
 const TimeConvert = (start) => {
@@ -154,20 +156,20 @@ class Row extends React.Component {
                     let courseCode = entry.course !== undefined ? entry.course.code.slice(0, 3) : "TST";
                     
                     // Calculating the size and positioning of the schedule object on the calendar
-                    let entryWidth = (entry.duration / 60) * width;
-                    let entryLeft = ((entry.startTime - (StartingPoint * 60)) / 60) * width;
+                    let entryWidth = (entry.duration / 60) * this.props.Width;
+                    let entryLeft = ((entry.startTime - (StartingPoint * 60)) / 60) * this.props.Width;
                     if (entry.startTime < (StartingPoint * 60)) {
-                        entryWidth = (((entry.startTime + entry.duration) - (StartingPoint * 60)) / 60) * width;
+                        entryWidth = (((entry.startTime + entry.duration) - (StartingPoint * 60)) / 60) * this.props.Width;
                         entryLeft = 0;
                     }
                     else if (entry.startTime + entry.duration > (EndingPoint * 60)) {
-                        entryWidth = ((EndingPoint - entry.startTime) / 60) * width;
+                        entryWidth = ((EndingPoint - entry.startTime) / 60) * this.props.Width;
                     }
                     let style = { width: entryWidth + "px" };
 
                     // Switches a schedule between opening left or right depending on it's distance to an edge
-                    if (entryLeft > (((EndingPoint - StartingPoint) * width) / 2)) {
-                        style.right = ((((EndingPoint - StartingPoint) * width) - entryLeft) - entryWidth) + "px";
+                    if (entryLeft > (((EndingPoint - StartingPoint) * this.props.Width) / 2)) {
+                        style.right = ((((EndingPoint - StartingPoint) * this.props.Width) - entryLeft) - entryWidth) + "px";
                     }
                     else style.left = entryLeft + "px";
 
@@ -177,9 +179,9 @@ class Row extends React.Component {
                     // Only renders a schedule if it appears on the calendar at all
                     if (entryWidth > 0) {
                         return (
-                            <div key={entry.year + '' + entry.day + '' + entry.startTime} className={`row time-block ${courseCode} ${this.props.UpdateSchedule === undefined ? "hover" : ""}`} style={style} title={this.props.UpdateSchedule === undefined ? "Click to view tutor's page" : "Scheduled time"} onClick={this.props.UpdateSchedule === undefined ? evt => this.props.TutorNavigation(this.props.data.coach.id) : null}>
+                            <div key={entry.year + '' + entry.day + '' + entry.startTime} className={`time-block ${courseCode} ${this.props.UpdateSchedule === undefined ? "hover" : ""}`} style={style} title={this.props.UpdateSchedule === undefined ? "Click to view tutor's page" : "Scheduled time"} onClick={this.props.UpdateSchedule === undefined ? evt => this.props.TutorNavigation(this.props.data.coach.id) : null}>
                                 <div className={`interactive-time-block container horizontal max-height max-width`}>
-                                    <div className={`${entryWidth < 180 ? "time-block-text" : ""} container vertical max-width align-start`}>
+                                    <div className={`${entryWidth < (this.props.Width * 1.5) ? "time-block-text" : ""} container vertical max-width align-start`}>
                                         {this.props.UpdateSchedule !== undefined && (this.props.Admin || NotOld)
                                             ? <ScheduleUpdateDisplay Schedule={entry} CoachName={this.props.data.coach.name} Courses={this.props.Courses} UpdateSchedule={this.props.UpdateSchedule} />
                                             : <>
@@ -206,6 +208,22 @@ class Row extends React.Component {
 }
 
 class CalendarFrame extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            width: 120
+        }
+    }
+    handleResize = (evt) => {
+        let width = 120;
+        if (window.innerWidth < 993) width = 90;
+        if (window.innerWidth < 525) width = 60;
+        this.setState({ width: width });
+    }
+    componentDidMount = () => {
+        window.addEventListener('resize', this.handleResize);
+        this.handleResize(null);
+    }
     render() {
         return (
             <div id="Frame" className="max-height max-width">
@@ -229,7 +247,7 @@ class CalendarFrame extends React.Component {
                             <div className="container horizontal justify-start align-start box max-height">
                                 {/* Generates bars that visually represent a time filter's effect */}
                                 {this.props.Auxilary !== undefined && this.props.Auxilary.StartTime !== undefined
-                                    ? <div className="auxilaryWings max-height" style={{ width: Math.max((((this.props.Auxilary.StartTime - (StartingPoint * 60)) / 60) * width), 0) + "px", left: "0px" }}></div>
+                                    ? <div className="auxilaryWings max-height" style={{ width: Math.max((((this.props.Auxilary.StartTime - (StartingPoint * 60)) / 60) * this.state.width), 0) + "px", left: "0px" }}></div>
                                     : <></>
                                 }
                                 {/* Generates the vertical bars that represent each hour */}
@@ -242,7 +260,7 @@ class CalendarFrame extends React.Component {
                                 })}
                                 {/* Generates bars that visually represent a time filter's effect */}
                                 {this.props.Auxilary !== undefined && this.props.Auxilary.EndTime !== undefined
-                                    ? <div className="auxilaryWings max-height" style={{ width: Math.max(((((EndingPoint * 60) - this.props.Auxilary.EndTime) / 60) * width), 0) + "px", right: "0px" }}></div>
+                                    ? <div className="auxilaryWings max-height" style={{ width: Math.max(((((EndingPoint * 60) - this.props.Auxilary.EndTime) / 60) * this.state.width), 0) + "px", right: "0px" }}></div>
                                     : <></>
                                 }
                             </div>
@@ -255,7 +273,7 @@ class CalendarFrame extends React.Component {
                                 })}
                             </div>
                             {this.props.data.map(data => {
-                                return (<Row data={data} TutorNavigation={this.props.TutorNavigation} Admin={this.props.Admin} key={data.coach.name} DeleteSchedule={this.props.DeleteSchedule} UpdateSchedule={this.props.UpdateSchedule} getID={this.props.getID} Courses={this.props.Courses} />)
+                                return (<Row data={data} Width={this.state.width} TutorNavigation={this.props.TutorNavigation} Admin={this.props.Admin} key={data.coach.name} DeleteSchedule={this.props.DeleteSchedule} UpdateSchedule={this.props.UpdateSchedule} getID={this.props.getID} Courses={this.props.Courses} />)
                             })}
                         </div>
                     </div>

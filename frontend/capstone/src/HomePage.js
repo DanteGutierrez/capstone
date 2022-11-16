@@ -9,11 +9,11 @@ import Calendar from './Calendar';
 class SearchOptions extends React.Component {
     render() {
         return (
-            <div id="Filter" title="Filters for the daily schedule"className="container vertical max-height max-width">
+            <div id="Filter" title="Filters for the daily schedule"className="container vertical max-height">
                 <div className="max-width filter-title">Filters:</div>
-                <div className="container horizontal max-height max-width justify-around item">
+                <div id="FilterInteractions" className="container horizontal max-height max-width justify-around item">
                     <Menu label="Courses: " options={this.props.Courses} update={this.props.UpdateCourses} />
-                    <div className="container vertical max-width max-height">
+                    <div id="TimeSort" className="container vertical">
                         <div className="container horizontal item max-width" title="Change the earliest hour to view">
                             <label className="item bolded" htmlFor='StartTime'>Start Time: </label>
                             <input className={`item timeInput ${this.props.Time.StartTimeError !== "" ? "timeInputIssue" : ""}`} name="StartTime" type="time" onChange={event => this.props.UpdateTime(event)} value={this.props.Time.StartTime} />
@@ -33,17 +33,17 @@ class SearchOptions extends React.Component {
 class DateSelection extends React.Component {
     render() {
         return (
-            <div className="container horizontal max-height max-width justify-start">
+            <div id="DateSelection" className="container horizontal justify-start max-height">
                 <div id="WeekChanger" className="container vertical max-height">
                     <div className="item">Year</div>
                     <div className="item">{this.props.Year}</div>
-                    <div className="container horizontal max-width item">
+                    <div className="container horizontal item">
                         <div className="item button" title="Look at last week's shedules" onClick={evt => this.props.ChangeDay(-7)}>◄</div>
                         <div className="item">Week {Math.ceil(((6 - new Date(this.props.Year, 0, this.props.Day).getDay()) + this.props.Day) / 7)}</div>
                         <div className="item button" title="Look at next week's schedules" onClick={evt => this.props.ChangeDay(7)}>►</div>
                     </div>
                 </div>
-                <div className="container horizontal max-height align-end item">
+                <div className="container horizontal max-height align-end">
                     {this.props.Tabs.map(tab => {
                         let date = new Date(this.props.Year, 0, this.props.Day + tab.value).toLocaleDateString().split('/');
                         let stringDate = date[0] + "/" + date[1];
@@ -355,7 +355,7 @@ class HomeFrame extends React.Component {
         });
         return (
             <div id="Framing" className="container vertical justify-start max-width">
-                <div className="container horizontal max-width">
+                <div id="TopBar" className="container horizontal justify-space max-width">
                     <DateSelection ChangeDay={this.ChangeDay} Year={this.state.search.Year} Day={this.state.search.Day} Tabs={tabs} />
                     <SearchOptions Courses={courses} Coaches={coaches} Time={this.state.selections.time} UpdateCoaches={this.UpdateCoaches} UpdateCourses={this.UpdateCourses} UpdateTime={this.ChangeTime} key={this.state.courses + this.state.coaches} />
                 </div>

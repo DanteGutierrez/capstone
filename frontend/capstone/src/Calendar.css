@@ -27,6 +27,8 @@
 .time-row {
     position: relative;
     border-bottom: 2px solid black;
+    /* box-sizing: border-box;
+    height: 102px; */
 }
 .time-block {
     position: absolute;
@@ -35,6 +37,7 @@
     border: 2px solid black;
     box-sizing: border-box;
     transition: min-width .5s, border .25s;
+    height:102px;
 }
 .time-block:hover {
     min-width: 240px;
@@ -217,5 +220,46 @@ div:hover > .mini-save {
     }
     to {
         opacity: 1;
+    }
+}
+
+/*Mobile Changes*/
+
+@media screen and (max-width: 993px) {
+    .row {
+        height: 75px;
+    }
+    .column {
+        width: 90px;
+    }
+    .interactive-time-block {
+        font-size: 7.5pt;
+    }
+    .time-block {
+        height: 77px;
+    }
+    .time-block:hover {
+        min-width:180px;
+    }
+}
+
+@media screen and (max-width: 525px) {
+    .row {
+        height: 50px;
+    }
+    .column {
+        width: 60px;
+    }
+    .interactive-time-block {
+        font-size: 5pt;
+    }
+    .name {
+        font-size: 9pt;
+    }
+    .time-block {
+        height: 52px;
+    }
+    .time-block:hover {
+        min-width: 120px;
     }
 }

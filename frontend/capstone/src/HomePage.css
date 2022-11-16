@@ -2,7 +2,7 @@
 #WeekChanger {
     /* width is equal to size of name box + border width x 1 */
     width: calc(120px + 2px);
-    border: 2px solid #DDD;
+    border-right: 2px solid #DDD;
     box-sizing:border-box;
 }
 
@@ -40,8 +40,7 @@
     font-weight: bold;
     font-size: 16pt;
     text-align: center;
-    border-bottom: 1px solid gray;
-    background-color: rgba(127,127,127,.2);
+    background-color: #DDD
 }
 
 .timeInput {
@@ -51,9 +50,66 @@
     border-color: red;
 }
 #Filter {
-    border-left: 2px solid gray;
+    border-left: 2px solid #DDD;
     /* box-sizing: border-box; */
 }
 .bolded {
     font-weight:bold;
+}
+
+/*Mobile Changes*/
+#DateSelection {
+    min-width: 525px;
+    min-height: 100px;
+}
+#TopBar {
+    flex-wrap:wrap-reverse;
+}
+
+@media screen and (max-width:993px) {
+    #DateSelection {
+        height: 50%;
+        width: 100%;
+    }
+    #Filter {
+        height: 50%;
+        width: 100%;
+        border:none;
+        border-bottom: 2px solid #DDD;
+    }
+}
+@media screen and (max-width: 525px) {
+    #DateSelection {
+        flex-direction: column;
+        min-width:0px;
+    }
+    #WeekChanger {
+        flex-direction: row;
+        width: 100%;
+        border:none;
+        border-bottom: 2px solid #DDD;
+    }
+    .tab {
+        width: 33px;
+    }
+    .selectedTab {
+        width: 52px;
+    }
+
+    #FilterInteractions {
+        flex-wrap: wrap;
+    }
+    #FilterInteractions > div {
+        width: calc((1/3) * 100%);
+    }
+    #TimeSort {
+        order: 3;
+        flex-direction: row;
+    }
+    .filter-title {
+        font-size: 12pt;
+    }
+    input[type="time"] {
+        width: 40px;
+    }
 }
