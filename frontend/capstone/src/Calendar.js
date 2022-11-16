@@ -50,10 +50,10 @@ class DeleteButton extends React.Component {
                     ?
                     <>
                         <div className="item">Are you sure?</div>
-                        <div className="item button" onClick={evt => this.props.DeleteSchedule(this.props.id)}>Delete</div>
-                        <div className="item button" onClick={evt => this.Toggle()}>Cancel</div>
+                        <div className="item button" title="Delete Schedule" onClick={evt => this.props.DeleteSchedule(this.props.id)}>Delete</div>
+                        <div className="item button" title="Cancel Delete" onClick={evt => this.Toggle()}>Cancel</div>
                     </>
-                    : < div className="item button" onClick={evt => this.Toggle()}>Delete</div>
+                    : < div className="item button" title="Delete Schedule" onClick={evt => this.Toggle()}>Delete</div>
                 }
             </div>
         )
@@ -116,18 +116,18 @@ class ScheduleUpdateDisplay extends React.Component {
         return (
             <>
                 <div className="item text-left">{this.props.CoachName}</div>
-                <div className="container horizontal max-width justify-start">
+                <div className="container horizontal max-width justify-start" title="Adjust time">
                     <input className={"item mini-input" + (this.state.TimeIssue ? " issue": "")} name="StartTime" type="time" value={this.state.StartTime} onChange={this.UpdateInput} />
                     <div className="item"> - </div>
                     <input className={"item mini-input" + (this.state.TimeIssue ? " issue" : "")} name="EndTime" type="time" value={this.state.EndTime} onChange={this.UpdateInput} />
                     <img className="item mini-save" src={"save-writing.png"} alt="Save Time" title="Save Time" onClick={evt => this.CheckSchedule()} />
                 </div>
-                <div className="container horizontal max-width justify-start">
+                <div className="container horizontal max-width justify-start" title="Adjust room">
                     <div className="item">Room: </div>
                     <input className="item mini-input" name="Room" type="text" value={this.state.Room} onChange={this.UpdateInput} />
                     <img className="item mini-save" src={"save-writing.png"} alt="Save Room" title="Save Room" onClick={evt => this.CheckSchedule()} />
                 </div>
-                <div className="container horizontal max-width justify-start">
+                <div className="container horizontal max-width justify-start" title="Adjust course">
                     <select className="item mini-select" name="Course" onChange={this.UpdateInput} defaultValue={this.state.CourseId}>
                         {this.props.Courses.map(course => {
                             return (
@@ -177,7 +177,7 @@ class Row extends React.Component {
                     // Only renders a schedule if it appears on the calendar at all
                     if (entryWidth > 0) {
                         return (
-                            <div key={entry.year + '' + entry.day + '' + entry.startTime} className={`row time-block ${courseCode}`} style={style}>
+                            <div key={entry.year + '' + entry.day + '' + entry.startTime} className={`row time-block ${courseCode} ${this.props.UpdateSchedule === undefined ? "hover" : ""}`} style={style} title={this.props.UpdateSchedule === undefined ? "Click to view tutor's page" : "Scheduled time"} onClick={this.props.UpdateSchedule === undefined ? evt => this.props.TutorNavigation(this.props.data.coach.id) : null}>
                                 <div className={`interactive-time-block container horizontal max-height max-width`}>
                                     <div className={`${entryWidth < 180 ? "time-block-text" : ""} container vertical max-width align-start`}>
                                         {this.props.UpdateSchedule !== undefined && (this.props.Admin || NotOld)
@@ -209,54 +209,58 @@ class CalendarFrame extends React.Component {
     render() {
         return (
             <div id="Frame" className="max-height max-width">
-                <div className="container horizontal">
-                    <div id="Names" className="container vertical">
-                        <div id="Title"className="column title">{this.props.title}</div>
-                        {this.props.data.map(data => {
-                            return (
-                                <div className="container vertical justify-start align-start column row name" key={data.coach.name}>
-                                    {data.coach.id !== undefined
-                                        ? <div className="nameButton max-height max-width" title={`Go to ${data.coach.name}'s tutor page`} onClick={evt => this.props.TutorNavigation(data.coach.id)}>{data.coach.name}</div>
-                                        : <>{data.coach.name}</>
-                                    }
-                                </div>
-                            )
-                        })}
-                    </div>
-                    <div className='container vertical justify-start align-start box-bind'>
-                        <div className="container horizontal justify-start align-start box max-height">
-                            {/* Generates bars that visually represent a time filter's effect */}
-                            {this.props.Auxilary !== undefined && this.props.Auxilary.StartTime !== undefined
-                                ? <div className="auxilaryWings max-height" style={{ width: Math.max((((this.props.Auxilary.StartTime - (StartingPoint * 60)) / 60) * width), 0) + "px", left: "0px" }}></div>
-                                : <></>
-                            }
-                            {/* Generates the vertical bars that represent each hour */}
-                            {Times.slice(StartingPoint,EndingPoint).map((value, i) => {
+                {this.props.data.length > 0
+                    ?
+                    <div id="InnerFrame" className="container horizontal">
+                        <div id="Names" className="container vertical">
+                            <div id="Title"className="column title">{this.props.title}</div>
+                            {this.props.data.map(data => {
                                 return (
-                                    <React.Fragment key = {i}>
-                                        <div className="spacer column max-height"></div>
-                                    </React.Fragment>
-                                )
-                            })}
-                            {/* Generates bars that visually represent a time filter's effect */}
-                            {this.props.Auxilary !== undefined && this.props.Auxilary.EndTime !== undefined
-                                ? <div className="auxilaryWings max-height" style={{ width: Math.max(((((EndingPoint * 60) - this.props.Auxilary.EndTime) / 60) * width), 0) + "px", right: "0px" }}></div>
-                                : <></>
-                            }
-                        </div>
-                        <div className="container horizontal justify-start align-start title">
-                            {/* Labels the hours that are being displayed on the calendar */}
-                            {Times.slice(StartingPoint, EndingPoint).map(value => {
-                                return (
-                                    <div className="column times" key={value}>{value}</div>
+                                    <div className="container vertical justify-start align-start column row name" key={data.coach.name}>
+                                        {data.coach.id !== undefined
+                                            ? <div className="nameButton max-height max-width" title={`Go to ${data.coach.name}'s tutor page`} onClick={evt => this.props.TutorNavigation(data.coach.id)}>{data.coach.name}</div>
+                                            : <>{data.coach.name}</>
+                                        }
+                                    </div>
                                 )
                             })}
                         </div>
-                        {this.props.data.map(data => {
-                            return (<Row data={data} Admin={this.props.Admin} key={data.coach.name} DeleteSchedule={this.props.DeleteSchedule} UpdateSchedule={this.props.UpdateSchedule} getID={this.props.getID} Courses={this.props.Courses} />)
+                        <div className='container vertical justify-start align-start box-bind'>
+                            <div className="container horizontal justify-start align-start box max-height">
+                                {/* Generates bars that visually represent a time filter's effect */}
+                                {this.props.Auxilary !== undefined && this.props.Auxilary.StartTime !== undefined
+                                    ? <div className="auxilaryWings max-height" style={{ width: Math.max((((this.props.Auxilary.StartTime - (StartingPoint * 60)) / 60) * width), 0) + "px", left: "0px" }}></div>
+                                    : <></>
+                                }
+                                {/* Generates the vertical bars that represent each hour */}
+                                {Times.slice(StartingPoint,EndingPoint).map((value, i) => {
+                                    return (
+                                        <React.Fragment key = {i}>
+                                            <div className="spacer column max-height"></div>
+                                        </React.Fragment>
+                                    )
+                                })}
+                                {/* Generates bars that visually represent a time filter's effect */}
+                                {this.props.Auxilary !== undefined && this.props.Auxilary.EndTime !== undefined
+                                    ? <div className="auxilaryWings max-height" style={{ width: Math.max(((((EndingPoint * 60) - this.props.Auxilary.EndTime) / 60) * width), 0) + "px", right: "0px" }}></div>
+                                    : <></>
+                                }
+                            </div>
+                            <div className="container horizontal justify-start align-start title">
+                                {/* Labels the hours that are being displayed on the calendar */}
+                                {Times.slice(StartingPoint, EndingPoint).map(value => {
+                                    return (
+                                        <div className="column times" key={value}>{value}</div>
+                                    )
+                                })}
+                            </div>
+                            {this.props.data.map(data => {
+                                return (<Row data={data} TutorNavigation={this.props.TutorNavigation} Admin={this.props.Admin} key={data.coach.name} DeleteSchedule={this.props.DeleteSchedule} UpdateSchedule={this.props.UpdateSchedule} getID={this.props.getID} Courses={this.props.Courses} />)
                             })}
+                        </div>
                     </div>
-                </div>
+                    : <div id="BlankFrame" className="container vertical max-height max-width" >It seems like there are no schedules to display...</div>
+                }
             </div>
         )
     }

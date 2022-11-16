@@ -36,10 +36,24 @@
     background-color: #EEE;
     height: 50px;
 }
+.filter-title {
+    font-weight: bold;
+    font-size: 16pt;
+    text-align: center;
+    border-bottom: 1px solid gray;
+    background-color: rgba(127,127,127,.2);
+}
 
 .timeInput {
     width: 100px;
 }
 .timeInputIssue {
     border-color: red;
+}
+#Filter {
+    border-left: 2px solid gray;
+    /* box-sizing: border-box; */
+}
+.bolded {
+    font-weight:bold;
 }

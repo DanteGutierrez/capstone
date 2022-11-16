@@ -148,6 +148,9 @@ div:hover > .mini-save {
     background-color:rgba(255,127,127, .5);
     border-color: darkred;
 }
+.hover:hover {
+    cursor: pointer;
+}
 #Title {
     font-size: 11pt;
 }
@@ -185,9 +188,14 @@ div:hover > .mini-save {
     z-index:4;
     box-sizing: border-box;
 }
-#Frame > div {
+#InnerFrame {
     width: fit-content;
     height: fit-content;
+}
+#BlankFrame {
+    font-size: 28pt;
+    font-weight: bold;
+    color:darkred;
 }
 @keyframes DeleteHover {
     from {

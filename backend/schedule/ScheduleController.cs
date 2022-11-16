@@ -151,8 +151,12 @@ namespace capstone
                 List<Schedule> preferred = new();
                 if (search.Courses.Count() > 0) {
                     foreach(string course in search.Courses) {
-                        preferred.AddRange(list.FindAll(s => accounts.Find(user => user._id == ObjectId.Parse(s.AccountId)).ToList().First().PreferredCourses.Contains(course)));
-                        assigned.AddRange(list.FindAll(s => course.Equals(s.CourseId)));
+                        List<Schedule> range = list.FindAll(s => course.Equals(s.CourseId));
+                        assigned.AddRange(range);
+                        list = list.Except(range).ToList();
+                        range = list.FindAll(s => accounts.Find(user => user._id == ObjectId.Parse(s.AccountId)).ToList().First().PreferredCourses.Contains(course));
+                        preferred.AddRange(range);
+                        list = list.Except(range).ToList();
                     }
                 }
                 else {

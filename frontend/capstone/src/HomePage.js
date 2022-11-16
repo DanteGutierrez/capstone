@@ -9,19 +9,22 @@ import Calendar from './Calendar';
 class SearchOptions extends React.Component {
     render() {
         return (
-            <div className="container horizontal max-height max-width justify-around item">
-                <Menu label="Class: " options={this.props.Courses} update={this.props.UpdateCourses} />
-                <div className="container vertical max-width max-height">
-                    <div className="container horizontal item max-width">
-                        <label className="item" htmlFor='StartTime'>Start Time: </label>
-                        <input className={`item timeInput ${this.props.Time.StartTimeError !== "" ? "timeInputIssue" : ""}`} name="StartTime" type="time" onChange={event => this.props.UpdateTime(event)} value={this.props.Time.StartTime} />
+            <div id="Filter" title="Filters for the daily schedule"className="container vertical max-height max-width">
+                <div className="max-width filter-title">Filters:</div>
+                <div className="container horizontal max-height max-width justify-around item">
+                    <Menu label="Courses: " options={this.props.Courses} update={this.props.UpdateCourses} />
+                    <div className="container vertical max-width max-height">
+                        <div className="container horizontal item max-width" title="Change the earliest hour to view">
+                            <label className="item bolded" htmlFor='StartTime'>Start Time: </label>
+                            <input className={`item timeInput ${this.props.Time.StartTimeError !== "" ? "timeInputIssue" : ""}`} name="StartTime" type="time" onChange={event => this.props.UpdateTime(event)} value={this.props.Time.StartTime} />
+                        </div>
+                        <div className="container horizontal item max-width" title="Change the latest hour to view">
+                            <label className="item bolded" htmlFor='EndTime'>End Time: </label>
+                            <input className={`item timeInput ${this.props.Time.EndTimeError !== "" ? "timeInputIssue" : ""}`} name="EndTime" type="time" onChange={evt => this.props.UpdateTime(evt)} value={this.props.Time.EndTime} />
+                        </div>
                     </div>
-                    <div className="container horizontal item max-width">
-                        <label className="item" htmlFor='EndTime'>End Time: </label>
-                        <input className={`item timeInput ${this.props.Time.EndTimeError !== "" ? "timeInputIssue" : ""}`} name="EndTime" type="time" onChange={evt => this.props.UpdateTime(evt)} value={this.props.Time.EndTime} />
-                    </div>
+                    <Menu label="Coaches: " options={this.props.Coaches} update={this.props.UpdateCoaches} />
                 </div>
-                <Menu label="Tutor: " options={this.props.Coaches} update={this.props.UpdateCoaches} />
             </div>
         )
     }
