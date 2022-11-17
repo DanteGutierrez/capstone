@@ -181,7 +181,7 @@ class Row extends React.Component {
                         return (
                             <div key={entry.year + '' + entry.day + '' + entry.startTime} className={`time-block ${courseCode} ${this.props.UpdateSchedule === undefined ? "hover" : ""}`} style={style} title={this.props.UpdateSchedule === undefined ? "Click to view tutor's page" : "Scheduled time"} onClick={this.props.UpdateSchedule === undefined ? evt => this.props.TutorNavigation(this.props.data.coach.id) : null}>
                                 <div className={`interactive-time-block container horizontal max-height max-width`}>
-                                    <div className={`${entryWidth < (this.props.Width * 1.5) ? "time-block-text" : ""} container vertical max-width align-start`}>
+                                    <div className={`${entryWidth < (this.props.Width * 1.5) ? "time-block-text" : ""} container vertical max-width align-start display`}>
                                         {this.props.UpdateSchedule !== undefined && (this.props.Admin || NotOld)
                                             ? <ScheduleUpdateDisplay Schedule={entry} CoachName={this.props.data.coach.name} Courses={this.props.Courses} UpdateSchedule={this.props.UpdateSchedule} />
                                             : <>

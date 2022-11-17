@@ -1,3 +1,16 @@
 .day {
     border: 2px solid #DDD;
 }
+@media screen and (max-width: 993px) {
+    #DayRepeater {
+        flex-wrap:wrap;
+    }
+    #StartEndDay {
+        flex-wrap:wrap;
+    }
+}
+@media screen and (max-width: 525px) {
+    #CourseSelectinator {
+        width: calc(100% - 60px);
+    }
+}

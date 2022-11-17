@@ -10,9 +10,9 @@ import TutorInfo from './TutorInfo';
 class ClassSelection extends React.Component {
     render() {
         return (
-            <div className="container horizontal align-start max-height">
-                <div className="container vertical justify-start max-height bubble">
-                    <div className="container vertical max-width">
+            <div id="CourseInformation" className="container horizontal align-start max-height">
+                <div id="MainCourseInfo"className="container vertical justify-start max-height bubble">
+                    <div id="Assigned" className="container vertical max-width">
                         <div className="item">Assigned:</div>
                         {
                             this.props.courses.map(course => {
@@ -45,7 +45,7 @@ class ClassSelection extends React.Component {
                     </div>
                 </div>
                 {this.props.Login.admin || this.props.Login.id === this.props.Tutor.id
-                    ? <div className="preferredContainer container vertical justify-start max-height bubble">
+                    ? <div id="AddPreferred" className="preferredContainer container vertical justify-start max-height bubble">
                         <div className="item">Add to Preferred: </div>
                         <div className="container horizontal item preferred">
                             {this.props.courses.map(course => {
@@ -264,7 +264,7 @@ class TutorFrame extends React.Component {
                 <div id="TutoringInformation" className="container horizontal max-width">
                     <ClassSelection Tutor={this.props.Tutor} courses={this.state.courses} Login={this.props.Login} movePreferredCourse={this.movePreferredCourse} />
                     {this.state.scheduleOpen
-                        ? <Calendar data={this.state.schedules} getID={this.props.getID} title={"Days of the Week"} key={this.state.schedules} Admin={this.props.Login.admin} Courses={this.state.courses} DeleteSchedule={this.props.Login.id === this.props.Tutor.id || this.props.Login.admin ? this.DeleteSchedule : undefined} UpdateSchedule={this.props.Login.id === this.props.Tutor.id || this.props.Login.admin ? this.UpdateSchedule : undefined} />
+                        ? <Calendar data={this.state.schedules} getID={this.props.getID} title={"Week"} key={this.state.schedules} Admin={this.props.Login.admin} Courses={this.state.courses} DeleteSchedule={this.props.Login.id === this.props.Tutor.id || this.props.Login.admin ? this.DeleteSchedule : undefined} UpdateSchedule={this.props.Login.id === this.props.Tutor.id || this.props.Login.admin ? this.UpdateSchedule : undefined} />
                         : <Schedule APIS={this.props.APIS} getID={this.props.getID} Login={this.props.Login} Tutor={this.props.Tutor} />
                     }
                 </div>

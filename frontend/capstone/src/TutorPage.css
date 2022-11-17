@@ -1,8 +1,6 @@
 
 #TutoringInformation {
-    min-height: 80%;
-    height: 80%;
-    padding: 1px;
+    height: calc(100% - 140px);
 }
 .bubble {
     border: 2px solid #DDD;
@@ -31,4 +29,71 @@
 ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
+}
+
+/*Mobile Friendliness*/
+
+@media screen and (max-width: 993px) { 
+    #TutoringInformation {
+        height: calc(100% - 210px);
+        flex-direction: column;
+    }
+    .course {
+        width: 75px;
+        height: 56.25px;
+        font-size: 8pt;
+    }
+    .preferredContainer {
+        width: 100%;
+    }
+    #CourseInformation {
+        height: 210px;
+        width: 100%;
+    }
+    #MainCourseInfo {
+        width: 100%;
+        min-width: 50%;
+    }
+    #AddPreferred {
+        min-width: 50%;
+    }
+}
+@media screen and (max-width: 525px) {
+    #TutoringInformation {
+        height: calc(100% - 175px);
+    }
+    .course {
+        width: 50px;
+        height: 37.5px;
+        font-size:6pt;
+    }
+    #MainCourseInfo {
+        flex-direction:row;
+        min-width: 0px;
+        height: 70px;
+    }
+    #CourseInformation {
+        font-size: 8pt;
+        min-height: 70px;
+        max-height: 140px;
+        flex-wrap: wrap;
+    }
+    .preferredContainer {
+        flex-direction: row;
+        width: calc(100% - 55px);
+        min-width: 0px;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+    .preferredContainer > .container {
+        flex-direction: row;
+        flex-wrap: nowrap;
+    }
+    #Assigned {
+        width: 55px;
+    }
+    #AddPreferred {
+        height: 70px;
+        width: 100%;
+    }
 }

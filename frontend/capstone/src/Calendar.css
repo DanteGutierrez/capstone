@@ -241,6 +241,23 @@ div:hover > .mini-save {
     .time-block:hover {
         min-width:180px;
     }
+    .mini-input {
+        height: 10pt;
+        font-size: 8pt;
+        margin: 0px;
+        padding: 0px;
+    }
+    .mini-input[type="time"] {
+        width: 55px;
+    }
+    .mini-select {
+        height: 10pt;
+        font-size: 8pt;
+        width: 110px;
+    }
+    .deleteButton {
+        font-size: 7pt;
+    }
 }
 
 @media screen and (max-width: 525px) {
@@ -261,5 +278,43 @@ div:hover > .mini-save {
     }
     .time-block:hover {
         min-width: 120px;
+    }
+    .time-block-text {
+        padding-left: 3px;
+    }
+    .mini-input {
+        height: 7pt;
+        font-size: 6pt;
+        margin: 0px;
+        padding: 0px;
+    }
+
+    .mini-input[type="time"] {
+        width: 32px;
+    }
+
+    .mini-select {
+        height: 7pt;
+        font-size: 6pt;
+        width: 60px;
+    }
+
+    .deleteButton {
+        font-size: 5pt;
+    }
+    .deleteButton > .item {
+        margin: 0px;
+    }
+    .mini-save {
+        height: 8pt;
+    }
+    .display > div {
+        margin: 0px;
+    }
+    .display> div > div {
+        margin: 0px;
+    }
+    .mini-save {
+        height: 6pt;
     }
 }

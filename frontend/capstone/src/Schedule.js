@@ -212,11 +212,15 @@ class ScheduleMakingFrame extends React.Component {
                         <input className="item" type="date" name="Day" onChange={this.UpdateCredentials} value={this.state.Form.StartDay} />
                     </div>
                     :
-                    <div className="container horizontal item">
-                        <label className="item" htmlFor='Start'>Start Day:</label>
-                        <input className="item" type="date" name="Start" onChange={this.UpdateCredentials} max={this.state.Form.EndDay} value={this.state.Form.StartDay} />
-                        <label className="item" htmlFor='End'>End Day:</label>
-                        <input className="item" type="date" name="End" onChange={this.UpdateCredentials} min={this.state.Form.StartDay} value={this.state.Form.EndDay} />
+                    <div id="StartEndDay" className="container horizontal item">
+                        <div>
+                            <label className="item" htmlFor='Start'>Start Day:</label>
+                            <input className="item" type="date" name="Start" onChange={this.UpdateCredentials} max={this.state.Form.EndDay} value={this.state.Form.StartDay} />
+                        </div>
+                        <div>
+                            <label className="item" htmlFor='End'>End Day:</label>
+                            <input className="item" type="date" name="End" onChange={this.UpdateCredentials} min={this.state.Form.StartDay} value={this.state.Form.EndDay} />
+                        </div>
                     </div>
                 }              
                 <div className="container horizontal item">
@@ -225,7 +229,7 @@ class ScheduleMakingFrame extends React.Component {
                 </div>
                 <div className="container horizontal item" key={this.state.courses}>
                     <label className="item" htmlFor='Course'>Course:</label>
-                    <select className="item" name="Course" onChange={this.UpdateCredentials} defaultValue={this.state.Form.Course}>
+                    <select id="CourseSelectinator" className="item" name="Course" onChange={this.UpdateCredentials} defaultValue={this.state.Form.Course}>
                         <option value="">Please Select A Course</option>
                         {this.state.courses.map(course => {
                             return (
@@ -241,7 +245,7 @@ class ScheduleMakingFrame extends React.Component {
                 {this.state.Form.Repeat
                     ?
                     <>
-                        <div className="container horizontal item">
+                        <div id="DayRepeater"className="container horizontal item">
                             {/* Sarah does not want a schedule to be created on sundays */}
                             {/* <div className="container horizontal item day">
                                 <label className="item" htmlFor='Sunday'>Sunday:</label>

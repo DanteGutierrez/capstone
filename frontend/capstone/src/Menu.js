@@ -29,8 +29,8 @@ class Menu extends React.Component {
                     <div className="item bolded" title="Change this filter">{this.state.label}</div>
                     <div className="container vertical item">
                         {this.state.open
-                            ? <div>
-                                <div className="button" onClick={evt => this.ChangeOpen()} title="Close list of filters">Close</div>
+                            ? <div className="opened">
+                                <div className="button lame" onClick={evt => this.ChangeOpen()} title="Close list of filters">Close</div>
                                 <div className="dropdown">
                                 {this.props.options.unselected.map(option => {
                                     return (
@@ -41,7 +41,7 @@ class Menu extends React.Component {
                                 })}
                                 </div>
                             </div>
-                            : <div className="button" onClick={evt => this.ChangeOpen()} title="Open list of filters">Open</div>
+                            : <div className="button lame" onClick={evt => this.ChangeOpen()} title="Open list of filters">Open</div>
                         }
                     </div>
                 </div>

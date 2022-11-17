@@ -1,3 +1,6 @@
+.opened {
+    position: relative;
+}
 .dropdown {
     display: block;
     position: absolute;
@@ -7,6 +10,10 @@
     border-radius:5px;
     width: fit-content;
     z-index: 5;
+    right: 0px;
+}
+.lame {
+    width: 45px;
 }
 .selection {
     overflow-x: scroll;

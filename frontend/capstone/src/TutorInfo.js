@@ -71,77 +71,79 @@ class TutorInfoFrame extends React.Component {
     
     render() {
         return (
-            <div id="NameInformation" className="container horizontal max-width item">
-                <img id="ProfilePicture" className="max-height item bubble" src={"no-profile.png"} alt="Profile" />
-                <div className="container vertical max-height max-width item bubble align-start">
-                    {this.props.Login.admin || this.props.Login.id === this.props.Tutor.id
-                        ? <div id="TutorName" className="container horizontal justify-start max-height">
-                            <input title="Change the name you want to go by" id="PreferredName" type="text" name="PreferredName" value={this.state.preferredName} onChange={this.onChange} />
-                            <div id="SaveWriting" title="Save preferred name" onClick={evt => this.props.SavePreferredName(this.state.preferredName)}><img src={"save-writing.png"} alt="Save"></img></div>
-                            <div>{this.props.Tutor.name.split(' ').pop()}</div>
-                        </div>
-                        : <div id="TutorName" className="max-height">{this.props.Tutor.name}</div>
-                    }
-                    <div id="EmailContainer" className="container horizontal justify-start justify-space max-width">
-                        <a id="TutorEmail" className="max-height" href={`mailto:${this.props.Tutor.email}?subject=Tutoring`}>{this.props.Tutor.email}</a>
+            <div id="NameInformation" className="container horizontal max-width justify-space">
+                <div id="NameSection" className="container horizontal">
+                    <img id="ProfilePicture" className="max-height bubble" src={"no-profile.png"} alt="Profile" />
+                    <div id="TutorInformation"className="container vertical max-height max-width bubble align-start">
                         {this.props.Login.admin || this.props.Login.id === this.props.Tutor.id
-                            ? <>
-                                {this.state.passwordChangerOpen
-                                    ? <div id="PasswordChange" className="container horizontal justify-start max-height">
-                                        <input id="Password" name="Password" type="password" title="Change current password" onChange={this.onChange} />
-                                        <div id="SavePassword" title="Save password" onClick={evt => this.checkPassword()}><img src={"save-writing.png"} alt="Save"></img></div>
-                                    </div>
-                                    : <></>
-                                }
-                                <div id="PasswordChangerShowHide" title="View / Hide password changer" onClick={evt => this.onPasswordOpen()}><img src={"password-change.png"} alt="View/Hide"/></div>
-                            </>
-                            : <></>
+                            ? <div id="TutorName" className="container horizontal justify-start max-height">
+                                <input title="Change the name you want to go by" id="PreferredName" type="text" name="PreferredName" value={this.state.preferredName} onChange={this.onChange} />
+                                <div id="SaveWriting" title="Save preferred name" onClick={evt => this.props.SavePreferredName(this.state.preferredName)}><img src={"save-writing.png"} alt="Save"></img></div>
+                                <div>{this.props.Tutor.name.split(' ').pop()}</div>
+                            </div>
+                            : <div id="TutorName" className="max-height max-width">{this.props.Tutor.name}</div>
                         }
-                    </div>
-                    <div id="Links" className="container horizontal max-width justify-start">
-                        {this.props.Tutor.links.map(link => {
-                            return (
-                                <div className="container horizontal item" key={link.title}>
-                                    <a className="item" href={link.url} target="_blank" rel="noreferrer"><img className="linkImage" src={link.imageURL} alt={link.title} /></a>
-                                    <a className="item" href={link.url} target="_blank" rel="noreferrer">{link.title}</a>
-                                    {this.props.Login.admin || this.props.Login.id === this.props.Tutor.id
-                                        ? <div className="X item" title={`Remove '${link.title}' link`} onClick={evt => this.props.DeleteLink(link)}>✖</div>
+                        <div id="EmailContainer" className="container horizontal justify-start justify-space max-width item">
+                            <a id="TutorEmail" className="max-height" href={`mailto:${this.props.Tutor.email}?subject=Tutoring`}>{this.props.Tutor.email}</a>
+                            {this.props.Login.admin || this.props.Login.id === this.props.Tutor.id
+                                ? <>
+                                    {this.state.passwordChangerOpen
+                                        ? <div id="PasswordChange" className="container horizontal justify-start max-height">
+                                            <input id="Password" name="Password" type="password" title="Change current password" onChange={this.onChange} />
+                                            <div id="SavePassword" title="Save password" onClick={evt => this.checkPassword()}><img src={"save-writing.png"} alt="Save"></img></div>
+                                        </div>
                                         : <></>
                                     }
-                                </div>
-                            )
-                        })}
-                        {this.props.Login.admin || this.props.Login.id === this.props.Tutor.id
-                            ? <>
-                                {this.state.linkAdderOpen
-                                    ? <div id="LinkAdding" className="container horizontal max-height max-width">
-                                        <label htmlFor='ImageURL'>Link Image: </label>
-                                        <select className={`item${this.state.link.ImageURL === "" ? " badInput" : ""}`} name="ImageURL" onChange={this.onChange}>
-                                            <option value="">Choose</option>
-                                            <option value="teams-logo.jfif">Teams</option>
-                                            <option value="twitter-logo.jpg">Twitter</option>
-                                            <option value="discord-logo.jfif">Discord</option>
-                                            <option value="linkedin-logo.jfif">LinkedIn</option>
-                                            <option value="link-default.png">Other</option>
-                                        </select>
-                                        <label htmlFor='URL'>URL: </label>
-                                        <input className={`item${this.state.link.URL === "" ? " badInput" : ""}`} type="text" name="URL" placeholder="ex: https://google.com" onChange={this.onChange}/>
-                                        <label htmlFor='Title'>Name: </label>
-                                        <input className="item" type="text" name="Title" placeholder="Title" onChange={this.onChange} />
-                                        <div className="button item" title="Create Link" onClick={evt => this.checkLink()}>Save</div>
-                                        <div className="X item" title="Close Menu" onClick={evt => this.onOpen()}>✖</div>
+                                    <div id="PasswordChangerShowHide" title="View / Hide password changer" onClick={evt => this.onPasswordOpen()}><img src={"password-change.png"} alt="View/Hide"/></div>
+                                </>
+                                : <></>
+                            }
+                        </div>
+                        <div id="Links" className="container horizontal max-width justify-start">
+                            {this.props.Tutor.links.map(link => {
+                                return (
+                                    <div className="container horizontal item" key={link.title}>
+                                        <a className="item" href={link.url} target="_blank" rel="noreferrer"><img className="linkImage" src={link.imageURL} alt={link.title} /></a>
+                                        <a className="item" href={link.url} target="_blank" rel="noreferrer">{link.title}</a>
+                                        {this.props.Login.admin || this.props.Login.id === this.props.Tutor.id
+                                            ? <div className="X item" title={`Remove '${link.title}' link`} onClick={evt => this.props.DeleteLink(link)}>✖</div>
+                                            : <></>
+                                        }
                                     </div>
-                                    : <img className="linkImage" src={"add-link.png"} alt="Add new link" title="Add new link" onClick={evt => this.onOpen()}/>
-                                }
-                            </>
-                            : <></>
-                        }
+                                )
+                            })}
+                            {this.props.Login.admin || this.props.Login.id === this.props.Tutor.id
+                                ? <>
+                                    {this.state.linkAdderOpen
+                                        ? <div id="LinkAdding" className="container horizontal max-height">
+                                            <label htmlFor='ImageURL'>Link Image: </label>
+                                            <select className={`item${this.state.link.ImageURL === "" ? " badInput" : ""}`} name="ImageURL" onChange={this.onChange}>
+                                                <option value="">Choose</option>
+                                                <option value="teams-logo.jfif">Teams</option>
+                                                <option value="twitter-logo.jpg">Twitter</option>
+                                                <option value="discord-logo.jfif">Discord</option>
+                                                <option value="linkedin-logo.jfif">LinkedIn</option>
+                                                <option value="link-default.png">Other</option>
+                                            </select>
+                                            <label htmlFor='URL'>URL: </label>
+                                            <input className={`item${this.state.link.URL === "" ? " badInput" : ""}`} type="text" name="URL" placeholder="ex: https://google.com" onChange={this.onChange}/>
+                                            <label htmlFor='Title'>Name: </label>
+                                            <input id="LinkTitle" className="item" type="text" name="Title" placeholder="Title" onChange={this.onChange} />
+                                            <div className="button item" title="Create Link" onClick={evt => this.checkLink()}>Save</div>
+                                            <div className="X item" title="Close Menu" onClick={evt => this.onOpen()}>✖</div>
+                                        </div>
+                                        : <img className="linkImage" src={"add-link.png"} alt="Add new link" title="Add new link" onClick={evt => this.onOpen()}/>
+                                    }
+                                </>
+                                : <></>
+                            }
+                        </div>
                     </div>
                 </div>
-                <div className="container vertical max-height item bubble">
+                <div id="DateSelectionTutor" className="container vertical bubble">
                     <div className="item">Year</div>
                     <div className="item">{this.props.Year}</div>
-                    <div className="container horizontal max-width item">
+                    <div className="container horizontal item">
                         <div className="item button" onClick={evt => this.props.ChangeDay(-7)}>◄</div>
                         <div className="item">Week {Math.ceil(((6 - new Date(this.props.Year, 0, this.props.Day).getDay()) + this.props.Day) / 7)}</div>
                         <div className="item button" onClick={evt => this.props.ChangeDay(7)}>►</div>
@@ -151,7 +153,7 @@ class TutorInfoFrame extends React.Component {
                         : <></>
                     }
                 </div>
-                <div id="Status" className="container vertical align-start max-height max-width bubble">
+                <div id="Status" className="container vertical align-start bubble">
                     <div className="item max-height">Status:</div>
                     {this.props.Login.admin || this.props.Login.id === this.props.Tutor.id
                         ? <div className="container horizontal justify-start max-width max-height item">

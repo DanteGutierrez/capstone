@@ -1,6 +1,5 @@
 #NameInformation {
-    height: 20%;
-    min-height: 140px;
+    height: 140px;
 }
 
 #PreferredName {
@@ -20,6 +19,8 @@
 }
 #Status {
     font-size: 28pt;
+    height: 100%;
+    width: 100%;
 }
 #ChangeStatus {
     height: 32pt;
@@ -28,7 +29,7 @@
     border-bottom: 2px solid #333;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-    width: calc(100% - 30px);
+    width: calc(100% - 40px);
     margin-left: 5px;
 }
 #ChangeStatus:hover {
@@ -114,6 +115,7 @@
 #LinkAdding {
     position:absolute;
     background-color: white;
+    min-width: 100%;
 }
 
 #Links {
@@ -149,4 +151,169 @@
 .none {
     color: gray;
     font-style:italic;
+}
+#NameSection {
+    width: fit-content;
+    height: 100%;
+}
+#DateSelectionTutor {
+    height: 100%;
+}
+#LinkTitle {
+    width: 25px;
+}
+/*Mobile Friendliness*/
+
+@media screen and (max-width: 993px) {
+    #NameInformation {
+        min-height: 210px;
+        flex-wrap: wrap;
+    }
+    #NameSection {
+        width: 100%;
+        height: 105px;
+    }
+    #TutorInformation {
+        width: calc(100% - 105px);
+    }
+    #TutorName {
+        font-size: 26pt;
+    }
+    #TutorEmail {
+        font-size: 18pt;
+        word-wrap: break-word;
+    }
+    #Status {
+        font-size: 22pt;
+        height: 105px;
+        width: 50%;
+    }
+    .linkImage {
+        height: 20px;
+    }
+    #Links {
+        font-size: 10pt;
+        min-height: 35px;
+    }
+    ::-webkit-scrollbar {
+        width: 7.5px;
+        height: 7.5px;
+    }
+    #DateSelectionTutor {
+        height: 105px;
+        width: 50%;
+        order: 3;
+        min-width: 0px;
+        min-height: 0px;
+    }
+    #SaveWriting {
+        margin-right: 5px;
+    }
+    #SaveWriting > img {
+        height: 20px;
+    }
+    #PreferredName {
+        height: 25px;
+        font-size: 20pt;
+        padding: 0px;
+    }
+    #TutorName > div {
+        font-size: 20pt;
+    }
+    #Password {
+        height: 25px;
+        font-size: 20pt;
+        padding: 0px;
+    }
+    #ChangeStatus {
+        padding: 0px;
+        margin: 0px;
+    }
+    #PasswordChangerShowHide > img { 
+        height: 26px;
+    }
+}
+@media screen and (max-width: 525px) {
+    #NameInformation {
+        min-height: 175px;
+    }
+    #NameSection {
+        width: 100%;
+        height: 70px;
+    }
+    #TutorInformation {
+        width: calc(100% - 70px);
+    }
+    #TutorName {
+        font-size: 16pt;
+    }
+    #TutorEmail {
+        font-size: 8pt;
+        word-wrap:break-word;
+    }
+    #Status {
+        font-size: 16pt;
+        height: 70px;
+        width: 100%;
+    }
+    .linkImage {
+        height: 15px;
+    }
+    #Links {
+        font-size: 8pt;
+        min-height: 30px;
+    }
+    ::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+    }
+    #DateSelectionTutor {
+        flex-direction: row;
+        height: 35px;
+        width: 100%;
+        font-size: 8pt;
+    }
+    #EmailContainer {
+        height: 12px;
+    }
+    #PreferredName {
+        height:17px;
+        font-size: 12pt;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+
+    #TutorName>div {
+        font-size: 12pt;
+    }
+    #ChangeStatus {
+        height: 30px;
+        font-size: 20px;
+    }
+    #Password {
+        height: 12px;
+        font-size: 12pt;
+        padding: 0px;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+    #SaveWriting {
+        margin-right: 3px;
+    }
+
+    #SaveWriting>img {
+        height: 12px;
+    }
+    #SavePassword >img {
+        height: 17px;
+    }
+    #LinkAdding > input {
+        height: 8pt;
+        font-size: 7pt;
+    }
+    #LinkAdding>select {
+        height: 10pt;
+        font-size: 7pt;
+    }
+    
 }
